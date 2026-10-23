@@ -10,7 +10,7 @@ import {
 
 import { CacheTypeEnum } from '/@/enums/cacheEnum';
 
-export type LocaleType = 'zh_CN' | 'en' | 'ru' | 'ja' | 'ko';
+export type LocaleType = 'zh_CN' | 'en' | 'ja_JP' | 'ru' | 'ja' | 'ko';
 
 export interface MenuSetting {
   bgColor: string;
@@ -171,6 +171,8 @@ export interface GlobConfig {
   isQiankunMicro: boolean;
   // 【JEECG作为乾坤子应用】乾坤子应用入口
   qiankunMicroAppEntry?: string;
+  // Shopify 后端服务地址
+  shopifyApiUrl?: string;
 }
 export interface GlobEnvConfig {
   // Site title
@@ -204,4 +206,6 @@ export interface GlobEnvConfig {
   VITE_GLOB_ONLINE_DOCUMENT_VERSION?: string;
   // 当前运行在什么平台
   VITE_GLOB_RUN_PLATFORM?: 'web' | 'electron';
+  // Shopify 后端服务地址
+  VITE_GLOB_SHOPIFY_API_URL?: string;
 }

@@ -4,6 +4,9 @@
 export interface LoginParams {
   username: string;
   password: string;
+  captcha?: string;
+  checkKey?: string | null;
+  tenantId?: string | number;
 }
 
 export interface ThirdLoginParams {
@@ -22,6 +25,7 @@ export interface RoleInfo {
 export interface LoginResultModel {
   userId: string | number;
   token: string;
+  tenantId?: string | number;
   role: RoleInfo;
   userInfo?: any
 }

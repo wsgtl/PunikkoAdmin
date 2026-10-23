@@ -18,6 +18,9 @@ export const useGlobSetting = (): Readonly<GlobConfig> => {
     // 【JEECG作为乾坤子应用】
     VITE_GLOB_QIANKUN_MICRO_APP_NAME,
     VITE_GLOB_QIANKUN_MICRO_APP_ENTRY,
+
+    // Shopify 后端服务地址
+    VITE_GLOB_SHOPIFY_API_URL,
   } = getAppEnvConfig();
 
   // if (!/[a-zA-Z\_]*/.test(VITE_GLOB_APP_SHORT_NAME)) {
@@ -50,6 +53,9 @@ export const useGlobSetting = (): Readonly<GlobConfig> => {
     isQiankunMicro: VITE_GLOB_QIANKUN_MICRO_APP_NAME != null && VITE_GLOB_QIANKUN_MICRO_APP_NAME !== '',
     // 【JEECG作为乾坤子应用】乾坤子应用入口
     qiankunMicroAppEntry: VITE_GLOB_QIANKUN_MICRO_APP_ENTRY,
+
+    // Shopify 后端服务地址
+    shopifyApiUrl: VITE_GLOB_SHOPIFY_API_URL,
   };
 
   // 【JEECG作为乾坤子应用】乾坤子应用下，需要定义一下

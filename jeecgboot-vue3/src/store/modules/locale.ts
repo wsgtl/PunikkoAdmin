@@ -5,11 +5,17 @@ import { store } from '/@/store';
 
 import { LOCALE_KEY } from '/@/enums/cacheEnum';
 import { createLocalStorage } from '/@/utils/cache';
-import { localeSetting } from '/@/settings/localeSetting';
+import { localeSetting, getBrowserLocale } from '/@/settings/localeSetting';
 
 const ls = createLocalStorage();
 
-const lsLocaleSetting = (ls.get(LOCALE_KEY) || localeSetting) as LocaleSetting;
+// 从本地缓存读取语言设置，如果没有则根据浏览器语言自动检测
+const cachedLocale = ls.get(LOCALE_KEY);
+const defaultLocaleSetting: LocaleSetting = cachedLocale
+  ? (cachedLocale as LocaleSetting)
+  : { ...localeSetting, locale: getBrowserLocale() };
+
+const lsLocaleSetting = defaultLocaleSetting;
 
 interface LocaleState {
   localInfo: LocaleSetting;

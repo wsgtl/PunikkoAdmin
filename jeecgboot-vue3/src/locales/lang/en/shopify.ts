@@ -1,0 +1,22 @@
+export default {
+  storeReservation: {
+    title: 'Store reservations',
+    code: 'Reservation code',
+    customerName: 'Customer name',
+    customerEmail: 'Customer email',
+    customerPhone: 'Customer phone',
+    storeName: 'Store',
+    status: 'Status',
+    reservedAt: 'Reserved at',
+    expiresAt: 'Expires at',
+    remark: 'Remarks',
+    customerId: 'Customer ID',
+    storeRef: 'Store ID',
+    storeAddress: 'Store address',
+    createTime: 'Created at',
+    actions: 'Actions',
+    detail: 'Details',
+    advancedQuery: 'Advanced query',
+    dictionaryError: 'Unable to load dictionaries. Status labels use the list response.',
+  },
+};

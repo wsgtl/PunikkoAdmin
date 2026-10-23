@@ -1,0 +1,22 @@
+export default {
+  storeReservation: {
+    title: '店舗予約管理',
+    code: '予約コード',
+    customerName: '顧客名',
+    customerEmail: 'メールアドレス',
+    customerPhone: '電話番号',
+    storeName: '店舗',
+    status: '予約状態',
+    reservedAt: '予約日時',
+    expiresAt: '有効期限',
+    remark: '備考',
+    customerId: '顧客ID',
+    storeRef: '店舗ID',
+    storeAddress: '店舗住所',
+    createTime: '作成日時',
+    actions: '操作',
+    detail: '詳細',
+    advancedQuery: '詳細検索',
+    dictionaryError: '辞書を取得できませんでした。一覧の状態名を表示します。',
+  },
+};

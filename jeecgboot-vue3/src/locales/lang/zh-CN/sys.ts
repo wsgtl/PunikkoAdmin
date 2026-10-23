@@ -75,6 +75,11 @@ export default {
 
     loginButton: '登录',
     registerButton: '注册',
+    showPassword: '显示密码',
+    hidePassword: '隐藏密码',
+    refreshCaptcha: '点击刷新验证码',
+    captchaLoading: '加载中…',
+    captchaLoadFailed: '验证码加载失败，请点击重试',
     rememberMe: '记住我',
     forgetPassword: '忘记密码?',
     otherSignIn: '其他登录方式',

@@ -1,0 +1,22 @@
+export default {
+  storeReservation: {
+    title: '门店预约管理',
+    code: '预约码',
+    customerName: '客户姓名',
+    customerEmail: '客户邮箱',
+    customerPhone: '客户手机号',
+    storeName: '门店',
+    status: '预约状态',
+    reservedAt: '预约时间',
+    expiresAt: '过期时间',
+    remark: '备注',
+    customerId: '客户ID',
+    storeRef: '门店ID',
+    storeAddress: '门店地址',
+    createTime: '创建时间',
+    actions: '操作',
+    detail: '详情',
+    advancedQuery: '高级查询',
+    dictionaryError: '字典加载失败，状态暂按列表返回文本显示',
+  },
+};

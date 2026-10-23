@@ -4,7 +4,8 @@ import { LoginParams, LoginResultModel, GetUserInfoModel } from './model/userMod
 import { ErrorMessageMode } from '/#/axios';
 import { useMessage } from '/@/hooks/web/useMessage';
 import { useUserStoreWithOut } from '/@/store/modules/user';
-import { setAuthCache } from '/@/utils/auth';
+import { getTenantId, setAuthCache } from '/@/utils/auth';
+import { ConfigEnum, ContentTypeEnum } from '/@/enums/httpEnum';
 import { TOKEN_KEY } from '/@/enums/cacheEnum';
 import { router } from '/@/router';
 import { PageEnum } from '/@/enums/pageEnum';
@@ -12,7 +13,7 @@ import { ExceptionEnum } from "@/enums/exceptionEnum";
 
 const { createErrorModal } = useMessage();
 enum Api {
-  Login = '/sys/login',
+  Login = '/sys/mLogin',
   phoneLogin = '/sys/phoneLogin',
   Logout = '/sys/logout',
   GetUserInfo = '/sys/user/getUserInfo',
@@ -49,13 +50,16 @@ enum Api {
  * @description: user login api
  */
 export function loginApi(params: LoginParams, mode: ErrorMessageMode = 'modal') {
+  const { tenantId = getTenantId() ?? 0, ...data } = params;
   return defHttp.post<LoginResultModel>(
     {
       url: Api.Login,
-      params,
+      data,
+      headers: { [ConfigEnum.TENANT_ID]: tenantId, 'Content-Type': ContentTypeEnum.JSON },
     },
     {
       errorMessageMode: mode,
+      withToken: false,
     }
   );
 }
@@ -107,7 +111,7 @@ export function doLogout() {
 
 export function getCodeInfo(currdatetime) {
   let url = Api.getInputCode + `/${currdatetime}`;
-  return defHttp.get({ url: url });
+  return defHttp.get({ url: url }, { isTransformResponse: false });
 }
 /**
  * @description: 获取短信验证码

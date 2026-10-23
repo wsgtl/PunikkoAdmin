@@ -76,6 +76,11 @@ export default {
 
     loginButton: 'Sign in',
     registerButton: 'Sign up',
+    showPassword: 'Show password',
+    hidePassword: 'Hide password',
+    refreshCaptcha: 'Refresh verification code',
+    captchaLoading: 'Loading…',
+    captchaLoadFailed: 'Unable to load verification code. Click to retry.',
     rememberMe: 'Remember me',
     forgetPassword: 'Forget Password?',
     otherSignIn: 'Sign in with',

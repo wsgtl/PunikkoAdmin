@@ -44,9 +44,12 @@ export function getAppEnvConfig() {
     // 【JEECG作为乾坤子应用】
     VITE_GLOB_QIANKUN_MICRO_APP_NAME,
     VITE_GLOB_QIANKUN_MICRO_APP_ENTRY,
-    
+
     //在线文档编辑版本。可选属性：wps, onlyoffice
     VITE_GLOB_ONLINE_DOCUMENT_VERSION,
+
+    // Shopify 后端服务地址
+    VITE_GLOB_SHOPIFY_API_URL,
   } = ENV;
 
   // if (!/^[a-zA-Z\_]*$/.test(VITE_GLOB_APP_SHORT_NAME)) {
@@ -74,7 +77,10 @@ export function getAppEnvConfig() {
     VITE_GLOB_QIANKUN_MICRO_APP_ENTRY,
 
     //在线文档编辑版本。可选属性：wps, onlyoffice
-    VITE_GLOB_ONLINE_DOCUMENT_VERSION
+    VITE_GLOB_ONLINE_DOCUMENT_VERSION,
+
+    // Shopify 后端服务地址
+    VITE_GLOB_SHOPIFY_API_URL
   };
 }
 
