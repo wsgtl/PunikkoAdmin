@@ -266,3 +266,19 @@ const { t } = useI18n();
 - 编辑时获取 `/sys/dict/getDictItems/sys_role,role_name,id`，角色多选以逗号分隔的 `roleIds` 保存；缓存只读并原样提交。
 - 远程抽屉不自动加载缓存或远端数据。刷新字段 GET `/fields?type={type}&refresh=true`；查询数据 GET `/remoteData?type={type}&source=admin&refresh=true`。
 - 未识别的远程响应保留为 JSON 显示，不丢弃信息。角色授权由后端校验；编辑及远程入口使用文档权限标识。
+
+## Shopify 客户订阅配置
+
+- 菜单组件入口：`shopify/member/customerSubscriptionConfig/ShopifyCustomerSubscriptionConfigList`（已由权限接口响应确认），复用 `shopify/subscription/ShopifyCustomerSubscriptionConfigList` 页面。
+- 接口依据：项目根目录 `Shopify模块.md` 的 Shopify 客户订阅配置章节。
+- 列表 GET `/shopify/subscription/shopifyCustomerSubscriptionConfig/list`，使用标准分页和默认创建时间倒序。
+- 仅保存本地：PUT `/shopify/subscription/shopifyCustomerSubscriptionConfig/edit`。
+- 同步并保存：POST `/shopify/subscription/shopifyCustomerSubscriptionConfig/saveAndSyncRemote`。
+- 单条同步：PUT `/shopify/subscription/shopifyCustomerSubscriptionConfig/syncRemote?id={id}`。
+- 保存采用业务字段白名单，不发送字典翻译和审计字段；远程状态与同步时间等只读。
+- 订阅选项使用全局全量字典缓存：来源 `shopify_customer_subscription_source`，本地/远程状态 `shopify_customer_subscription_status`，本地/远程级别 `shopify_marketing_opt_in_level`，同步状态 `shopify_customer_subscription_sync_status`。映射已根据真实全量字典响应确认，不使用通用同步状态字典。
+- 本页不提供截图中的新增、删除和导出功能。
+
+### 全量字典初始化
+
+登录后或刷新浏览器、初始化后台权限菜单时，统一请求 `/sys/dict/queryAllDictItems` 并写入用户字典缓存。即使权限响应没有 `dictVersion` 也会请求；普通页面切换不重复请求。字典请求不阻塞菜单及列表加载。

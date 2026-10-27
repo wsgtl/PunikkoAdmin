@@ -133,8 +133,8 @@ export const useUserStore = defineStore('app-user', {
      * @author scott
      * @since 2026-10-13 【issues/9838】管理员修改字典后，其他用户刷新页面即可同步最新字典
      */
-    async refreshDictItemsIfChanged(dictVersion?: string) {
-      if (!dictVersion || dictVersion === getAuthCache<string>(DB_DICT_VERSION_KEY)) {
+    async refreshDictItemsIfChanged(dictVersion?: string, force = false) {
+      if (!force && (!dictVersion || dictVersion === getAuthCache<string>(DB_DICT_VERSION_KEY))) {
         return;
       }
       const res = await queryAllDictItems();

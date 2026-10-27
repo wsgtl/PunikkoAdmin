@@ -126,9 +126,9 @@ export const usePermissionStore = defineStore('app-permission', {
       const codeList = systemPermission.codeList;
       this.setPermCodeList(codeList);
       this.setAuthData(systemPermission);
-      // 代码逻辑说明: 【issues/9838】字典版本号变化时后台刷新字典缓存，不阻塞菜单构建
+      // 登录后或刷新页面初始化菜单时获取全量字典；兼容后端未返回 dictVersion，不阻塞菜单构建。
       useUserStore()
-        .refreshDictItemsIfChanged(systemPermission.dictVersion)
+        .refreshDictItemsIfChanged(systemPermission.dictVersion, true)
         .catch((e) => console.warn('刷新字典缓存失败', e));
 
       //菜单路由
