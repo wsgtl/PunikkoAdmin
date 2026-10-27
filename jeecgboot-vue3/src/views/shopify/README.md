@@ -253,3 +253,16 @@ const { t } = useI18n();
 - 搜索字段：`requestNo`、`username`、`shopifyCustomerGid`。
 - 按截图展示申请编号、账号、Shopify 客户、状态、进度、当前处理器、重试次数、失败原因、申请时间、完成时间；无写入操作。
 - 状态优先展示 `status_dictText`；已确认的 `SUCCEEDED` 使用中英日成功文案，其他未知状态原样保留，不猜测字典 code。进度使用接口百分数，不再乘以 100；零进度、零重试次数正常显示。
+
+
+## 接口依据
+
+后续 Shopify 接口以项目根目录 `Shopify模块.md` 为准。文档中的 `/yueran` 由现有环境代理处理，业务 API 不重复拼接。
+
+## 元对象授权映射
+
+- 组件：`shopify/metaobjectMapping/ShopifyMetaobjectMappingList`。
+- 列表 GET `/shopify/common/shopifyMetaobjectMapping/list`；编辑 PUT `/edit`。
+- 编辑时获取 `/sys/dict/getDictItems/sys_role,role_name,id`，角色多选以逗号分隔的 `roleIds` 保存；缓存只读并原样提交。
+- 远程抽屉不自动加载缓存或远端数据。刷新字段 GET `/fields?type={type}&refresh=true`；查询数据 GET `/remoteData?type={type}&source=admin&refresh=true`。
+- 未识别的远程响应保留为 JSON 显示，不丢弃信息。角色授权由后端校验；编辑及远程入口使用文档权限标识。
