@@ -282,3 +282,12 @@ const { t } = useI18n();
 ### 全量字典初始化
 
 登录后或刷新浏览器、初始化后台权限菜单时，统一请求 `/sys/dict/queryAllDictItems` 并写入用户字典缓存。即使权限响应没有 `dictVersion` 也会请求；普通页面切换不重复请求。字典请求不阻塞菜单及列表加载。
+
+## Shopify Webhook 配置
+
+- 菜单组件：`shopify/member/webhookConfig/ShopifyWebhookSubscriptionConfigList`。
+- 接口依据：根目录 `Shopify模块.md` 的 Shopify Webhook推送配置章节。
+- 列表 GET `/shopify/member/shopifyWebhookSubscriptionConfig/list`；编辑 PUT `/edit`；同步远程 PUT `/syncRemote?id={id}`；校验远程 GET `/checkRemote?id={id}`（后三者使用同一接口前缀）。
+- 筛选和编辑字典：`shopify_webhook_topic`、`shopify_enabled_status`、`shopify_webhook_sync_status`，读取全局全量字典缓存。
+- 同步状态、远程订阅ID、最后同步/校验时间及错误信息只读；编辑只提交模型业务字段，保留原始字典值及远程快照，不发送审计字段和翻译字段。
+- 编辑、同步、校验成功后刷新列表；“更多”提供校验远程和只读详情。本次不增加新增、删除操作。
