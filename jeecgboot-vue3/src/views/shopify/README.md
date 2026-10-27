@@ -291,3 +291,12 @@ const { t } = useI18n();
 - 筛选和编辑字典：`shopify_webhook_topic`、`shopify_enabled_status`、`shopify_webhook_sync_status`，读取全局全量字典缓存。
 - 同步状态、远程订阅ID、最后同步/校验时间及错误信息只读；编辑只提交模型业务字段，保留原始字典值及远程快照，不发送审计字段和翻译字段。
 - 编辑、同步、校验成功后刷新列表；“更多”提供校验远程和只读详情。本次不增加新增、删除操作。
+
+## Shopify 第三方身份绑定审核
+
+- 菜单组件：`shopify/accountBindingReview/ShopifyThirdAccountBindingReviewList`，与权限接口返回路径一致。
+- GET `/shopify/member/shopifyThirdAccountBindingReview/list` 获取分页列表，默认创建时间倒序；筛选字段为 `customerEmail`、`shopifySub`、`shopifyCustomerGid`。
+- 列表包含候选会员主档、审核状态、邮件次数、申请时间、审核时间和审核人；申请时间对应 `createTime`。
+- 状态读取全局字典 `shopify_third_account_binding_review_status`；候选会员等字段优先显示接口返回的 `_dictText`。
+- 详情调用 GET `/shopify/member/shopifyThirdAccountBindingReview/queryById?id={id}`，展示只读审核及通知信息，按钮权限为 `shopify:shopify_third_account_binding_review:queryById`。
+- 本次仅提供列表、查询、详情，不执行通过、拒绝等审核操作。接口字段依据根目录 `Shopify模块.md`。
