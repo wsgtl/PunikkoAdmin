@@ -235,3 +235,13 @@ const { t } = useI18n();
 - 门店下拉使用 `JDictSelectTag`，表字典 `shopify_store,store_name,id`，由框架请求 `/sys/dict/getDictItems/shopify_store,store_name,id`；提交门店 ID，显示门店名称。
 - 统计列严格使用 `limitNumber`、`productReservedNumber`、`storeReservedNumber`、`reservedNumber`；门店名称快照使用 `storeName`。
 - 支持高级查询、分页、刷新、列设置及只读详情；没有新增、编辑、删除入口。详情基于当前列表记录，不调用未提供的详情接口。
+
+## 每日人工放行（已接入）
+
+- 组件路径：`shopify/reservationDailyUnlock/ShopifyReservationDailyUnlockList`。
+- 列表：`GET /shopify/shopifyReservationDailyUnlock/list`，支持预约模式、门店、Shopify 客户 ID、预约日期查询。
+- 操作提供「放行」「详情」；没有新增或删除入口。弹窗标题及提交文案均为「确认放行」。
+- 每次打开弹窗重新请求 `GET /sys/dict/getDictItems/shopify_store,store_name,id`，选项加载成功且所选门店有效才能提交。
+- 提交：`PUT /shopify/shopifyReservationDailyUnlock/edit`，JSON 包含原记录 `id`、`mode`、`storeRef`、`customerId`、`reservationDate`、`unlockCount`、`reason`、`operatorId`、`operatorName`。ID 保持字符串；次数为大于零的整数；不提交字典显示字段和审计字段。
+- 操作人信息为原记录只读值，不伪造当前操作人；实际审计由后端负责。成功后关闭弹窗并刷新当前列表；失败保留表单。
+- 预约模式当前使用已确认响应中的 `store`、`product` 两种业务值，文案支持中英日；实际模式字典分组/code 尚未提供，后续可替换其选项来源。
