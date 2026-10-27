@@ -62,4 +62,18 @@ export default {
     storeMode: 'Store reservation',
     productMode: 'Product reservation',
   },
+  accountDeletion: {
+    title: 'Shopify account deletion requests',
+    requestNo: 'Request number',
+    username: 'Account',
+    shopifyCustomerGid: 'Shopify customer',
+    status: 'Status',
+    progress: 'Progress',
+    currentHandler: 'Current handler',
+    retryCount: 'Retry count',
+    lastError: 'Failure reason',
+    requestedTime: 'Requested at',
+    completedTime: 'Completed at',
+    succeeded: 'Succeeded',
+  },
 };

@@ -62,4 +62,18 @@ export default {
     storeMode: '门店预约',
     productMode: '商品预约',
   },
+  accountDeletion: {
+    title: 'Shopify账号注销申请',
+    requestNo: '申请编号',
+    username: '账号',
+    shopifyCustomerGid: 'Shopify客户',
+    status: '状态',
+    progress: '进度',
+    currentHandler: '当前处理器',
+    retryCount: '重试次数',
+    lastError: '失败原因',
+    requestedTime: '申请时间',
+    completedTime: '完成时间',
+    succeeded: '处理成功',
+  },
 };

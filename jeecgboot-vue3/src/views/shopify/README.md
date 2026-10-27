@@ -245,3 +245,11 @@ const { t } = useI18n();
 - 提交：`PUT /shopify/shopifyReservationDailyUnlock/edit`，JSON 包含原记录 `id`、`mode`、`storeRef`、`customerId`、`reservationDate`、`unlockCount`、`reason`、`operatorId`、`operatorName`。ID 保持字符串；次数为大于零的整数；不提交字典显示字段和审计字段。
 - 操作人信息为原记录只读值，不伪造当前操作人；实际审计由后端负责。成功后关闭弹窗并刷新当前列表；失败保留表单。
 - 预约模式当前使用已确认响应中的 `store`、`product` 两种业务值，文案支持中英日；实际模式字典分组/code 尚未提供，后续可替换其选项来源。
+
+## Shopify 账号注销申请（已接入）
+
+- 菜单组件路径：`shopify/accountDeletion/ShopifyAccountDeletionList`。
+- 接口：`GET /shopify/accountDeletion/list`；默认 `createTime` 倒序、每页 10 条，使用 `records/total` 分页。
+- 搜索字段：`requestNo`、`username`、`shopifyCustomerGid`。
+- 按截图展示申请编号、账号、Shopify 客户、状态、进度、当前处理器、重试次数、失败原因、申请时间、完成时间；无写入操作。
+- 状态优先展示 `status_dictText`；已确认的 `SUCCEEDED` 使用中英日成功文案，其他未知状态原样保留，不猜测字典 code。进度使用接口百分数，不再乘以 100；零进度、零重试次数正常显示。

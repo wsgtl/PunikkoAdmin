@@ -62,4 +62,18 @@ export default {
     storeMode: '店舗予約',
     productMode: '商品予約',
   },
+  accountDeletion: {
+    title: 'Shopifyアカウント削除申請',
+    requestNo: '申請番号',
+    username: 'アカウント',
+    shopifyCustomerGid: 'Shopify顧客',
+    status: '状態',
+    progress: '進捗',
+    currentHandler: '現在の処理ハンドラー',
+    retryCount: '再試行回数',
+    lastError: '失敗理由',
+    requestedTime: '申請日時',
+    completedTime: '完了日時',
+    succeeded: '処理成功',
+  },
 };
