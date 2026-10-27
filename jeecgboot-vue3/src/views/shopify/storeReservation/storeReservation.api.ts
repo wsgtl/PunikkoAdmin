@@ -35,3 +35,10 @@ export const list = (params: Record<string, unknown>) => defHttp.get<Reservation
 
 // 当前兼容全量字典，页面按 code 选择一组，选项值始终使用后端 value。
 export const loadDictionaries = () => defHttp.get<Record<string, DictItem[]>>({ url: '/sys/dict/queryAllDictItems' });
+
+// 核销接口要求 POST，id 保持字符串并放在 URL 查询参数中。
+export const verifyReservation = (id: string) =>
+  defHttp.post<StoreReservation>(
+    { url: `/shopify/shopifyStoreReservation/verify?id=${encodeURIComponent(id)}` },
+    { errorMessageMode: 'none' }
+  );

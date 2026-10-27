@@ -223,5 +223,15 @@ const { t } = useI18n();
 - 已实现列表、普通搜索、状态筛选、高级查询、行选择、详情、刷新及列设置。
 - 当前字典仅使用 `GET /sys/dict/queryAllDictItems`，下拉项取返回分组中的 `text/value`，不写死中文或状态选项。不调用按 code 查询接口。未来新增按 code 接口时，替换 `storeReservation.api.ts` 的字典加载实现。
 - 预约状态优先匹配 `shopify_store_reservation_status` 或本文档约定的 `shopify_reservation_status`；否则只接受全量字典中唯一的非商品预约状态分组。实际分组名称仍需结合接口响应确认，不按状态值猜测其他业务字典。未找到时状态列回退到 `status_dictText`，最后回退原值。
-- 新增、编辑、删除、核销接口及核销可用状态尚未提供，页面暂不展示这些操作。截图中的过期记录也有核销入口，因此不能自行限定为仅 `pending` 可核销。
+- 核销接口：`POST /shopify/shopifyStoreReservation/verify?id={id}`，ID 保持字符串；`pending`、`expired` 显示核销按钮，`redeemed`、`cancelled` 不显示。请求期间防止重复点击，成功后刷新当前列表。
+- 新增、编辑、删除接口尚未提供，页面暂不展示这些操作。
 - 按钮、搜索字段、表格列是前端配置；字典只提供选项和显示文本，列表数据来自预约列表接口。
+
+## 预约时间统计（已接入）
+
+- 后端菜单组件路径：`shopify/reservationSlotStat/ShopifyReservationSlotStatList`。
+- 列表：`GET /shopify/shopifyReservationSlotStat/list`，默认创建时间倒序、每页 10 条。
+- 查询字段：`storeRef`、`statDate`（YYYY-MM-DD）、`slotTime`。
+- 门店下拉使用 `JDictSelectTag`，表字典 `shopify_store,store_name,id`，由框架请求 `/sys/dict/getDictItems/shopify_store,store_name,id`；提交门店 ID，显示门店名称。
+- 统计列严格使用 `limitNumber`、`productReservedNumber`、`storeReservedNumber`、`reservedNumber`；门店名称快照使用 `storeName`。
+- 支持高级查询、分页、刷新、列设置及只读详情；没有新增、编辑、删除入口。详情基于当前列表记录，不调用未提供的详情接口。

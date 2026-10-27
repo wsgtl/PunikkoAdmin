@@ -10,7 +10,18 @@
       </template>
       <template #status="{ record }">{{ statusText(record) }}</template>
       <template #action="{ record }">
-        <TableAction :actions="[{ label: t('shopify.storeReservation.detail'), onClick: () => showDetail(record) }]" />
+        <TableAction
+          :actions="[
+            {
+              label: t('shopify.storeReservation.verify'),
+              ifShow: ['pending', 'expired'].includes(record.status),
+              loading: verifyingIds.has(record.id),
+              disabled: verifyingIds.has(record.id),
+              onClick: () => handleVerify(record),
+            },
+            { label: t('shopify.storeReservation.detail'), onClick: () => showDetail(record) },
+          ]"
+        />
       </template>
     </BasicTable>
     <BasicModal @register="registerDetail" :title="t('shopify.storeReservation.detail')" :showOkBtn="false" :width="760">
@@ -32,7 +43,7 @@
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useUserStore } from '/@/store/modules/user';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import { list, loadDictionaries } from './storeReservation.api';
+  import { list, loadDictionaries, verifyReservation } from './storeReservation.api';
   import type { DictItem, StoreReservation } from './storeReservation.api';
   import { createColumns, createSearchSchemas, createSuperQueryConfig, reservationFields } from './storeReservation.data';
 
@@ -42,6 +53,7 @@
   const { createMessage } = useMessage();
   const dictionaries = ref<Record<string, DictItem[]>>({});
   const detail = ref<StoreReservation>();
+  const verifyingIds = reactive(new Set<string>());
   const detailFields = [...reservationFields, 'customerId', 'storeRef', 'storeAddress', 'createTime'] as const;
   const superQueryParams = reactive<Record<string, unknown>>({});
   const columns = computed(createColumns);
@@ -82,7 +94,7 @@
         actionColOptions: { xs: 24, md: 12, xl: 6 },
       },
       pagination: { pageSize: 10, pageSizeOptions: ['10', '20', '50', '100'] },
-      actionColumn: { width: 110, fixed: 'right', title: t('shopify.storeReservation.actions') },
+      actionColumn: { width: 170, fixed: 'right', title: t('shopify.storeReservation.actions') },
       scroll: { x: 1750 },
       beforeFetch(params) {
         Object.assign(params, superQueryParams);
@@ -102,6 +114,21 @@
     Object.assign(superQueryParams, params ?? {});
     selectedRowKeys.value = [];
     reload({ page: 1 });
+  }
+  async function handleVerify(record: StoreReservation) {
+    if (!record.id || verifyingIds.has(record.id) || !['pending', 'expired'].includes(record.status)) return;
+    verifyingIds.add(record.id);
+    try {
+      await verifyReservation(record.id);
+      record.status = 'redeemed';
+      record.status_dictText = undefined;
+      createMessage.success(t('shopify.storeReservation.verifySuccess'));
+      await reload();
+    } catch (error) {
+      createMessage.error(error instanceof Error ? error.message : t('sys.api.apiRequestFailed'));
+    } finally {
+      verifyingIds.delete(record.id);
+    }
   }
   function showDetail(record: StoreReservation) {
     detail.value = record;
