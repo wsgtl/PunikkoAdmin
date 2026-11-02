@@ -222,4 +222,17 @@ export default {
     unavailable: '不可预约',
     loadFailed: '加载失败，请关闭后重试',
   },
+  storeRecycle: {
+    title: '门店回收站',
+    hint: '回收站仅展示逻辑删除门店；有预约历史的门店不允许永久删除。',
+    restore: '恢复',
+    delete: '永久删除',
+    detail: '回收站门店详情',
+    createBy: '创建人',
+    updateTime: '删除时间',
+    restoreConfirm: '确定恢复门店“{name}”吗？',
+    deleteConfirm: '确定永久删除门店“{name}”吗？此操作无法恢复，有预约历史的门店不允许永久删除。',
+    restored: '门店已恢复',
+    deleted: '门店已永久删除',
+  },
 };

@@ -323,3 +323,12 @@ const { t } = useI18n();
 - 新增时请求工作日字典，不请求编辑详情。默认未发布、暂停预约、周一至周五、预约周期 1、时段人数 40、每人每天 1 次，依据新增原型。
 - 新增和编辑均使用通用 `JSelectUser` 用户选择弹窗（ID 为值、realname 为文本），通过 `/sys/user/list` 分页查询，每页 10 条，支持账号和姓名查询。
 - 新增提交不含旧记录 ID；编辑仍调用 PUT `/edit`，保留原记录多语言内容。
+
+## 门店回收站
+
+- 菜单入口：`shopify/store/ShopifyStoreRecycleList`，已加入已实现菜单过滤白名单。
+- GET `/shopify/shopifyStore/recycle/list`，支持代码、名称筛选和默认创建时间倒序分页。
+- 详情 GET `/shopify/shopifyStore/recycle/queryById?id={id}`；恢复 POST `/shopify/shopifyStore/recycle/restore?id={id}`；永久删除 DELETE `/shopify/shopifyStore/recycle/physicalDelete?id={id}`。
+- 恢复及永久删除均弹窗确认，显示门店名称；永久删除提示不可恢复和有预约历史禁止删除，最终限制由后端校验。失败显示后台错误，不移除列表记录；成功刷新列表首页。
+- 按钮权限分别使用 `recycleList`、`recycleRestore`、`recyclePhysicalDelete`（前缀 `shopify:shopify_store:`）。
+- 文档模型未提供独立删除时间字段，当前删除时间列按回收站记录 `updateTime` 展示，后续如有专用字段应调整映射。

@@ -222,4 +222,17 @@ export default {
     unavailable: 'Unavailable',
     loadFailed: 'Loading failed. Close and retry.',
   },
+  storeRecycle: {
+    title: 'Store recycle bin',
+    hint: 'Only soft-deleted stores appear here. Stores with reservation history cannot be permanently deleted.',
+    restore: 'Restore',
+    delete: 'Delete permanently',
+    detail: 'Deleted store details',
+    createBy: 'Created by',
+    updateTime: 'Deleted at',
+    restoreConfirm: 'Restore store {name}?',
+    deleteConfirm: 'Permanently delete store {name}? This cannot be undone. Stores with reservation history cannot be permanently deleted.',
+    restored: 'Store restored',
+    deleted: 'Store permanently deleted',
+  },
 };

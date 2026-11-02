@@ -222,4 +222,17 @@ export default {
     unavailable: '予約不可',
     loadFailed: '読込に失敗しました。閉じて再試行してください。',
   },
+  storeRecycle: {
+    title: '店舗のごみ箱',
+    hint: '論理削除済み店舗のみ表示します。予約履歴のある店舗は完全削除できません。',
+    restore: '復元',
+    delete: '完全削除',
+    detail: '削除済み店舗の詳細',
+    createBy: '作成者',
+    updateTime: '削除日時',
+    restoreConfirm: '店舗「{name}」を復元しますか？',
+    deleteConfirm: '店舗「{name}」を完全削除しますか？元に戻せません。予約履歴のある店舗は完全削除できません。',
+    restored: '店舗を復元しました',
+    deleted: '店舗を完全削除しました',
+  },
 };
