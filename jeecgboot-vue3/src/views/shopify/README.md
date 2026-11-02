@@ -355,3 +355,14 @@ const { t } = useI18n();
 - “营业 + 整天”须等门店营业时间加载成功后才能保存；新增、编辑均使用该规则，构造提交副本，不修改隐藏输入的草稿值。
 
 - 营业日历“更多 → 删除”使用 `shopify:shopify_store_calendar:delete` 权限，弹窗确认门店与日期后调用 DELETE `/shopify/shopifyStoreCalendar/delete?id={id}`，成功刷新首页，失败保留记录。
+
+## 门店多语言内容
+
+- 菜单组件 `shopify/storeI18n/ShopifyStoreI18nList`，在后台授权菜单基础上加入已实现白名单。
+- GET `/shopify/shopifyStoreI18n/list`，默认创建时间倒序、每页 10 条，支持门店 `storeId`、语言 `language` 和门店名称 `storeName` 筛选。
+- 门店来自 GET `/sys/dict/getDictItems/shopify_store,store_name,id`，语言来自全局 `shopify_language` 字典（zh/en/ja）。
+- 新增 POST `/shopify/shopifyStoreI18n/add`，编辑 PUT `/shopify/shopifyStoreI18n/edit`；编辑从列表完整记录回填，保存仅发送业务字段，编辑额外包含 ID。
+- 门店、语言、门店名称必填；门店事项和预约公告分别使用独立整行富文本编辑器，支持地址和备注。保存失败保留输入，成功刷新列表。
+- 按钮权限为 `shopify:shopify_store_i18n:add` / `edit`。本页未实现导入导出；不向真实后台提交测试数据。
+
+- 门店多语言列表操作显示“编辑”；更多菜单提供详情与删除，分别受 `queryById`、`delete` 权限控制。详情 GET `/shopify/shopifyStoreI18n/queryById?id={id}`，弹窗只读且隐藏确认按钮；删除先确认门店及语言，再 DELETE `/shopify/shopifyStoreI18n/delete?id={id}`，成功刷新首页。
