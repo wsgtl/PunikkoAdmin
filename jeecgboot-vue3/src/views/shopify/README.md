@@ -300,3 +300,26 @@ const { t } = useI18n();
 - 状态读取全局字典 `shopify_third_account_binding_review_status`；候选会员等字段优先显示接口返回的 `_dictText`。
 - 详情调用 GET `/shopify/member/shopifyThirdAccountBindingReview/queryById?id={id}`，展示只读审核及通知信息，按钮权限为 `shopify:shopify_third_account_binding_review:queryById`。
 - 本次仅提供列表、查询、详情，不执行通过、拒绝等审核操作。接口字段依据根目录 `Shopify模块.md`。
+
+## 已实现菜单过滤
+
+后台模式下，先由 `/sys/permission/getUserPermissionByToken` 返回当前账号已授权菜单，再通过 `src/router/helper/implementedMenu.ts` 的组件白名单过滤，随后才进行组件解析、路由注册和侧边栏生成。保留有可见子项的父目录，删除空目录，目录默认入口指向保留的首个子项。不会添加后台未授权菜单；按钮权限仍使用原权限数据。新增完成页面后需同步维护白名单。
+
+当前保留：门店预约管理、预约时间统计、每日人工放行、账号注销、元对象授权映射、客户订阅配置、Webhook配置、第三方身份绑定审核。
+
+## 门店管理
+
+- 菜单组件 `shopify/store/ShopifyStoreList` 已加入已实现白名单，仍先由后台账号权限决定是否可见。
+- 列表 GET `/shopify/shopifyStore/list`；编辑回填 GET `/shopify/shopifyStore/queryFormById?id={id}`；保存 PUT `/shopify/shopifyStore/edit`。
+- 编辑时请求 `/sys/dict/getDictItems/shopify_business_day`。店长、副店长、店员按 ID 调用 `/sys/user/list?isMultiTranslate=true&pageSize=1&id={id}` 回填，并支持姓名搜索选择；ID 始终作为字符串保存。
+- 发布/预约状态使用全局 `shopify_store_publish_status` / `shopify_store_reservation_status` 字典；公告和门店事项使用现有富文本组件。
+- `queryFormById` 返回的 `shopifyStoreI18nList` 原样保留并随基本资料保存，当前不编辑多语言内容。
+- 预约状态 GET `/shopify/user/reservationSlots/store?storeRef={id}`，按 `slotList[].date` 分页签并展示 `slots`，不叠加重复的 `slotMap` 数据；仅查看，不提供时间段人数修改。
+- 尚未提供删除、导入导出、预约限定和取消限定功能。
+
+### 新增门店
+
+- 新增按钮受 `shopify:shopify_store:add` 权限控制，确认调用 POST `/shopify/shopifyStore/add`，成功后刷新列表首页。
+- 新增时请求工作日字典，不请求编辑详情。默认未发布、暂停预约、周一至周五、预约周期 1、时段人数 40、每人每天 1 次，依据新增原型。
+- 新增和编辑均使用通用 `JSelectUser` 用户选择弹窗（ID 为值、realname 为文本），通过 `/sys/user/list` 分页查询，每页 10 条，支持账号和姓名查询。
+- 新增提交不含旧记录 ID；编辑仍调用 PUT `/edit`，保留原记录多语言内容。

@@ -8,6 +8,7 @@ import { useAppStoreWithOut } from './app';
 import { toRaw } from 'vue';
 import { transformObjToRoute, flatMultiLevelRoutes, addSlashToRouteComponent } from '/@/router/helper/routeHelper';
 import { transformRouteToMenu } from '/@/router/helper/menuHelper';
+import { filterImplementedMenus } from '/@/router/helper/implementedMenu';
 
 import projectSetting from '/@/settings/projectSetting';
 
@@ -132,7 +133,7 @@ export const usePermissionStore = defineStore('app-permission', {
         .catch((e) => console.warn('刷新字典缓存失败', e));
 
       //菜单路由
-      const routeList = systemPermission.menu;
+      const routeList = filterImplementedMenus(systemPermission.menu);
       return routeList;
     },
     async buildRoutesAction(): Promise<AppRouteRecordRaw[]> {
