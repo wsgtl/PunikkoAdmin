@@ -332,3 +332,26 @@ const { t } = useI18n();
 - 恢复及永久删除均弹窗确认，显示门店名称；永久删除提示不可恢复和有预约历史禁止删除，最终限制由后端校验。失败显示后台错误，不移除列表记录；成功刷新列表首页。
 - 按钮权限分别使用 `recycleList`、`recycleRestore`、`recyclePhysicalDelete`（前缀 `shopify:shopify_store:`）。
 - 文档模型未提供独立删除时间字段，当前删除时间列按回收站记录 `updateTime` 展示，后续如有专用字段应调整映射。
+
+## 营业时间管理
+
+- 菜单组件：`shopify/storeCalendar/ShopifyStoreCalendarList`，已加入已实现菜单白名单，按后台授权显示。
+- GET `/shopify/shopifyStoreCalendar/list`，默认创建时间倒序、每页 10 条，支持门店、日期和规则类型筛选。
+- 门店选项 GET `/sys/dict/getDictItems/shopify_store,store_name,id`；规则读取全局字典 `shopify_store_calendar_rule_type`，`open` 为营业、`close` 为休息。
+- 新增 POST `/shopify/shopifyStoreCalendar/add`；编辑 PUT `/shopify/shopifyStoreCalendar/edit`。请求统一通过现有代理/API 基地址，不重复拼接 `/yueran`。
+- 新增默认营业，编辑从列表记录回填；门店、日期、规则类型必填。开始及结束时间可一起留空，填写时须成对且结束晚于开始；休息规则留空表示全天休息。
+- 日期提交为 `YYYY-MM-DD`，时间为 `HH:mm`，空时间提交空字符串；ID 保持字符串。保存只发送业务字段，编辑额外带 ID，不发送审计字段和字典翻译字段。
+- 新增和编辑按钮分别使用 `shopify:shopify_store_calendar:add`、`shopify:shopify_store_calendar:edit` 权限；保存成功刷新列表，失败保留表单。门店加载失败可在弹窗重试。
+- 本页提供查询、新增、编辑和删除，不包含导入、导出；接口校验使用本地模拟，不向真实后台提交测试数据。
+- 选择门店后通过 GET `/shopify/shopifyStore/queryFormById?id={id}` 读取并展示基础营业时间。门店字典只有 ID/名称，不能用于推断营业时间。局部休息时段提交前检查是否在基础营业时间内；全天休息仍提交两个空时间，营业和休息规则的时间段均校验范围。
+- 时间按秒比较，兼容 `HH:mm` 与 `HH:mm:ss`；切换门店时忽略旧请求响应，读取失败可重试并阻止未校验的局部休息提交。后端仍是最终校验依据。
+
+### 营业日历时间范围
+
+- 新增默认“整天”，隐藏时间输入；营业规则提交所选门店的默认起止营业时间，休息规则提交两个空时间；切换到“时间段”后必须填写开始、结束时间。编辑根据已有时间自动回填模式，模式仅用于前端，不新增接口字段。
+- 营业和休息的时间段均限制在所选门店默认营业时间内，时间选择器按小时、分钟禁用越界选项，同时限制开始早于结束；保存时再次校验。
+- 切换门店重新获取营业时间，加载期间禁止选择时间；原时段越界则清空并提示重新选择，范围内的时段保留。
+
+- “营业 + 整天”须等门店营业时间加载成功后才能保存；新增、编辑均使用该规则，构造提交副本，不修改隐藏输入的草稿值。
+
+- 营业日历“更多 → 删除”使用 `shopify:shopify_store_calendar:delete` 权限，弹窗确认门店与日期后调用 DELETE `/shopify/shopifyStoreCalendar/delete?id={id}`，成功刷新首页，失败保留记录。
