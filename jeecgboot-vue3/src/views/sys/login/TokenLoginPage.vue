@@ -1,11 +1,11 @@
 <template>
     <div class="app-loading">
         <div class="app-loading-wrap">
-            <img src="/resource/img/logo.png" class="app-loading-logo" alt="Logo">
+            <img src="/resource/img/logo.png" class="app-loading-logo" alt="Punikko">
             <div class="app-loading-dots">
                 <span class="dot dot-spin"><i></i><i></i><i></i><i></i></span>
             </div>
-            <div class="app-loading-title">JeecgBoot 企业级低代码平台</div>
+            <div class="app-loading-title">punikko管理端</div>
         </div>
     </div>
 </template>
@@ -136,7 +136,8 @@
 
     .app-loading .app-loading-logo {
         display: block;
-        width: 90px;
+        width: 180px;
+          height: auto;
         margin: 0 auto;
         margin-bottom: 20px;
     }

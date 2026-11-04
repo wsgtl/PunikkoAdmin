@@ -28,7 +28,13 @@ export function initAppConfigStore() {
   const appStore = useAppStore();
   let projCfg: ProjectConfig = Persistent.getLocal(PROJ_CFG_KEY) as ProjectConfig;
   projCfg = deepMerge(projectSetting, projCfg || {});
-  const darkMode = appStore.getDarkMode;
+  // 品牌配色固定为粉色浅色主题，覆盖旧浏览器缓存中的蓝色/深色配置。
+  projCfg.themeColor = '#e995a0';
+  projCfg.themeMode = ThemeEnum.LIGHT;
+  projCfg.headerSetting = { ...projCfg.headerSetting, bgColor: '#ffffff', theme: ThemeEnum.LIGHT };
+  projCfg.menuSetting = { ...projCfg.menuSetting, bgColor: '#ffffff', theme: ThemeEnum.LIGHT, isThemeBright: false };
+  appStore.setDarkMode(ThemeEnum.LIGHT);
+  const darkMode = ThemeEnum.LIGHT;
   const {
     colorWeak,
     grayMode,
@@ -51,13 +57,8 @@ export function initAppConfigStore() {
 
   // init dark mode
   updateDarkTheme(darkMode);
-  if (darkMode === ThemeEnum.DARK) {
-    updateHeaderBgColor();
-    updateSidebarBgColor();
-  } else {
-    headerBgColor && updateHeaderBgColor(headerBgColor);
-    bgColor && updateSidebarBgColor(bgColor);
-  }
+  headerBgColor && updateHeaderBgColor(headerBgColor);
+  bgColor && updateSidebarBgColor(bgColor);
   // init store
   localeStore.initLocale();
 

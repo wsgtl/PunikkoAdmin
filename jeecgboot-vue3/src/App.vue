@@ -8,6 +8,7 @@
 
 <script lang="ts" setup>
   import { watch, ref } from 'vue';
+  import { punikkoTheme } from '/@/settings/punikkoTheme';
   import { theme } from 'ant-design-vue';
   import { ConfigProvider } from 'ant-design-vue';
   import { AppProvider } from '/@/components/Application';
@@ -66,12 +67,13 @@
     { immediate: true }
   );
   watch(
-    appStore.getProjectConfig,
+    () => appStore.getProjectConfig,
     (newValue) => {
       const primary = newValue.themeColor;
       const result = {
         ...appTheme.value,
         ...{
+          components: punikkoTheme.components,
           token: {
             colorPrimary: primary,
             wireframe: true,
@@ -84,6 +86,7 @@
             sizeUnit: 4,
             colorWarning: '#EFBD47',
             colorError: '#ED6F6F',
+            ...punikkoTheme.token,
             fontFamily:
               '-apple-system,BlinkMacSystemFont,Segoe UI,PingFang SC,Hiragino Sans GB,Microsoft YaHei,Helvetica Neue,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol',
           },

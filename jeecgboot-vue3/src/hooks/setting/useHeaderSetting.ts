@@ -45,7 +45,8 @@ export function useHeaderSetting() {
 
   const getShowFullScreen = computed(() => appStore.getHeaderSetting.showFullScreen);
 
-  const getShowNotice = computed(() => appStore.getHeaderSetting.showNotice);
+  // 固定隐藏入口，避免历史本地配置重新开启。
+  const getShowNotice = computed(() => false);
 
   const getShowBread = computed(() => {
     return unref(getMenuMode) !== MenuModeEnum.HORIZONTAL && unref(getShowBreadCrumb) && !unref(getSplit);

@@ -26,7 +26,8 @@ export function useRootSetting() {
 
   const getUseOpenBackTop = computed(() => appStore.getProjectConfig.useOpenBackTop);
 
-  const getShowSettingButton = computed(() => appStore.getProjectConfig.showSettingButton);
+  // 固定隐藏入口，避免历史本地配置重新开启。
+  const getShowSettingButton = computed(() => false);
 
   const getUseErrorHandle = computed(() => appStore.getProjectConfig.useErrorHandle);
 

@@ -1,5 +1,5 @@
 import type { ProjectConfig } from '../../types/config';
-import { MenuTypeEnum, MenuModeEnum, TriggerEnum, MixSidebarTriggerEnum } from '../enums/menuEnum';
+import { MenuTypeEnum, TriggerEnum, MixSidebarTriggerEnum } from '../enums/menuEnum';
 import { CacheTypeEnum } from '../enums/cacheEnum';
 import {
   ContentEnum,
@@ -16,12 +16,12 @@ import { getConfigByMenuType } from '../utils/getConfigByMenuType';
 const menuType = MenuTypeEnum.SIDEBAR;
 
 // update-begin--author:liaozhiyang---date:20251201---for【QQYUN-14176】修改一个配置就能切换默认四个主题，不需要额外修改颜色等
-const { themeColor, headerBgColor, sideBgColor, split, mode } = getConfigByMenuType(menuType);
+const { split, mode } = getConfigByMenuType(menuType);
 // update-end--author:liaozhiyang---date:20251201---for【QQYUN-14176】修改一个配置就能切换默认四个主题，不需要额外修改颜色等
 // ! 改动后需要清空浏览器缓存
 const setting: ProjectConfig = {
   // 是否显示SettingButton
-  showSettingButton: true,
+  showSettingButton: false,
 
   // 是否显示主题切换按钮
   showDarkModeToggle: true,
@@ -46,7 +46,7 @@ const setting: ProjectConfig = {
   // SessionTimeoutProcessingEnum.PAGE_COVERAGE: 生成登录弹窗，覆盖当前页面
   sessionTimeoutProcessing: SessionTimeoutProcessingEnum.ROUTE_JUMP,
   // 项目主题色 - 根据导航栏模式确定主题色动态设置
-  themeColor: themeColor,
+  themeColor: '#e995a0',
   // 项目主题模式
   themeMode: darkMode,
 
@@ -74,7 +74,7 @@ const setting: ProjectConfig = {
   // 头部配置
   headerSetting: {
     // 背景色
-    bgColor: headerBgColor,
+    bgColor: '#ffffff',
     // 固定头部
     fixed: true,
     // 是否显示顶部
@@ -88,7 +88,7 @@ const setting: ProjectConfig = {
     // 显示官网按钮
     showDoc: false,
     // 显示消息中心按钮
-    showNotice: true,
+    showNotice: false,
     // 显示菜单搜索按钮
     showSearch: true,
   },
@@ -96,7 +96,7 @@ const setting: ProjectConfig = {
   // 菜单配置
   menuSetting: {
     // 背景色
-    bgColor: sideBgColor,
+    bgColor: '#ffffff',
     // 是否固定住左侧菜单
     fixed: true,
     // 菜单折叠

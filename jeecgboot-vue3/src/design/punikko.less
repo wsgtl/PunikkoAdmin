@@ -1,0 +1,65 @@
+// Punikko 浅色品牌主题。
+html[data-theme='light'] {
+  .jeecg-app-logo__title {
+    color: #d98290 !important;
+  }
+  .jeecg-menu-light {
+    color: #d98290;
+    .jeecg-menu-submenu > .jeecg-menu {
+      background: #fceef0;
+      .jeecg-menu-item:not(.jeecg-menu-item-selected) {
+        background: #fceef0;
+        &:hover {
+          background: #f8dfe4;
+        }
+      }
+    }
+    .jeecg-menu,
+    .jeecg-menu-item,
+    .jeecg-menu-submenu-title {
+      color: #d98290 !important;
+    }
+    // SimpleMenu 有独立的黑色图标规则，统一跟随所在菜单项颜色。
+    .jeecg-menu-item,
+    .jeecg-menu-submenu-title {
+      .anticon,
+      .app-iconify,
+      .jeecg-menu-submenu-title-icon {
+        color: inherit !important;
+      }
+    }
+    .jeecg-menu-item-selected {
+      background: #e995a0 !important;
+      color: #fff !important;
+    }
+  }
+  // 表格工具栏使用裸图标而非 Ant Button，统一补齐参考图尺寸。
+  .table-settings {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    > .anticon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      margin-right: 0;
+      border: 1px solid #e1e4eb;
+      border-radius: 4px;
+      background: #fff;
+      color: #7c8494;
+      cursor: pointer;
+      font-size: 17px;
+      &:first-child,
+      &:hover {
+        color: #d77c87;
+        border-color: #d77c87;
+      }
+      svg {
+        width: 17px;
+        height: 17px;
+      }
+    }
+  }
+}

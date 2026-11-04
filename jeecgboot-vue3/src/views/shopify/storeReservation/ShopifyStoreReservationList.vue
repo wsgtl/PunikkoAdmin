@@ -8,7 +8,9 @@
           @search="handleSuperQuery"
         />
       </template>
-      <template #status="{ record }">{{ statusText(record) }}</template>
+      <template #status="{ record }">
+        <a-tag :bordered="false" :color="record.status === 'redeemed' ? 'success' : record.status === 'expired' ? 'error' : 'default'">{{ statusText(record) }}</a-tag>
+      </template>
       <template #action="{ record }">
         <TableAction
           :actions="[
