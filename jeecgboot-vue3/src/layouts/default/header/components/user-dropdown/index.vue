@@ -1,7 +1,12 @@
 <template>
-  <Dropdown placement="bottomLeft" :overlayClassName="`${prefixCls}-dropdown-overlay`">
+  <Dropdown :placement="placement" :overlayClassName="`${prefixCls}-dropdown-overlay`">
     <span :class="[prefixCls, `${prefixCls}--${theme}`]" class="flex">
-      <img :class="`${prefixCls}__header`" :src="getAvatarUrl" />
+      <span :class="`${prefixCls}__header`" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="8" r="3.5" />
+          <path d="M5.5 20v-2a6.5 6.5 0 0 1 13 0v2" />
+        </svg>
+      </span>
       <span :class="`${prefixCls}__info hidden md:block`">
         <span :class="`${prefixCls}__name  `" class="truncate">
           {{ getUserInfo.realname }}
@@ -15,7 +20,6 @@
         <MenuDivider v-if="getShowDoc" />
         <MenuItem itemKey="account" :text="t('layout.header.dropdownItemSwitchAccount')" icon="ant-design:setting-outlined" />
         <MenuItem itemKey="password" :text="t('layout.header.dropdownItemSwitchPassword')" icon="ant-design:edit-outlined" />
-        <MenuItem itemKey="depart" :text="t('layout.header.dropdownItemSwitchDepart')" icon="ant-design:cluster-outlined" />
         <MenuItem itemKey="cache" :text="t('layout.header.dropdownItemRefreshCache')" icon="ion:sync-outline" />
         <!-- <MenuItem
             v-if="getUseLockPage"
@@ -28,7 +32,6 @@
     </template>
   </Dropdown>
   <LockAction v-if="lockActionVisible" ref="lockActionRef" @register="register" />
-  <DepartSelect ref="loginSelectRef" />
   <UpdatePassword v-if="passwordVisible" ref="updatePasswordRef" />
 </template>
 <script lang="ts">
@@ -46,7 +49,6 @@
   import { useModal } from '/@/components/Modal';
   import { useMessage } from '/src/hooks/web/useMessage';
   import { useGo } from '/@/hooks/web/usePage';
-  import headerImg from '/@/assets/images/header.jpg';
   import { propTypes } from '/@/utils/propTypes';
   import { openWindow } from '/@/utils';
 
@@ -55,11 +57,10 @@
   import { refreshCache, queryAllDictItems } from '/@/views/system/dict/dict.api';
   import { DB_DICT_DATA_KEY } from '/src/enums/cacheEnum';
   import { removeAuthCache, setAuthCache } from '/src/utils/auth';
-  import { getFileAccessHttpUrl } from '/@/utils/common/compUtils';
   import { getRefPromise } from '/@/utils/index';
   import { refreshDragCache, refreshHomeCache } from "@/api/common/api";
 
-  type MenuEvent = 'logout' | 'doc' | 'lock' | 'cache' | 'depart' | 'defaultHomePage' | 'password' | 'account';
+  type MenuEvent = 'logout' | 'doc' | 'lock' | 'cache' | 'defaultHomePage' | 'password' | 'account';
   const { createMessage } = useMessage();
   export default defineComponent({
     name: 'UserDropdown',
@@ -69,11 +70,11 @@
       MenuItem: createAsyncComponent(() => import('./DropMenuItem.vue')),
       MenuDivider: Menu.Divider,
       LockAction: createAsyncComponent(() => import('../lock/LockModal.vue')),
-      DepartSelect: createAsyncComponent(() => import('./DepartSelect.vue')),
       UpdatePassword: createAsyncComponent(() => import('./UpdatePassword.vue')),
     },
     props: {
       theme: propTypes.oneOf(['dark', 'light']),
+      placement: propTypes.oneOf(['topLeft', 'topRight', 'bottomLeft', 'bottomRight']).def('bottomLeft'),
     },
     setup() {
       const { prefixCls } = useDesign('header-user-dropdown');
@@ -85,25 +86,12 @@
       const lockActionVisible = ref(false);
       const lockActionRef = ref(null);
 
-      const getUserInfo = computed(() => {
-        const { realname = '', avatar, desc } = userStore.getUserInfo || {};
-        return { realname, avatar: avatar || headerImg, desc };
-      });
-
-      const getAvatarUrl = computed(() => {
-        let { avatar } = getUserInfo.value;
-        if (avatar == headerImg) {
-          return avatar;
-        } else {
-          return getFileAccessHttpUrl(avatar);
-        }
-      });
+      const getUserInfo = computed(() => ({ realname: userStore.getUserInfo?.realname || '' }));
 
       const [register, { openModal }] = useModal();
       /**
        * 多部门弹窗逻辑
        */
-      const loginSelectRef = ref();
       // 代码逻辑说明: 【QQYUN-6333】空路由问题—首次访问资源太大
       async function handleLock() {
         await getRefPromise(lockActionRef);
@@ -137,10 +125,6 @@
           createMessage.error(t('layout.header.refreshCacheFailure'));
         }
       }
-      // 切换部门
-      function updateCurrentDepart() {
-        loginSelectRef.value.show();
-      }
       // 修改密码
       const updatePasswordRef = ref();
       // 代码逻辑说明: 【QQYUN-6333】空路由问题—首次访问资源太大
@@ -163,9 +147,6 @@
           case 'cache':
             clearCache();
             break;
-          case 'depart':
-            updateCurrentDepart();
-            break;
           case 'password':
             updatePassword();
             break;
@@ -180,12 +161,10 @@
         prefixCls,
         t,
         getUserInfo,
-        getAvatarUrl,
         handleMenuClick,
         getShowDoc,
         register,
         getUseLockPage,
-        loginSelectRef,
         updatePasswordRef,
         passwordVisible,
         lockActionVisible,
@@ -212,7 +191,18 @@
     }
 
     &__header {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      width: 26px;
+      height: 26px;
+      margin-right: 8px;
       border-radius: 50%;
+      background: #fceef0;
+      color: #d77c87;
+
+      svg { width: 18px; height: 18px; }
     }
 
     &__name {

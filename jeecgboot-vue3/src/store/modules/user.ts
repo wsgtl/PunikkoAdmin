@@ -208,7 +208,7 @@ export const useUserStore = defineStore('app-user', {
     async afterLoginAction(goHome?: boolean, data?: any): Promise<any | null> {
       if (!this.getToken) return null;
       //获取用户信息
-      const userInfo = await this.getUserInfoAction();
+      await this.getUserInfoAction();
       const sessionTimeout = this.sessionTimeout;
       if (sessionTimeout) {
         this.setSessionTimeout(false);
@@ -247,7 +247,7 @@ export const useUserStore = defineStore('app-user', {
           goHome && window.location.replace(getCasServiceUrl());
           //update-end---author:wangshuai ---date:20260810  for：[issues/9797]开启CAS验证，回跳地址错误------------  
         }else{
-          goHome && (await router.replace((userInfo && userInfo.homePath) || PageEnum.BASE_HOME));
+          goHome && (await router.replace(PageEnum.BASE_HOME));
         }
       }
       return data;

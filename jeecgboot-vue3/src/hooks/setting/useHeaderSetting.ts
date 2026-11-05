@@ -8,10 +8,12 @@ import { useMenuSetting } from '/@/hooks/setting/useMenuSetting';
 import { useRootSetting } from '/@/hooks/setting/useRootSetting';
 import { useFullContent } from '/@/hooks/web/useFullContent';
 import { MenuModeEnum } from '/@/enums/menuEnum';
+import { useSidebarUserBar } from '/@/hooks/setting/useSidebarUserBar';
 
 export function useHeaderSetting() {
   const { getFullContent } = useFullContent();
   const appStore = useAppStore();
+  const showSidebarUserBar = useSidebarUserBar();
 
   const getShowFullHeaderRef = computed(() => {
     return !unref(getFullContent) && unref(getShowMixHeaderRef) && unref(getShowHeader) && !unref(getIsTopMenu) && !unref(getIsMixSidebar);
@@ -33,7 +35,7 @@ export function useHeaderSetting() {
 
   const getHeaderTheme = computed(() => appStore.getHeaderSetting.theme);
 
-  const getShowHeader = computed(() => appStore.getHeaderSetting.show);
+  const getShowHeader = computed(() => appStore.getHeaderSetting.show && !unref(showSidebarUserBar));
 
   const getFixed = computed(() => appStore.getHeaderSetting.fixed);
 
@@ -45,8 +47,8 @@ export function useHeaderSetting() {
 
   const getShowFullScreen = computed(() => appStore.getHeaderSetting.showFullScreen);
 
-  // 固定隐藏入口，避免历史本地配置重新开启。
-  const getShowNotice = computed(() => false);
+  // 消息通知入口遵循头部配置。
+  const getShowNotice = computed(() => appStore.getHeaderSetting.showNotice);
 
   const getShowBread = computed(() => {
     return unref(getMenuMode) !== MenuModeEnum.HORIZONTAL && unref(getShowBreadCrumb) && !unref(getSplit);

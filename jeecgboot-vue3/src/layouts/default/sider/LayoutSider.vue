@@ -17,7 +17,10 @@
     <template #trigger v-if="getShowTrigger">
       <LayoutTrigger />
     </template>
-    <LayoutMenu :theme="getMenuTheme" :menuMode="getMode" :splitType="getSplitType" />
+    <div class="sidebar-menu-area" :class="{ 'has-user-bar': showSidebarUserBar, 'is-collapsed': getCollapsed }">
+      <LayoutMenu :theme="getMenuTheme" :menuMode="getMode" :splitType="getSplitType" />
+    </div>
+    <SidebarUserBar v-if="showSidebarUserBar" :collapsed="getCollapsed" />
     <DragBar ref="dragBarRef" />
   </Sider>
 </template>
@@ -38,11 +41,14 @@
   import { useDesign } from '/@/hooks/web/useDesign';
 
   import DragBar from './DragBar.vue';
+  import SidebarUserBar from './SidebarUserBar.vue';
+  import { useSidebarUserBar } from '/@/hooks/setting/useSidebarUserBar';
 
   export default defineComponent({
     name: 'LayoutSideBar',
-    components: { Sider: Layout.Sider, LayoutMenu, DragBar, LayoutTrigger },
+    components: { Sider: Layout.Sider, LayoutMenu, DragBar, LayoutTrigger, SidebarUserBar },
     setup() {
+      const showSidebarUserBar = useSidebarUserBar();
       const dragBarRef = ref<ElRef>(null);
       const sideRef = ref<ElRef>(null);
 
@@ -108,6 +114,7 @@
 
       return {
         prefixCls,
+        showSidebarUserBar,
         sideRef,
         dragBarRef,
         getIsMobile,
@@ -135,6 +142,13 @@
 
   .@{prefix-cls} {
     z-index: @layout-sider-fixed-z-index;
+
+    .sidebar-menu-area {
+      height: 100%;
+      &.has-user-bar { height: calc(100% - 56px); }
+      &.has-user-bar.is-collapsed { height: calc(100% - 88px); }
+    }
+
 
     &--fixed {
       position: fixed !important;

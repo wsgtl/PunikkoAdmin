@@ -21,19 +21,19 @@
 
     <!-- action  -->
     <div :class="`${prefixCls}-action`">
-      <AppSearch :class="`${prefixCls}-action__item `" v-if="getShowSearch" />
+      <AppSearch :class="`${prefixCls}-action__item `" v-if="getShowSearch && !showSidebarUserBar" />
 
       <ErrorAction v-if="getUseErrorHandle" :class="`${prefixCls}-action__item error-action`" />
 
-      <Notify v-if="getShowNotice" :class="`${prefixCls}-action__item notify-item`" />
+      <Notify v-if="getShowNotice && !showSidebarUserBar" :class="`${prefixCls}-action__item notify-item`" />
 
       <FullScreen v-if="getShowFullScreen" :class="`${prefixCls}-action__item fullscreen-item`" />
 
       <LockScreen v-if="getUseLockPage" />
 
-      <AppLocalePicker v-if="getShowLocalePicker" :reload="true" :showText="false" :class="`${prefixCls}-action__item`" />
+      <AppLocalePicker v-if="getShowLocalePicker && !showSidebarUserBar" :reload="true" :showText="false" :class="`${prefixCls}-action__item`" />
 
-      <UserDropDown :theme="getHeaderTheme" />
+      <UserDropDown v-if="!showSidebarUserBar" :theme="getHeaderTheme" />
 
       <SettingDrawer v-if="getShowSetting" :class="`${prefixCls}-action__item`" />
       <!-- ai助手 -->
@@ -54,6 +54,7 @@
 
   import { AppSearch } from '/@/components/Application';
 
+  import { useSidebarUserBar } from '/@/hooks/setting/useSidebarUserBar';
   import { useHeaderSetting } from '/@/hooks/setting/useHeaderSetting';
   import { useMenuSetting } from '/@/hooks/setting/useMenuSetting';
   import { useRootSetting } from '/@/hooks/setting/useRootSetting';
@@ -102,6 +103,7 @@
     setup(props) {
       const { prefixCls } = useDesign('layout-header');
       const userStore = useUserStore();
+      const showSidebarUserBar = useSidebarUserBar();
       const { getShowTopMenu, getShowHeaderTrigger, getSplit, getIsMixMode, getMenuWidth, getIsMixSidebar } = useMenuSetting();
       const { getUseErrorHandle, getShowSettingButton, getSettingButtonPosition, getAiIconShow } = useRootSetting();
       const { title, isQiankunMicro } = useGlobSetting();
@@ -188,6 +190,7 @@
 
       return {
         prefixCls,
+        showSidebarUserBar,
         getHeaderClass,
         getShowHeaderLogo,
         getHeaderTheme,

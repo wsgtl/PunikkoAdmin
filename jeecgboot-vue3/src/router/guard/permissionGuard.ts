@@ -7,7 +7,6 @@ import { useUserStoreWithOut } from '/@/store/modules/user';
 
 import { PAGE_NOT_FOUND_ROUTE } from '/@/router/routes/basic';
 
-import { RootRoute } from '/@/router/routes';
 
 import {isOAuth2AppEnv, isOAuth2DingAppEnv} from '/@/views/sys/login/useLogin';
 import { OAUTH2_THIRD_LOGIN_TENANT_ID } from "/@/enums/cacheEnum";
@@ -24,7 +23,6 @@ const SYS_FILES_PATH = PageEnum.SYS_FILES_PATH;
 // 邮件中的跳转地址,对应此路由,携带token免登录直接去办理页面
 const TOKEN_LOGIN = PageEnum.TOKEN_LOGIN;
 
-const ROOT_PATH = RootRoute.path;
 
 // 代码逻辑说明: [VUEN-2472]分享免登录------------
 const whitePathList: PageEnum[] = [LOGIN_PATH, OAUTH2_LOGIN_PAGE_PATH,SYS_FILES_PATH, TOKEN_LOGIN ];
@@ -33,22 +31,7 @@ export function createPermissionGuard(router: Router) {
   const userStore = useUserStoreWithOut();
   const permissionStore = usePermissionStoreWithOut();
 
-  // 自定义首页跳转次数
-  let homePathJumpCount = 0;
-
   router.beforeEach(async (to, from) => {
-    if (
-      // 【#6861】跳转到自定义首页的逻辑，只跳转一次即可
-      homePathJumpCount < 1 &&
-      from.path === ROOT_PATH &&
-      to.path === PageEnum.BASE_HOME &&
-      userStore.getUserInfo.homePath &&
-      userStore.getUserInfo.homePath !== PageEnum.BASE_HOME
-    ) {
-      homePathJumpCount++;
-      return userStore.getUserInfo.homePath;
-    }
-
     const token = userStore.getToken;
 
     // Whitelist can be directly entered
@@ -144,13 +127,13 @@ export function createPermissionGuard(router: Router) {
       if (isOAuth2DingAppEnv()) {
         return OAUTH2_LOGIN_PAGE_PATH;
       } else {
-        return userStore.getUserInfo.homePath || PageEnum.BASE_HOME;
+        return PageEnum.BASE_HOME;
       }
     }
     //==============================【首次登录并且是企业微信或者钉钉的情况下才会调用】==================
     // Jump to the 404 page after processing the login
-    if (from.path === LOGIN_PATH && to.name === PAGE_NOT_FOUND_NAME_404 && to.fullPath !== (userStore.getUserInfo.homePath || PageEnum.BASE_HOME)) {
-      return userStore.getUserInfo.homePath || PageEnum.BASE_HOME;
+    if (from.path === LOGIN_PATH && to.name === PAGE_NOT_FOUND_NAME_404 && to.fullPath !== (PageEnum.BASE_HOME)) {
+      return PageEnum.BASE_HOME;
     }
 
     // // get userinfo while last fetch time is empty

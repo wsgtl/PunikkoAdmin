@@ -73,3 +73,18 @@ export const ERROR_LOG_ROUTE: AppRouteRecordRaw = {
     },
   ],
 };
+
+// 欢迎首页不依赖后台业务菜单，登录后始终可访问。
+export const WELCOME_ROUTE: AppRouteRecordRaw = {
+  path: '/dashboard',
+  name: 'PunikkoHome',
+  component: LAYOUT,
+  redirect: '/dashboard/analysis',
+  meta: { title: '首页', icon: 'ant-design:home-outlined', hideChildrenInMenu: true },
+  children: [{
+    path: 'analysis',
+    name: 'PunikkoWelcome',
+    component: () => import('/@/views/dashboard/welcome/index.vue'),
+    meta: { title: '首页', affix: true },
+  }],
+};

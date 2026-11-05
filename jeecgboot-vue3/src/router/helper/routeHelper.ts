@@ -86,6 +86,7 @@ function asyncImportRoute(routes: AppRouteRecordRaw[] | undefined) {
     let { component, name } = item;
     const { children } = item;
     if (component) {
+      item.meta = { ...item.meta, originComponent: component };
       const layoutFound = LayoutMap.get(component.toUpperCase());
       if (layoutFound) {
         item.component = layoutFound;
@@ -141,6 +142,8 @@ export function transformObjToRoute<T = AppRouteModule>(routeList: AppRouteModul
     const component = route.component as string;
     if (component) {
       route.originComponent = component;
+      // Vue Router 标准化时仅保留 meta 内的自定义信息，供首页匹配授权功能入口。
+      route.meta = { ...route.meta, originComponent: component };
       if (component.toUpperCase() === 'LAYOUT') {
         route.component = LayoutMap.get(component.toUpperCase());
       } else {

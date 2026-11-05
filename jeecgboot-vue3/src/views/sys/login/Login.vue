@@ -1,6 +1,8 @@
 <template>
   <div :class="prefixCls" class="relative w-full h-full px-4">
-    <AppLocalePicker class="absolute text-white top-4 right-4 enter-x xl:text-gray-600" :showText="false" v-if="!sessionTimeout && showLocale" />
+    <div v-if="!sessionTimeout && showLocale" class="login-locale-picker">
+      <AppLocalePicker :showText="false" />
+    </div>
     <AppDarkModeToggle class="absolute top-3 right-7 enter-x" v-if="!sessionTimeout" />
     <span class="-enter-x xl:hidden">
       <AppLogo :alwaysShowTitle="true" />
@@ -99,6 +101,25 @@
   .@{prefix-cls} {
     min-height: 100%;
     overflow: hidden;
+
+    .login-locale-picker {
+      position: absolute;
+      z-index: 2;
+      top: 24px;
+      right: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      color: #d77c87;
+      background: #fff;
+      box-shadow: 0 2px 10px rgb(215 124 135 / 14%);
+      cursor: pointer;
+
+      &:hover { background: #fceef0; }
+    }
     @media (max-width: @screen-xl) {
       background-color: #293146;
 

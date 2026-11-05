@@ -1,9 +1,13 @@
 <template>
   <div :class="prefixCls" class="password-login">
-    <AppLocalePicker v-if="showLocale && !sessionTimeout" class="locale-picker" :showText="false" />
+    <div v-if="showLocale && !sessionTimeout" class="locale-picker">
+      <AppLocalePicker :showText="false" />
+    </div>
     <main v-if="!forgotLoaded" class="login-card">
-      <div class="login-art" aria-hidden="true">
-        <img :src="adTextImg" alt="" />
+      <div class="login-art">
+        <img :src="adTextImg" alt="Punikko" />
+        <h2>Punikko Admin</h2>
+        <p>punikko管理端</p>
       </div>
       <section class="login-panel">
         <h1>{{ t('sys.login.signInFormTitle') }}</h1>
@@ -94,7 +98,7 @@
   import { useDesign } from '/@/hooks/web/useDesign';
   import { createLocalStorage } from '/@/utils/cache';
   import { encryptAESCBC } from '/@/utils/cipher';
-  import adTextImg from '/@/assets/loginmini/icon/jeecg_ad_text.png';
+  import adTextImg from '/@/assets/images/logo.png';
 
   const MiniForgotpad = defineAsyncComponent(() => import('./MiniForgotpad.vue'));
   defineProps({ sessionTimeout: Boolean });
@@ -199,10 +203,12 @@
     justify-content: center;
     min-height: 100vh;
     padding: 64px 24px;
-    background: #e3f0ff url('/@/assets/loginmini/icon/jeecg_bg.png') center / cover no-repeat;
+    background: radial-gradient(ellipse at top right, #f8dfe4, transparent 55%), #fff5f7;
   }
   .locale-picker {
-    position: absolute;
+    position: fixed;
+    z-index: 10;
+    color: #d77c87;
     top: 20px;
     right: 24px;
   }
@@ -213,16 +219,22 @@
     max-width: 100%;
     min-height: 518px;
     background: #fff;
-    box-shadow: 0 4px 10px #213b5b40;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 12px 40px #b9758520;
   }
   .login-art {
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 40px;
-    background: #0198cd url('/@/assets/loginmini/icon/jeecg_ad.png') center / cover no-repeat;
+    flex-direction: column;
+    background: linear-gradient(145deg, #fceef0, #f2c4cc);
+    h2 { margin-top: 32px; color: #633c36; font-size: 30px; font-weight: 600; }
+    p { margin-top: 12px; color: #9e6370; font-size: 18px; }
     img {
-      width: 100%;
+      width: 320px;
+      max-width: 100%;
       height: auto;
     }
   }
@@ -243,7 +255,7 @@
         width: 30px;
         height: 4px;
         border-radius: 4px;
-        background: #1b90ff;
+        background: var(--j-global-primary-color, #e995a0);
         content: '';
       }
     }
@@ -258,7 +270,7 @@
       box-shadow: none;
       background: transparent;
       &:focus-within {
-        border-color: #1b90ff;
+        border-color: var(--j-global-primary-color, #e995a0);
       }
     }
     :deep(.ant-input) {
@@ -267,7 +279,7 @@
     }
     :deep(.ant-input-prefix) {
       margin-right: 12px;
-      color: #1b90ff;
+      color: var(--j-global-primary-color, #e995a0);
       font-size: 20px;
     }
   }
@@ -285,7 +297,7 @@
     align-items: center;
     border-bottom: 1px solid #d9d9d9;
     &:focus-within {
-      border-color: #1b90ff;
+      border-color: var(--j-global-primary-color, #e995a0);
     }
     :deep(.ant-input-affix-wrapper) {
       border-bottom: 0;
@@ -298,7 +310,7 @@
     padding: 0;
     border: 0;
     background: #f5f7fa;
-    color: #1677ff;
+    color: #d77c87;
     font-size: 12px;
     cursor: pointer;
     img {
@@ -322,7 +334,6 @@
     height: 42px;
     margin-top: 64px;
     border-radius: 8px;
-    background: #1b90ff;
   }
   .forgot-panel {
     width: 100%;
@@ -337,7 +348,10 @@
       min-height: auto;
     }
     .login-art {
-      display: none;
+      padding: 24px;
+      img { width: 160px; }
+      h2 { margin-top: 12px; font-size: 22px; }
+      p { display: none; }
     }
     .login-panel {
       padding: 32px 24px 40px;
