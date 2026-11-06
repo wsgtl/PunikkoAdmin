@@ -6,6 +6,7 @@ export const navigationTitleKeys: Record<string, string> = {
   年度积分账号: 'annualMemberPointAccount.title',
   积分流水: 'memberPointLedger.title',
   会员等级: 'memberLevel.title',
+  会员等级多语言: 'memberLevelI18n.title',
   会员主档: 'memberCustomer.title',
   shopify会员: 'memberCustomer.members',
   Shopify会员: 'memberCustomer.members',
