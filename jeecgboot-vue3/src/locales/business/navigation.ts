@@ -7,6 +7,7 @@ export const navigationTitleKeys: Record<string, string> = {
   积分流水: 'memberPointLedger.title',
   会员等级: 'memberLevel.title',
   会员积分规则: 'memberPointRule.title',
+  会员消费归档: 'memberPurchaseArchive.title',
   会员积分计算规则: 'memberPointRule.title',
   会员等级多语言: 'memberLevelI18n.title',
   会员主档: 'memberCustomer.title',
