@@ -2,6 +2,7 @@ import type { AppRouteRecordRaw } from '/@/router/types';
 
 // 仅筛选后台已授权的菜单，不创建菜单、不扩大账号权限。
 export const implementedShopifyComponents = new Set([
+  'shopify/member/pointRule/ShopifyMemberPointRuleList',
   'shopify/member/levelI18n/ShopifyMemberLevelI18nList',
   'shopify/member/level/ShopifyMemberLevelList',
   'shopify/member/pointLedger/ShopifyMemberPointLedgerList',
