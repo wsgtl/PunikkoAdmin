@@ -1,0 +1,18 @@
+export default {
+  title: '年度积分账户',
+  detail: '详情',
+  detailTitle: '年度积分账户详情',
+  actions: '操作',
+  memberId: '会员',
+  memberYear: '年度',
+  totalEarnedPoints: '年度累计获得积分',
+  totalUsedPoints: '年度累计使用积分',
+  availablePoints: '可用积分',
+  frozenPoints: '冻结积分',
+  expiredPoints: '已过期积分',
+  lastChangeTime: '最近变动时间',
+  status: '状态',
+  loadFailed: '详情加载失败，请重试',
+  retry: '重试',
+  memberPlaceholder: '请选择会员',
+};

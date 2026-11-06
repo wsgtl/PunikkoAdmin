@@ -1,0 +1,18 @@
+export default {
+  title: 'Annual points accounts',
+  detail: 'Details',
+  detailTitle: 'Annual points account details',
+  actions: 'Actions',
+  memberId: 'Member',
+  memberYear: 'Year',
+  totalEarnedPoints: 'Points earned this year',
+  totalUsedPoints: 'Points used this year',
+  availablePoints: 'Available points',
+  frozenPoints: 'Frozen points',
+  expiredPoints: 'Expired points',
+  lastChangeTime: 'Last change',
+  status: 'Status',
+  loadFailed: 'Unable to load details. Please retry.',
+  retry: 'Retry',
+  memberPlaceholder: 'Select a member',
+};

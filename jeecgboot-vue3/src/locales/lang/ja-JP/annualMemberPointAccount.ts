@@ -1,0 +1,18 @@
+export default {
+  title: '年間ポイント口座',
+  detail: '詳細',
+  detailTitle: '年間ポイント口座の詳細',
+  actions: '操作',
+  memberId: '会員',
+  memberYear: '年度',
+  totalEarnedPoints: '年間獲得ポイント',
+  totalUsedPoints: '年間利用ポイント',
+  availablePoints: '利用可能ポイント',
+  frozenPoints: '凍結ポイント',
+  expiredPoints: '失効ポイント',
+  lastChangeTime: '最終変更日時',
+  status: '状態',
+  loadFailed: '詳細を読み込めませんでした。再試行してください。',
+  retry: '再試行',
+  memberPlaceholder: '会員を選択',
+};
