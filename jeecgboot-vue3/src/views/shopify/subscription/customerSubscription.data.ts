@@ -54,7 +54,7 @@ export function dictionaryOptions(dictionaries: SubscriptionDictionaries, field:
 }
 export function dictionaryText(dictionaries: SubscriptionDictionaries, field: string, record: Record<string, any>) {
   return dictionaryCodes[field]
-    ? businessDictionaryText(dictionaryCodes[field], record[field])
+    ? businessDictionaryText(dictionaryCodes[field], record[field], undefined, record[`${field}_dictText`])
     : (record[`${field}_dictText`] ?? record[field] ?? '—');
 }
 export function createColumns(dictionaries: SubscriptionDictionaries = {}): BasicColumn[] {

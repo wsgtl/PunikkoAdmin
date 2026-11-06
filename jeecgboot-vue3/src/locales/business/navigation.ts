@@ -1,5 +1,8 @@
 /** Exact aliases for backend menu titles. Paths, route names and permissions stay untouched. */
 export const navigationTitleKeys: Record<string, string> = {
+  会员主档: 'memberCustomer.title',
+  shopify会员: 'memberCustomer.members',
+  Shopify会员: 'memberCustomer.members',
   首页: 'layout.header.home',
   Shopify预约: 'navigation.reservations',
   Shopify线下门店管理: 'navigation.stores',

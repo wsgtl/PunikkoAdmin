@@ -15,7 +15,7 @@ export function createColumns(): BasicColumn[] {
     ...(['mode', 'storeRef'].includes(field)
       ? {
           customRender: ({ record }) =>
-            field === 'mode' ? businessDictionaryText('shopify_reservation_mode', record.mode) : (record[`${field}_dictText`] ?? record[field]),
+            field === 'mode' ? businessDictionaryText('shopify_reservation_mode', record.mode, undefined, record.mode_dictText) : (record[`${field}_dictText`] ?? record[field]),
         }
       : {}),
   }));

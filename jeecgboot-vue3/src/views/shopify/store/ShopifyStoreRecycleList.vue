@@ -54,7 +54,7 @@
     return field === 'businessDays'
       ? businessDictionaryListText('shopify_business_day', record[field])
       : dictCodes[field]
-        ? businessDictionaryText(dictCodes[field], record[field])
+        ? businessDictionaryText(dictCodes[field], record[field], undefined, record[`${field}_dictText`])
         : (record[`${field}_dictText`] ?? record[field] ?? '—');
   }
   const fields = ['code', 'storeName', 'createBy', 'storeManagerId', 'storeAddress', 'publishStatus', 'hasReservableProducts', 'updateTime'];

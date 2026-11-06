@@ -161,7 +161,7 @@
         field === 'storeRef'
           ? (stores.value.find((item) => item.value === record.storeRef)?.label ?? record.storeRef_dictText ?? record.storeRef)
           : field === 'ruleType'
-            ? businessDictionaryText('shopify_store_calendar_rule_type', record.ruleType)
+            ? businessDictionaryText('shopify_store_calendar_rule_type', record.ruleType, undefined, record.ruleType_dictText)
             : (record[field] ?? '—'),
     }))
   );

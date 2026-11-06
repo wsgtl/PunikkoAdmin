@@ -25,7 +25,7 @@ export type Dictionaries = Record<string, { value: string; text?: string; label?
 export const options = (dicts: Dictionaries, field: string) => businessDictionaryOptions(dictionaryCodes[field], dicts[dictionaryCodes[field]] ?? []);
 export function display(dicts: Dictionaries, field: string, record: Record<string, unknown>) {
   return dictionaryCodes[field]
-    ? businessDictionaryText(dictionaryCodes[field], record[field])
+    ? businessDictionaryText(dictionaryCodes[field], record[field], undefined, record[`${field}_dictText`])
     : (record[`${field}_dictText`] ?? record[field] ?? '—');
 }
 export function createColumns(dicts: Dictionaries): BasicColumn[] {

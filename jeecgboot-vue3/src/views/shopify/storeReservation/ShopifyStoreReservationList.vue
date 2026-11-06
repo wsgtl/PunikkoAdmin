@@ -102,7 +102,7 @@
 
   watch(schemas, (value) => getForm().updateSchema(value));
   function statusText(record: StoreReservation) {
-    return businessDictionaryText(statusDictCode.value, record.status);
+    return businessDictionaryText(statusDictCode.value, record.status, undefined, record.status_dictText);
   }
   function handleSuperQuery(params?: Record<string, unknown>) {
     Object.keys(superQueryParams).forEach((key) => delete superQueryParams[key]);

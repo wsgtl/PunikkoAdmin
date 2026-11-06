@@ -64,6 +64,14 @@ async function main() {
 
   const { businessDictionaries } = load('src/locales/business/dictionaries.ts');
   const adapter = load('src/locales/business/dictionaryAdapter.ts', { vue, '../setupI18n': { i18n: { global: { locale: vue.ref('ja_JP') } } }, './dictionaries': { businessDictionaries } });
+  // Missing/empty translations use backend labels, then local Chinese, then the raw value.
+  const missing = adapter.businessDictionaryOptions('shopify_business_day', [{ value: 'new', text: '后台新增值' }]);
+  assert.equal(missing[0].label, '后台新增值'); assert.equal(missing[0].value, 'new');
+  assert.equal(adapter.businessDictionaryText('shopify_business_day', '1', 'unsupported', '接口默认周一'), '接口默认周一');
+  assert.equal(adapter.businessDictionaryText('shopify_business_day', '1', 'unsupported'), '周一');
+  assert.equal(adapter.businessDictionaryText('unknown', 'new', 'ja_JP'), 'new');
+  assert.equal(adapter.businessDictionaryText('unknown', 0, 'ja_JP', '零'), '零');
+  assert.equal(adapter.businessDictionaryOptions('unknown', [{ value: 'x', text: '', label: '默认标签' }])[0].label, '默认标签');
   const raw = [{ value: '1', text: '周一' }, { value: 7, text: '周日' }];
   const translated = adapter.businessDictionaryOptions('shopify_business_day', raw);
   assert.equal(translated[0].label, '月曜日'); assert.equal(raw[0].text, '周一');

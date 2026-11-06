@@ -169,7 +169,7 @@
     const record = detail.value;
     const value =
       field === 'mode'
-        ? businessDictionaryText('shopify_reservation_mode', record.mode)
+        ? businessDictionaryText('shopify_reservation_mode', record.mode, undefined, record.mode_dictText)
         : field === 'storeRef'
           ? (record.storeRef_dictText ?? record.storeRef)
           : record[field];

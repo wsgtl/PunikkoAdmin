@@ -134,7 +134,7 @@
         field === 'storeId'
           ? (stores.value.find((item) => item.value === record.storeId)?.label ?? record.storeId_dictText ?? record.storeId)
           : field === 'language'
-            ? businessDictionaryText('shopify_language', record.language)
+            ? businessDictionaryText('shopify_language', record.language, undefined, record.language_dictText)
             : record[field] || '—',
     }))
   );
@@ -190,7 +190,7 @@
     if (!record.id || saving.value || deletePending.value || !hasPermission(permission('delete'))) return;
     const id = record.id;
     const name = stores.value.find((item) => item.value === record.storeId)?.label ?? record.storeId_dictText ?? record.storeId;
-    const language = businessDictionaryText('shopify_language', record.language);
+    const language = businessDictionaryText('shopify_language', record.language, undefined, record.language_dictText);
     deletePending.value = true;
     createConfirm({
       iconType: 'warning',

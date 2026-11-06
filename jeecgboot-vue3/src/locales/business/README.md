@@ -2,7 +2,7 @@
 
 `dictionaries.ts` 是本地枚举翻译表，按 `语言 → 字典编码 → 原始 value` 查找，覆盖当前提供的 50 个字典（含 `yn`）。新增枚举时应同步添加中、英、日三个语言的条目，不能使用中文 label 作为翻译键。
 
-- `businessDictionaryText(code, value)`：列表、详情展示。未收录的值显示原始 value；空值显示 `—`。
+- `businessDictionaryText(code, value)`：列表、详情展示。缺少当前语言译文时，优先使用传入的接口默认文字，其次使用本地中文，最后显示原始 value；空值显示 `—`。列表可通过第四个参数传入 `_dictText`。下拉选项自动使用接口的 text/label/title 兜底。
 - `businessDictionaryOptions(code, items)`：选择框展示。接口仍决定选项集合、顺序和值，只复制对象并替换展示文字，不修改原数组或提交值。
 - `businessDictionaryListText(code, values)`：逗号分隔的多选值展示，例如营业日。
 - `adaptBusinessDictionaryItems(code, items)`：公共字典加载器入口；仅对本地表内的枚举字典生效。门店、用户、角色等动态表字典保持原样。

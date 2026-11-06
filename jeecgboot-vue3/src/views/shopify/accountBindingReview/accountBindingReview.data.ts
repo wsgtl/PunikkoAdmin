@@ -29,7 +29,7 @@ export const detailFields = [
 export type Dictionaries = Record<string, { value: string; text?: string; label?: string }[]>;
 export function displayValue(dicts: Dictionaries, field: string, record: Record<string, unknown>) {
   return field === 'reviewStatus'
-    ? businessDictionaryText('shopify_third_account_binding_review_status', record[field])
+    ? businessDictionaryText('shopify_third_account_binding_review_status', record[field], undefined, record[`${field}_dictText`])
     : (record[`${field}_dictText`] ?? record[field] ?? '—');
 }
 export function createColumns(dicts: Dictionaries): BasicColumn[] {
