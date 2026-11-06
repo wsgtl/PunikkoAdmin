@@ -100,6 +100,7 @@
   </div>
 </template>
 <script lang="ts" setup>
+  import { businessDictionaryText } from '/@/locales/business/dictionaryAdapter';
   import { computed, nextTick, onMounted, ref, watch } from 'vue';
   import { BasicTable, TableAction } from '/@/components/Table';
   import type { BasicColumn } from '/@/components/Table';
@@ -135,7 +136,7 @@
     (
       (userStore.getAllDictItems as unknown as Record<string, { value: string; text?: string; label?: string }[]>)
         ?.shopify_store_calendar_rule_type ?? []
-    ).map((item) => ({ value: item.value, label: item.text ?? item.label ?? item.value }))
+    ).map((item) => ({ value: item.value, label: businessDictionaryText('shopify_store_calendar_rule_type', item.value) }))
   );
   async function loadStores() {
     if (storesLoading.value) return;
@@ -160,7 +161,7 @@
         field === 'storeRef'
           ? (stores.value.find((item) => item.value === record.storeRef)?.label ?? record.storeRef_dictText ?? record.storeRef)
           : field === 'ruleType'
-            ? (ruleOptions.value.find((item) => item.value === record.ruleType)?.label ?? record.ruleType_dictText ?? record.ruleType)
+            ? businessDictionaryText('shopify_store_calendar_rule_type', record.ruleType)
             : (record[field] ?? '—'),
     }))
   );

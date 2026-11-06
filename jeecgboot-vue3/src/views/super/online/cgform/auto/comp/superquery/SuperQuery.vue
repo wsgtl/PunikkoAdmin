@@ -1,6 +1,6 @@
 <template>
     <!-- 按钮区域 -->
-    <div class="j-super-query-button">
+    <div v-if="featureSetting.showSuperQuery" class="j-super-query-button">
         <a-tooltip v-if="superQueryFlag" :mouseLeaveDelay="0.2">
             <template #title>
                 <span>执行查询中...</span>
@@ -20,7 +20,7 @@
     </div>
 
     <!-- 高级查询弹框 -->
-    <teleport to="body">
+    <teleport v-if="featureSetting.showSuperQuery" to="body">
         <BasicModal :title="queryBtnCfg.buttonName + '构造器'" wrap-class-name="j-super-query-modal" :canFullscreen="true" :width="850" @register="registerFormModal" @ok="handleSubmit" @fullScreen="handleFullScreen">
             <template #footer>
                 <div style="float: left">
@@ -143,6 +143,7 @@
 </template>
 
 <script lang="ts">
+  import { featureSetting } from '/@/settings/featureSetting';
 
   import {ref, watch, computed} from 'vue'
   import { BasicModal, useModal } from '/@/components/Modal';
@@ -407,6 +408,7 @@
       }, {immediate: true});
       
       function handleOpen(){
+        if (!featureSetting.showSuperQuery) return;
         // update-begin--author:liaozhiyang---date:20240604---for：【TV360X-204】修改内容没点确定，再次打开应该是恢复之前的内容
         if (superQueryFlag.value && currentQueryInfo) {
           dynamicRowValues.values = cloneDeep(currentQueryInfo);
@@ -486,6 +488,7 @@
       // update-end--author:liaozhiyang---date:20240603---for：【TV360X-342】字段下拉样式调整
 
       return {
+        featureSetting,
         formRef,
         registerFormModal,
         init,

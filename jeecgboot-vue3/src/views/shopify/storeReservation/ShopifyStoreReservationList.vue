@@ -1,7 +1,7 @@
 <template>
   <div class="reservation-page">
     <BasicTable @register="registerTable" :columns="columns" :rowSelection="rowSelection">
-      <template #tableTitle>
+      <template v-if="featureSetting.showSuperQuery" #tableTitle>
         <SuperQuery
           :config="superQueryConfig"
           :queryBtnCfg="{ buttonName: t('shopify.storeReservation.advancedQuery'), buttonIcon: 'ant-design:filter-outlined' }"
@@ -9,7 +9,9 @@
         />
       </template>
       <template #status="{ record }">
-        <a-tag :bordered="false" :color="record.status === 'redeemed' ? 'success' : record.status === 'expired' ? 'error' : 'default'">{{ statusText(record) }}</a-tag>
+        <a-tag :bordered="false" :color="record.status === 'redeemed' ? 'success' : record.status === 'expired' ? 'error' : 'default'">{{
+          statusText(record)
+        }}</a-tag>
       </template>
       <template #action="{ record }">
         <TableAction
@@ -37,6 +39,8 @@
 </template>
 
 <script lang="ts" setup>
+  import { featureSetting } from '/@/settings/featureSetting';
+  import { businessDictionaryText } from '/@/locales/business/dictionaryAdapter';
   import { computed, onMounted, reactive, ref, watch } from 'vue';
   import { BasicTable, TableAction } from '/@/components/Table';
   import { BasicModal, useModal } from '/@/components/Modal';
@@ -60,21 +64,11 @@
   const superQueryParams = reactive<Record<string, unknown>>({});
   const columns = computed(createColumns);
 
-  // 优先使用项目文档约定的 code；兼容现有全量字典中的门店预约状态 code。
-  // 不使用硬编码 label/value，未找到字典时列表回退到接口的 status_dictText。
-  const statusDictCode = computed(() => {
-    const data = { ...(userStore.getAllDictItems as unknown as Record<string, DictItem[]>), ...dictionaries.value };
-    const codes = ['shopify_store_reservation_status', 'shopify_reservation_status'];
-    const known = codes.find((code) => Array.isArray(data[code]) && data[code].length);
-    if (known) return known;
-    const candidates = Object.keys(data).filter(
-      (code) => /reservation/i.test(code) && /status/i.test(code) && !/product/i.test(code) && Array.isArray(data[code])
-    );
-    return candidates.length === 1 ? candidates[0] : '';
-  });
+  // Booking status differs from a store's reservability (Y/N/NO_RESERVATION).
+  const statusDictCode = computed(() => 'shopify_reservation_status');
   const statusItems = computed(() => dictionaries.value[statusDictCode.value] ?? userStore.getAllDictItems?.[statusDictCode.value] ?? []);
   const statusOptions = computed(() =>
-    statusItems.value.map((item: DictItem) => ({ value: item.value, label: item.text ?? item.label ?? String(item.value) }))
+    statusItems.value.map((item: DictItem) => ({ value: item.value, label: businessDictionaryText(statusDictCode.value, item.value) }))
   );
   const schemas = computed(() => createSearchSchemas(() => statusOptions.value));
   const superQueryConfig = computed(() => ({
@@ -108,8 +102,7 @@
 
   watch(schemas, (value) => getForm().updateSchema(value));
   function statusText(record: StoreReservation) {
-    const item = statusItems.value.find((item: DictItem) => String(item.value) === record.status);
-    return item?.text ?? item?.label ?? record.status_dictText ?? record.status;
+    return businessDictionaryText(statusDictCode.value, record.status);
   }
   function handleSuperQuery(params?: Record<string, unknown>) {
     Object.keys(superQueryParams).forEach((key) => delete superQueryParams[key]);

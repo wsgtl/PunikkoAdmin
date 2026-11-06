@@ -3,21 +3,22 @@
     <section class="welcome-card">
       <span class="welcome-label">PUNIKKO ADMIN</span>
       <img :src="logo" alt="Punikko" class="welcome-logo" />
-      <h1>欢迎来到 Punikko Admin</h1>
-      <p class="welcome-greeting">{{ userName }}，欢迎回来</p>
-      <p class="welcome-description">从左侧菜单开始，轻松管理门店与预约。</p>
-      <nav v-if="shortcuts.length" class="welcome-topics" aria-label="常用功能">
+      <h1>{{ t('punikko.welcome') }}</h1>
+      <p class="welcome-greeting">{{ t('punikko.greeting', { name: userName }) }}</p>
+      <p class="welcome-description">{{ t('punikko.description') }}</p>
+      <nav v-if="shortcuts.length" class="welcome-topics" :aria-label="t('punikko.shortcuts')">
         <RouterLink v-for="item in shortcuts" :key="item.path" :to="item.path" class="welcome-shortcut">
           <component :is="item.icon" class="welcome-shortcut__icon" />
           <span class="welcome-shortcut__label">{{ item.label }}</span>
         </RouterLink>
       </nav>
     </section>
-    <p class="welcome-footer">Punikko 管理端</p>
+    <p class="welcome-footer">{{ t('punikko.admin') }}</p>
   </main>
 </template>
 
 <script setup lang="ts">
+  import { useI18n } from '/@/hooks/web/useI18n';
   import { computed } from 'vue';
   import { ShopOutlined, CalendarOutlined, ClockCircleOutlined } from '@ant-design/icons-vue';
   import { RouterLink, useRouter } from 'vue-router';
@@ -25,14 +26,15 @@
   import logo from '/@/assets/images/logo.png';
 
   defineOptions({ name: 'PunikkoWelcomePage' });
+  const { t } = useI18n();
   const userStore = useUserStore();
   const router = useRouter();
   // 使用已注册的授权路由，兼容后台菜单自定义路径。
   const shortcuts = computed(() => {
     const entries = [
-      { label: '门店管理', component: 'shopify/store/ShopifyStoreList', icon: ShopOutlined },
-      { label: '门店预约管理', component: 'shopify/storeReservation/ShopifyStoreReservationList', icon: CalendarOutlined },
-      { label: '营业时间管理', component: 'shopify/storeCalendar/ShopifyStoreCalendarList', icon: ClockCircleOutlined },
+      { label: t('shopify.storeManagement.title'), component: 'shopify/store/ShopifyStoreList', icon: ShopOutlined },
+      { label: t('shopify.storeReservation.title'), component: 'shopify/storeReservation/ShopifyStoreReservationList', icon: CalendarOutlined },
+      { label: t('shopify.storeCalendar.title'), component: 'shopify/storeCalendar/ShopifyStoreCalendarList', icon: ClockCircleOutlined },
     ];
     const routes = router.getRoutes();
     return entries.flatMap((entry) => {
@@ -43,7 +45,7 @@
       return route ? [{ label: entry.label, icon: entry.icon, path: route.path }] : [];
     });
   });
-  const userName = computed(() => userStore.getUserInfo.realname || userStore.getUserInfo.username || '你好');
+  const userName = computed(() => userStore.getUserInfo.realname || userStore.getUserInfo.username || t('punikko.guest'));
 </script>
 
 <style scoped lang="less">

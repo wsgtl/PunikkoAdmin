@@ -1,0 +1,20 @@
+/** Exact aliases for backend menu titles. Paths, route names and permissions stay untouched. */
+export const navigationTitleKeys: Record<string, string> = {
+  首页: 'layout.header.home',
+  Shopify预约: 'navigation.reservations',
+  Shopify线下门店管理: 'navigation.stores',
+  Shopify基础管理: 'navigation.settings',
+  门店预约管理: 'shopify.storeReservation.title',
+  预约时间统计: 'shopify.reservationSlotStat.title',
+  每日人工放行: 'shopify.dailyUnlock.title',
+  Shopify账号注销: 'shopify.accountDeletion.title',
+  Shopify账号注销申请: 'shopify.accountDeletion.title',
+  元对象授权映射: 'navigation.metaobjectMapping',
+  Shopify客户订阅配置: 'shopify.customerSubscription.title',
+  'Shopify Webhook配置': 'shopify.webhookConfig.title',
+  Shopify第三方身份绑定审核: 'shopify.bindingReview.title',
+  门店管理: 'shopify.storeManagement.title',
+  门店回收站: 'shopify.storeRecycle.title',
+  营业时间管理: 'shopify.storeCalendar.title',
+  门店多语言内容: 'shopify.storeI18n.title',
+};

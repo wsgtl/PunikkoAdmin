@@ -8,6 +8,8 @@ import { useLocaleStoreWithOut } from '/@/store/modules/locale';
 import { unref, computed } from 'vue';
 import { loadLocalePool, setHtmlPageLang } from './helper';
 
+let localeRequestVersion = 0;
+
 interface LangModule {
   message: Recordable;
   dateLocale: Recordable;
@@ -38,6 +40,7 @@ export function useLocale() {
   // Switching the language will change the locale of useI18n
   // And submit to configuration modification
   async function changeLocale(locale: LocaleType) {
+    const requestVersion = ++localeRequestVersion;
     const globalI18n = i18n.global;
     const currentLocale = unref(globalI18n.locale);
     if (currentLocale === locale) {
@@ -49,7 +52,7 @@ export function useLocale() {
       return locale;
     }
     const langModule = ((await import(`./lang/${locale}.ts`)) as any).default as LangModule;
-    if (!langModule) return;
+    if (!langModule || requestVersion !== localeRequestVersion) return;
 
     const { message } = langModule;
 

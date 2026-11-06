@@ -46,7 +46,7 @@
   import MenuItem from './components/MenuItem.vue';
   import SubMenu from './components/SubMenuItem.vue';
   import { propTypes } from '/@/utils/propTypes';
-  import { useI18n } from '/@/hooks/web/useI18n';
+  import { useNavigationI18n } from '/@/hooks/web/useNavigationI18n';
   import { createAsyncComponent } from '/@/utils/factory/createAsyncComponent';
 
   export default defineComponent({
@@ -73,7 +73,7 @@
       },
     },
     setup(props) {
-      const { t } = useI18n();
+      const { t } = useNavigationI18n();
       const { prefixCls } = useDesign('simple-menu');
 
       const getShowMenu = computed(() => !props.item?.meta?.hideMenu);

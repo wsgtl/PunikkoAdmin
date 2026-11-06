@@ -24,7 +24,7 @@
 
   import { TabsThemeEnum } from '/@/enums/appEnum';
   import { useDesign } from '/@/hooks/web/useDesign';
-  import { useI18n } from '/@/hooks/web/useI18n';
+  import { useNavigationI18n } from '/@/hooks/web/useNavigationI18n';
   import { useTabDropdown } from '../useTabDropdown';
   import { useMultipleTabSetting } from '/@/hooks/setting/useMultipleTabSetting';
   import { useLocaleStore } from '/@/store/modules/locale';
@@ -42,7 +42,7 @@
     },
     setup(props) {
       const { prefixCls } = useDesign('multiple-tabs-content');
-      const { t } = useI18n();
+      const { t } = useNavigationI18n();
 
       // 代码逻辑说明: VUEN-1144 online 配置成菜单后，打开菜单，显示名称未展示为菜单名称
       const localeStore = useLocaleStore();
@@ -50,7 +50,7 @@
         const { tabItem: { meta, fullPath } = {} } = props;
         let title = localeStore.getPathTitle(fullPath);
         if (title) {
-          return title;
+          return t(title);
         }
         return meta && t(meta.title as string);
       });

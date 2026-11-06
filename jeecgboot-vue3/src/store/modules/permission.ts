@@ -278,7 +278,8 @@ export const usePermissionStore = defineStore('app-permission', {
 
           routeList = flatMultiLevelRoutes(routeList);
           // 代码逻辑说明: 【TV360X-522】ai助手路由写死在前端
-          routes = [PAGE_NOT_FOUND_ROUTE, WELCOME_ROUTE, ...routeList, ...staticRoutesList];
+          // Welcome is registered with basicRoutes; keep it in the menu without replacing its matcher during startup.
+          routes = [PAGE_NOT_FOUND_ROUTE, ...routeList, ...staticRoutesList];
           break;
       }
 

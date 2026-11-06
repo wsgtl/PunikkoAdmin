@@ -1,6 +1,6 @@
 import type { AppRouteRecordRaw, AppRouteModule } from '/@/router/types';
 
-import { PAGE_NOT_FOUND_ROUTE, REDIRECT_ROUTE } from '/@/router/routes/basic';
+import { PAGE_NOT_FOUND_ROUTE, REDIRECT_ROUTE, WELCOME_ROUTE } from '/@/router/routes/basic';
 
 import { mainOutRoutes } from './mainOut';
 import { PageEnum } from '/@/enums/pageEnum';
@@ -119,4 +119,4 @@ export const onlinePreview = {
 
 
 // Basic routing without permission
-export const basicRoutes = [LoginRoute, RootRoute, ...mainOutRoutes, REDIRECT_ROUTE, PAGE_NOT_FOUND_ROUTE, TokenLoginRoute, Oauth2LoginRoute, formUrlDetail, formUrlAdd, formUrlEdit, formUrlSuccess, onlinePreview];
+export const basicRoutes = [LoginRoute, RootRoute, WELCOME_ROUTE, ...mainOutRoutes, REDIRECT_ROUTE, PAGE_NOT_FOUND_ROUTE, TokenLoginRoute, Oauth2LoginRoute, formUrlDetail, formUrlAdd, formUrlEdit, formUrlSuccess, onlinePreview];

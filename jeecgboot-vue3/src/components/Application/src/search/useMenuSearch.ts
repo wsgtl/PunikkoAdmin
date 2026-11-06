@@ -6,7 +6,7 @@ import { filter, forEach } from '/@/utils/helper/treeHelper';
 import { useGo } from '/@/hooks/web/usePage';
 import { useScrollTo } from '/@/hooks/event/useScrollTo';
 import { onKeyStroke, useDebounceFn } from '@vueuse/core';
-import { useI18n } from '/@/hooks/web/useI18n';
+import { useNavigationI18n } from '/@/hooks/web/useNavigationI18n';
 import { URL_HASH_TAB } from '/@/utils';
 
 export interface SearchResult {
@@ -35,7 +35,7 @@ export function useMenuSearch(refs: Ref<HTMLElement[]>, scrollWrap: Ref<ElRef>, 
 
   let menuList: Menu[] = [];
 
-  const { t } = useI18n();
+  const { t } = useNavigationI18n();
   const go = useGo();
   const handleSearch = useDebounceFn(search, 200);
 

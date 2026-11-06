@@ -123,6 +123,7 @@
   </div>
 </template>
 <script lang="ts" setup>
+  import { businessDictionaryText, businessDictionaryOptions, businessDictionaryListText } from '/@/locales/business/dictionaryAdapter';
   import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue';
   import { BasicTable, TableAction } from '/@/components/Table';
   import type { BasicColumn } from '/@/components/Table';
@@ -147,8 +148,7 @@
   const dictionaries = computed(
     () => (userStore.getAllDictItems ?? {}) as unknown as Record<string, { value: string; text?: string; label?: string }[]>
   );
-  const dictOptions = (field: string) =>
-    (dictionaries.value[dictCodes[field]] ?? []).map((x) => ({ value: x.value, label: x.text ?? x.label ?? x.value }));
+  const dictOptions = (field: string) => businessDictionaryOptions(dictCodes[field], dictionaries.value[dictCodes[field]] ?? []);
   const columns = computed<BasicColumn[]>(() =>
     listFields.map((field) => ({
       title: label(field),
@@ -156,7 +156,11 @@
       width: ['storeName', 'storeAddress', ...staffFields].includes(field) ? 220 : 160,
       ellipsis: true,
       customRender: ({ record }) =>
-        dictOptions(field).find((x) => x.value === record[field])?.label ?? record[`${field}_dictText`] ?? record[field] ?? '—',
+        field === 'businessDays'
+          ? businessDictionaryListText('shopify_business_day', record[field])
+          : dictCodes[field]
+            ? businessDictionaryText(dictCodes[field], record[field])
+            : (record[`${field}_dictText`] ?? record[field] ?? '—'),
     }))
   );
   const schemas = computed<FormSchema[]>(() =>
@@ -220,7 +224,7 @@
     showEdit(true);
     try {
       const [data, dict] = await Promise.all([queryForm(record.id), getBusinessDays()]);
-      businessOptions.value = dict.map((x) => ({ value: String(x.value), label: x.text ?? x.label ?? String(x.value) }));
+      businessOptions.value = dict.map((x) => ({ value: String(x.value), label: businessDictionaryText('shopify_business_day', x.value) }));
       days.value = splitIds(data.businessDays);
       draft.value = { ...data };
       await nextTick();
@@ -241,7 +245,7 @@
     showEdit(true);
     try {
       const dict = await getBusinessDays();
-      businessOptions.value = dict.map((x) => ({ value: String(x.value), label: x.text ?? x.label ?? String(x.value) }));
+      businessOptions.value = dict.map((x) => ({ value: String(x.value), label: businessDictionaryText('shopify_business_day', x.value) }));
       const initial = createStoreDraft();
       days.value = splitIds(initial.businessDays);
       draft.value = initial;

@@ -162,10 +162,22 @@
           <div class="app-loading-dots">
             <span class="dot dot-spin"><i></i><i></i><i></i><i></i></span>
           </div>
-          <div class="app-loading-title">punikko管理端</div>
+          <div class="app-loading-title" id="punikko-loading-title">Punikko Admin</div>
         </div>
       </div>
     </div>
+    <script>
+      (function () {
+        var locale;
+        try { locale = localStorage.getItem('punikko.loading.locale'); } catch (_) {}
+        var language = (navigator.language || 'en').toLowerCase();
+        if (['zh_CN', 'ja_JP', 'en'].indexOf(locale) === -1) {
+          locale = language.indexOf('ja') === 0 ? 'ja_JP' : language.indexOf('zh') === 0 ? 'zh_CN' : 'en';
+        }
+        var labels = { zh_CN: 'Punikko 管理端', ja_JP: 'Punikko 管理画面', en: 'Punikko Administration' };
+        document.getElementById('punikko-loading-title').textContent = labels[locale];
+      })();
+    </script>
     <script type="module" src="/src/main.ts"></script>
     <!-- 百度统计 -->
     <script>

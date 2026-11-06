@@ -1,3 +1,4 @@
+import { businessDictionaryText } from '/@/locales/business/dictionaryAdapter';
 import type { BasicColumn } from '/@/components/Table';
 import type { FormSchema } from '/@/components/Form';
 import { useI18n } from '/@/hooks/web/useI18n';
@@ -27,9 +28,9 @@ export const detailFields = [
 ];
 export type Dictionaries = Record<string, { value: string; text?: string; label?: string }[]>;
 export function displayValue(dicts: Dictionaries, field: string, record: Record<string, unknown>) {
-  const item =
-    field === 'reviewStatus' ? (dicts.shopify_third_account_binding_review_status ?? []).find((item) => item.value === record[field]) : undefined;
-  return item?.text ?? item?.label ?? record[`${field}_dictText`] ?? record[field] ?? '—';
+  return field === 'reviewStatus'
+    ? businessDictionaryText('shopify_third_account_binding_review_status', record[field])
+    : (record[`${field}_dictText`] ?? record[field] ?? '—');
 }
 export function createColumns(dicts: Dictionaries): BasicColumn[] {
   const { t } = useI18n();

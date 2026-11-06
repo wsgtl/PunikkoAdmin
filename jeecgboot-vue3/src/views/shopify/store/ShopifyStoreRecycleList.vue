@@ -30,6 +30,7 @@
   </div>
 </template>
 <script lang="ts" setup>
+  import { businessDictionaryText, businessDictionaryListText } from '/@/locales/business/dictionaryAdapter';
   import { computed, onBeforeUnmount, ref, watch } from 'vue';
   import { BasicTable, TableAction } from '/@/components/Table';
   import type { BasicColumn } from '/@/components/Table';
@@ -37,7 +38,6 @@
   import { BasicModal, useModal } from '/@/components/Modal';
   import { useListPage } from '/@/hooks/system/useListPage';
   import { useI18n } from '/@/hooks/web/useI18n';
-  import { useUserStore } from '/@/store/modules/user';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { usePermission } from '/@/hooks/web/usePermission';
   import { list, queryById, restore, physicalDelete } from './storeRecycle.api';
@@ -50,13 +50,12 @@
   const label = (key: string) => t(`shopify.storeRecycle.${key}`);
   const fieldLabel = (key: string) => (['createBy', 'updateTime'].includes(key) ? label(key) : t(`shopify.storeManagement.${key}`));
   const permission = (action: string) => `shopify:shopify_store:${action}`;
-  const userStore = useUserStore();
-  const dictionaries = computed(
-    () => (userStore.getAllDictItems ?? {}) as unknown as Record<string, { value: string; text?: string; label?: string }[]>
-  );
   function display(field: string, record: StoreRecord) {
-    const item = (dictionaries.value[dictCodes[field]] ?? []).find((item) => item.value === record[field]);
-    return item?.text ?? item?.label ?? record[`${field}_dictText`] ?? record[field] ?? '—';
+    return field === 'businessDays'
+      ? businessDictionaryListText('shopify_business_day', record[field])
+      : dictCodes[field]
+        ? businessDictionaryText(dictCodes[field], record[field])
+        : (record[`${field}_dictText`] ?? record[field] ?? '—');
   }
   const fields = ['code', 'storeName', 'createBy', 'storeManagerId', 'storeAddress', 'publishStatus', 'hasReservableProducts', 'updateTime'];
   const detailFields = [...editFields, 'createBy', 'updateTime'];

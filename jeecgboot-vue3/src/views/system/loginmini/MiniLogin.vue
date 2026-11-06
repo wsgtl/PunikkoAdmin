@@ -7,7 +7,7 @@
       <div class="login-art">
         <img :src="adTextImg" alt="Punikko" />
         <h2>Punikko Admin</h2>
-        <p>punikko管理端</p>
+        <p>{{ t('punikko.admin') }}</p>
       </div>
       <section class="login-panel">
         <h1>{{ t('sys.login.signInFormTitle') }}</h1>

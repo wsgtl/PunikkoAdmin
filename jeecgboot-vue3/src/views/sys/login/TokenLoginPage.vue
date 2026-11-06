@@ -5,7 +5,7 @@
             <div class="app-loading-dots">
                 <span class="dot dot-spin"><i></i><i></i><i></i><i></i></span>
             </div>
-            <div class="app-loading-title">punikko管理端</div>
+            <div class="app-loading-title">{{ t('punikko.admin') }}</div>
         </div>
     </div>
 </template>
@@ -82,6 +82,7 @@
           });
         }
       }
+      return { t };
     }
   }
 </script>

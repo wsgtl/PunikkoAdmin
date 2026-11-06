@@ -57,6 +57,13 @@ export default {
     placeholder: 'ロックパスワードを入力してください',
   },
   login: {
+    mobileCorrectPlaceholder: '正しい携帯電話番号を入力してください',
+    loginOrgCode: '部署',
+    authentication: '認証',
+    resetLoginPassword: 'ログインパスワードのリセット',
+    resetSuccess: 'リセットしました',
+    nextStep: '次へ',
+    goToLogin: 'ログインへ',
     backSignIn: '戻る',
     mobileSignInFormTitle: '携帯電話ログイン',
     qrSignInFormTitle: 'QRコードログイン',

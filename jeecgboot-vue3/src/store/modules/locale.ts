@@ -59,6 +59,8 @@ export const useLocaleStore = defineStore('app-locale', {
     setLocaleInfo(info: Partial<LocaleSetting>) {
       this.localInfo = { ...this.localInfo, ...info };
       ls.set(LOCALE_KEY, this.localInfo);
+      // Non-sensitive language hint for the HTML loading screen, before Vue starts.
+      try { localStorage.setItem('punikko.loading.locale', this.localInfo.locale); } catch { /* Storage can be unavailable. */ }
     },
     /**
      * Initialize multilingual information and load the existing configuration from the local cache

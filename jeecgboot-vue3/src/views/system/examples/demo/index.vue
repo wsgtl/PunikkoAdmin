@@ -53,7 +53,7 @@
           <a-button preIcon="ant-design:import-outlined" type="primary">导入</a-button>
         </a-upload>
         <a-button preIcon="ant-design:export-outlined" type="primary" @click="handleExportXls('单表示例', getExportUrl,exportParams)">导出</a-button>
-        <a-button preIcon="ant-design:filter" type="primary" @click="">高级查询</a-button>
+        <a-button v-if="featureSetting.showSuperQuery" preIcon="ant-design:filter" type="primary" @click="">高级查询</a-button>
         <a-button preIcon="ant-design:plus-outlined" type="primary" @click="openTab">打开Tab页</a-button>
         <a-button preIcon="ant-design:retweet-outlined" type="primary" @click="customSearch = !customSearch">{{
           customSearch ? '表单配置查询' : '自定义查询'
@@ -86,6 +86,7 @@
   </div>
 </template>
 <script lang="ts" setup>
+  import { featureSetting } from '/@/settings/featureSetting';
   import { ref, unref, reactive, toRaw, watch,computed } from 'vue';
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
   import { useModal } from '/@/components/Modal';

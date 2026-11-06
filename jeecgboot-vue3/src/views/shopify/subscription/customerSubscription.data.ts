@@ -1,3 +1,4 @@
+import { businessDictionaryText, businessDictionaryOptions } from '/@/locales/business/dictionaryAdapter';
 import type { BasicColumn } from '/@/components/Table';
 import { useI18n } from '/@/hooks/web/useI18n';
 export const editFields = [
@@ -49,11 +50,12 @@ export const dictionaryCodes: Record<string, string> = {
   configKey: 'shopify_customer_subscription_key',
 };
 export function dictionaryOptions(dictionaries: SubscriptionDictionaries, field: string) {
-  return (dictionaries[dictionaryCodes[field]] ?? []).map((item) => ({ value: item.value, label: item.text ?? item.label ?? item.value }));
+  return businessDictionaryOptions(dictionaryCodes[field], dictionaries[dictionaryCodes[field]] ?? []);
 }
 export function dictionaryText(dictionaries: SubscriptionDictionaries, field: string, record: Record<string, any>) {
-  const item = dictionaryOptions(dictionaries, field).find((item) => item.value === record[field]);
-  return item?.label ?? record[`${field}_dictText`] ?? record[field] ?? '—';
+  return dictionaryCodes[field]
+    ? businessDictionaryText(dictionaryCodes[field], record[field])
+    : (record[`${field}_dictText`] ?? record[field] ?? '—');
 }
 export function createColumns(dictionaries: SubscriptionDictionaries = {}): BasicColumn[] {
   const { t } = useI18n();

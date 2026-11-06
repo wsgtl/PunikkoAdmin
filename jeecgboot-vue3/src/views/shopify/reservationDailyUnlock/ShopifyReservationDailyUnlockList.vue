@@ -76,6 +76,7 @@
   </div>
 </template>
 <script lang="ts" setup>
+  import { businessDictionaryText } from '/@/locales/business/dictionaryAdapter';
   import { computed, nextTick, ref, watch } from 'vue';
   import { BasicTable, TableAction } from '/@/components/Table';
   import { BasicModal, useModal } from '/@/components/Modal';
@@ -167,7 +168,11 @@
     if (!detail.value) return '—';
     const record = detail.value;
     const value =
-      field === 'mode' ? (record.mode_dictText ?? record.mode) : field === 'storeRef' ? (record.storeRef_dictText ?? record.storeRef) : record[field];
+      field === 'mode'
+        ? businessDictionaryText('shopify_reservation_mode', record.mode)
+        : field === 'storeRef'
+          ? (record.storeRef_dictText ?? record.storeRef)
+          : record[field];
     return value == null || value === '' ? '—' : value;
   }
 </script>

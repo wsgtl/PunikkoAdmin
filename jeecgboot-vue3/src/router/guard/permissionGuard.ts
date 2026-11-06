@@ -162,15 +162,10 @@ export function createPermissionGuard(router: Router) {
 
     router.addRoute(PAGE_NOT_FOUND_ROUTE as unknown as RouteRecordRaw);
     permissionStore.setDynamicAddedRoute(true);
-    // 代码逻辑说明: 【issues/7500】vue-router4.5.0版本路由name:PageNotFound同名导致登录进不去
-    if (to.name === PAGE_NOT_FOUND_NAME_404) {
-      // 动态添加路由后，此处应当重定向到fullPath，否则会加载404页面内容
-      return { path: to.fullPath, replace: true, query: to.query };
-    } else {
-      const redirectPath = (from.query.redirect || to.path) as string;
-      const redirect = decodeURIComponent(redirectPath);
-      const nextData = to.path === redirect ? { ...to, replace: true } : { path: redirect };
-      return nextData;
-    }
+    // Re-resolve by URL after registration. Spreading `to` retains its old name/matched records.
+    // Preserve query/hash without passing fullPath as path and query a second time.
+    const redirectPath = (from.query.redirect || to.fullPath) as string;
+    const { path, query, hash } = router.resolve(redirectPath);
+    return { path, query, hash, replace: true };
   });
 }

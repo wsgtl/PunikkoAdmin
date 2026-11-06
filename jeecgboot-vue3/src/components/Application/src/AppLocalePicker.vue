@@ -11,7 +11,7 @@
     @menuEvent="handleMenuEvent"
     overlayClassName="app-locale-picker-overlay"
   >
-    <span class="cursor-pointer flex items-center">
+    <span class="cursor-pointer flex items-center" :aria-busy="localeSwitchPending" :aria-disabled="localeSwitchPending">
       <Icon icon="ion:language" />
       <span v-if="showText" class="ml-1">{{ getLocaleText }}</span>
     </span>
@@ -24,6 +24,9 @@
   import { Dropdown } from '/@/components/Dropdown';
   import { Icon } from '/@/components/Icon';
   import { useLocale } from '/@/locales/useLocale';
+  import { useMessage } from '/@/hooks/web/useMessage';
+  import { useI18n } from '/@/hooks/web/useI18n';
+  import { acquireLocaleSwitch, releaseLocaleSwitch, localeSwitchPending } from '/@/locales/localeSwitchGuard';
   import { localeList } from '/@/settings/localeSetting';
 
   const props = defineProps({
@@ -37,6 +40,8 @@
     reload: { type: Boolean },
   });
 
+  const { t } = useI18n();
+  const { createMessage } = useMessage();
   const selectedKeys = ref<string[]>([]);
 
   const { changeLocale, getLocale } = useLocale();
@@ -54,9 +59,21 @@
   });
 
   async function toggleLocale(lang: LocaleType | string) {
-    await changeLocale(lang as LocaleType);
-    selectedKeys.value = [lang as string];
-    props.reload && location.reload();
+    if (!acquireLocaleSwitch()) return;
+    let refreshing = false;
+    try {
+      const changed = await changeLocale(lang as LocaleType);
+      if (!changed) return;
+      selectedKeys.value = [changed];
+      if (props.reload) {
+        location.reload();
+        refreshing = true;
+      }
+    } catch {
+      createMessage.error(t('punikko.languageSwitchFailed'));
+    } finally {
+      if (!refreshing) releaseLocaleSwitch();
+    }
   }
 
   function handleMenuEvent(menu: DropMenu) {

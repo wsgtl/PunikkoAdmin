@@ -26,7 +26,7 @@
   import { useDesign } from '/@/hooks/web/useDesign';
   import { useRootSetting } from '/@/hooks/setting/useRootSetting';
   import { useGo } from '/@/hooks/web/usePage';
-  import { useI18n } from '/@/hooks/web/useI18n';
+  import { useNavigationI18n } from '/@/hooks/web/useNavigationI18n';
 
   import { propTypes } from '/@/utils/propTypes';
   import { isString } from '/@/utils/is';
@@ -49,7 +49,7 @@
       const { getShowBreadCrumbIcon } = useRootSetting();
       const go = useGo();
 
-      const { t } = useI18n();
+      const { t } = useNavigationI18n();
       watchEffect(async () => {
         if (currentRoute.value.name === REDIRECT_NAME) return;
         const menus = await getMenus();

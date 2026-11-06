@@ -1,3 +1,4 @@
+import { businessDictionaryText } from '/@/locales/business/dictionaryAdapter';
 import type { BasicColumn } from '/@/components/Table';
 import type { FormSchema } from '/@/components/Form';
 import { useI18n } from '/@/hooks/web/useI18n';
@@ -11,7 +12,12 @@ export function createColumns(): BasicColumn[] {
     width: field === 'customerId' || field === 'reason' ? 280 : 160,
     align: 'center',
     ellipsis: true,
-    ...(['mode', 'storeRef'].includes(field) ? { customRender: ({ record }) => record[`${field}_dictText`] ?? record[field] } : {}),
+    ...(['mode', 'storeRef'].includes(field)
+      ? {
+          customRender: ({ record }) =>
+            field === 'mode' ? businessDictionaryText('shopify_reservation_mode', record.mode) : (record[`${field}_dictText`] ?? record[field]),
+        }
+      : {}),
   }));
 }
 export function createSearchSchemas(modeOptions: () => { label: string; value: string }[]): FormSchema[] {

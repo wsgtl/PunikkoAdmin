@@ -18,7 +18,7 @@
       <Menu @click="handleMenuClick">
         <MenuItem itemKey="doc" :text="t('layout.header.dropdownItemDoc')" icon="ion:document-text-outline" v-if="getShowDoc" />
         <MenuDivider v-if="getShowDoc" />
-        <MenuItem itemKey="account" :text="t('layout.header.dropdownItemSwitchAccount')" icon="ant-design:setting-outlined" />
+        <MenuItem v-if="showAccountSettings" itemKey="account" :text="t('layout.header.dropdownItemSwitchAccount')" icon="ant-design:setting-outlined" />
         <MenuItem itemKey="password" :text="t('layout.header.dropdownItemSwitchPassword')" icon="ant-design:edit-outlined" />
         <MenuItem itemKey="cache" :text="t('layout.header.dropdownItemRefreshCache')" icon="ion:sync-outline" />
         <!-- <MenuItem
@@ -75,6 +75,8 @@
     props: {
       theme: propTypes.oneOf(['dark', 'light']),
       placement: propTypes.oneOf(['topLeft', 'topRight', 'bottomLeft', 'bottomRight']).def('bottomLeft'),
+      // Account settings page is not available yet; enable this prop when the page is ready.
+      showAccountSettings: propTypes.bool.def(false),
     },
     setup() {
       const { prefixCls } = useDesign('header-user-dropdown');
@@ -230,18 +232,25 @@
     }
 
     &-dropdown-overlay {
-      // 代码逻辑说明: 【QQYUN-7512】顶部账号划过首次弹出时位置会变更一下
-      width: 160px;
+      width: max-content;
+      min-width: 160px;
+      max-width: calc(100vw - 24px);
+
       .ant-dropdown-menu-item {
-        min-width: 160px;
-      }
-    }
-  }
-  // 代码逻辑说明: 【QQYUN-13013】切换到英文模式下拉菜单宽度有点窄
-  html[lang="en"] {
-    .@{prefix-cls} {
-      &-dropdown-overlay {
-        width: 175px;
+        padding: 8px 16px;
+
+        > .ant-dropdown-menu-title-content > span {
+          gap: 6px;
+
+          > :first-child {
+            flex-shrink: 0;
+          }
+
+          > span:last-child {
+            white-space: normal;
+            overflow-wrap: anywhere;
+          }
+        }
       }
     }
   }

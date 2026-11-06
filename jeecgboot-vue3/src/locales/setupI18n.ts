@@ -16,9 +16,12 @@ async function createI18nOptions(): Promise<I18nOptions> {
   const defaultLocal = await import(`./lang/${locale}.ts`);
   const message = defaultLocal.default?.message ?? {};
 
+  const fallbackModule = locale === fallback ? defaultLocal : await import(`./lang/${fallback}.ts`);
+  const fallbackMessage = fallbackModule.default?.message ?? {};
+
   setHtmlPageLang(locale);
   setLoadLocalePool((loadLocalePool) => {
-    loadLocalePool.push(locale);
+    loadLocalePool.push(...new Set([locale, fallback]));
   });
 
   return {
@@ -26,6 +29,7 @@ async function createI18nOptions(): Promise<I18nOptions> {
     locale,
     fallbackLocale: fallback,
     messages: {
+      [fallback]: fallbackMessage,
       [locale]: message,
     },
     availableLocales: availableLocales,
@@ -41,4 +45,8 @@ export async function setupI18n(app: App) {
   const options = await createI18nOptions();
   i18n = createI18n(options) as I18n;
   app.use(i18n);
+  // Reconcile the early loading hint with the authoritative framework locale cache.
+  const loadingTitle = document.getElementById('punikko-loading-title');
+  if (loadingTitle) loadingTitle.textContent = String(i18n.global.t('punikko.admin'));
+  try { localStorage.setItem('punikko.loading.locale', String(options.locale)); } catch { /* Storage can be unavailable. */ }
 }

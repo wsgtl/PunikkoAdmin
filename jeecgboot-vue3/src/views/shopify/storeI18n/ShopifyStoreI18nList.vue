@@ -82,6 +82,7 @@
   </div>
 </template>
 <script setup lang="ts">
+  import { businessDictionaryText } from '/@/locales/business/dictionaryAdapter';
   import { computed, ref, onMounted, nextTick, watch } from 'vue';
   import { BasicTable, TableAction } from '/@/components/Table';
   import type { BasicColumn } from '/@/components/Table';
@@ -107,7 +108,7 @@
   const storesLoading = ref(false);
   const languages = computed(() =>
     ((userStore.getAllDictItems as unknown as Record<string, { value: string; text?: string; label?: string }[]>)?.shopify_language ?? []).map(
-      (item) => ({ value: item.value, label: item.text ?? item.label ?? item.value })
+      (item) => ({ value: item.value, label: businessDictionaryText('shopify_language', item.value) })
     )
   );
   async function loadStores() {
@@ -133,7 +134,7 @@
         field === 'storeId'
           ? (stores.value.find((item) => item.value === record.storeId)?.label ?? record.storeId_dictText ?? record.storeId)
           : field === 'language'
-            ? (languages.value.find((item) => item.value === record.language)?.label ?? record.language_dictText ?? record.language)
+            ? businessDictionaryText('shopify_language', record.language)
             : record[field] || '—',
     }))
   );
@@ -189,7 +190,7 @@
     if (!record.id || saving.value || deletePending.value || !hasPermission(permission('delete'))) return;
     const id = record.id;
     const name = stores.value.find((item) => item.value === record.storeId)?.label ?? record.storeId_dictText ?? record.storeId;
-    const language = languages.value.find((item) => item.value === record.language)?.label ?? record.language_dictText ?? record.language;
+    const language = businessDictionaryText('shopify_language', record.language);
     deletePending.value = true;
     createConfirm({
       iconType: 'warning',
