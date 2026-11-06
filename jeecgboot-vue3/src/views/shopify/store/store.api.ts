@@ -3,6 +3,31 @@ export interface StoreRecord {
   id?: string;
   [key: string]: any;
 }
+export interface StoreTranslation {
+  id?: string;
+  storeId?: string;
+  language: string;
+  storeName?: string;
+  storeAddress?: string;
+  remark?: string;
+  reservationNotice?: string;
+  storeMatters?: string;
+}
+export function initializeStoreTranslations(rows: StoreTranslation[] = []): StoreTranslation[] {
+  const languages = ['zh', 'en', 'ja'];
+  return [
+    ...languages.map((language) => ({
+      storeName: '',
+      storeAddress: '',
+      remark: '',
+      reservationNotice: '',
+      storeMatters: '',
+      ...rows.find((row) => row.language === language),
+      language,
+    })),
+    ...rows.filter((row) => !languages.includes(row.language)).map((row) => ({ ...row })),
+  ];
+}
 export interface Slot {
   time: string;
   reservedAt: string;
@@ -65,6 +90,7 @@ export const searchUsers = (realname: string) =>
 // 初始值依据新增门店原型；每次打开返回独立对象，避免带入上次编辑内容。
 export function createStoreDraft(): StoreRecord {
   return {
+    shopifyStoreI18nList: initializeStoreTranslations(),
     code: '',
     storeName: '',
     publishStatus: 'N',

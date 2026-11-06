@@ -1,5 +1,17 @@
 export default {
   storeReservation: {
+    cancelBooking: '取消',
+    cancelTitle: '取消预约确认',
+    cancelPrompt: '确定取消预约「{code}」吗？',
+    confirmCancel: '确认取消预约',
+    cancelSuccess: '预约已取消',
+
+    verifyTitle: '核销确认',
+    confirmVerify: '确认核销',
+    verifyPrompt: '请确认以下预约信息，确认后将核销该预约。',
+    verifyExpired: '该预约已过期，无法核销。',
+    verifyUnavailable: '当前预约状态不支持核销。',
+
     title: '门店预约管理',
     code: '预约码',
     customerName: '客户姓名',
@@ -180,6 +192,14 @@ export default {
     detail: '绑定审核详情',
   },
   storeManagement: {
+    basicSection: '基本信息',
+    reservationSection: '预约设置',
+    staffSection: '人员与营业信息',
+    notesSection: '门店事项与备注',
+    translationExpandHint: '点击语言行左侧「＋」编辑该语言的预约公告、门店事项。',
+
+    translations: '多语言内容',
+    translationFallback: '留空使用门店默认内容',
     delete: '删除',
     deleteTitle: '删除门店',
     deleteConfirm: '确定删除门店“{name}”吗？',

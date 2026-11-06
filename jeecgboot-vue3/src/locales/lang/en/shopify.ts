@@ -1,5 +1,17 @@
 export default {
   storeReservation: {
+    cancelBooking: 'Cancel',
+    cancelTitle: 'Cancel reservation',
+    cancelPrompt: 'Cancel reservation “{code}”?',
+    confirmCancel: 'Confirm cancellation',
+    cancelSuccess: 'Reservation cancelled',
+
+    verifyTitle: 'Confirm redemption',
+    confirmVerify: 'Confirm redemption',
+    verifyPrompt: 'Check the reservation below before confirming redemption.',
+    verifyExpired: 'This reservation has expired and cannot be redeemed.',
+    verifyUnavailable: 'This reservation cannot be redeemed in its current status.',
+
     title: 'Store reservations',
     code: 'Reservation code',
     customerName: 'Customer name',
@@ -180,6 +192,14 @@ export default {
     detail: 'Binding review details',
   },
   storeManagement: {
+    basicSection: 'Basic information',
+    reservationSection: 'Reservation settings',
+    staffSection: 'Staff and business hours',
+    notesSection: 'Store information and notes',
+    translationExpandHint: 'Expand a language row to edit its reservation notice and store information.',
+
+    translations: 'Multilingual content',
+    translationFallback: 'Leave blank to use the store default',
     delete: 'Delete',
     deleteTitle: 'Delete store',
     deleteConfirm: 'Delete store “{name}”?',

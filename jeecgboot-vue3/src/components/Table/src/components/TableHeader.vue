@@ -13,7 +13,13 @@
       <div :class="`${prefixCls}__toolbar`">
         <slot name="toolbar"></slot>
         <Divider type="vertical" v-if="$slots.toolbar && showTableSetting" />
-        <TableSetting :class="`${prefixCls}__toolbar-desktop`" style="white-space: nowrap;" :setting="tableSetting" v-if="showTableSetting" @columns-change="handleColumnChange" />
+        <TableSetting
+          :class="`${prefixCls}__toolbar-desktop`"
+          style="white-space: nowrap"
+          :setting="tableSetting"
+          v-if="showTableSetting"
+          @columns-change="handleColumnChange"
+        />
         <a-popover :overlayClassName="`${prefixCls}__toolbar-mobile`" trigger="click" placement="left" :getPopupContainer="(n) => n?.parentElement">
           <template #content>
             <TableSetting mode="mobile" :setting="tableSetting" v-if="showTableSetting" @columns-change="handleColumnChange" />
@@ -23,7 +29,7 @@
       </div>
     </div>
     <!--添加tableTop插槽-->
-    <div style="margin: -4px 0 -2px; padding-top: 5px">
+    <div :class="`${prefixCls}__selection-alert`">
       <slot name="tableTop">
         <a-alert type="info" show-icon class="alert" v-if="openRowSelection != null">
           <template #message>
@@ -100,6 +106,14 @@
   @prefix-cls: ~'@{namespace}-basic-table-header';
 
   .@{prefix-cls} {
+    &__selection-alert {
+      margin: 8px 0 6px;
+
+      .alert {
+        margin: 0;
+      }
+    }
+
     &__toolbar {
       //flex: 1;
       width: 140px;

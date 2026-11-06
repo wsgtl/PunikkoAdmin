@@ -12,20 +12,21 @@
         <TableAction :actions="[{ label: t('shopify.storeReservation.detail'), onClick: () => showDetail(record) }]" />
       </template>
     </BasicTable>
-    <BasicModal @register="registerDetail" :title="t('shopify.reservationSlotStat.detail')" :showOkBtn="false" :width="800">
+    <BusinessDetailPanel @register="registerDetail" :title="t('shopify.reservationSlotStat.detail')" :showOkBtn="false" :width="800">
       <a-descriptions v-if="detail" bordered :column="1" size="small">
         <a-descriptions-item v-for="field in detailFields" :key="field" :label="t(`shopify.reservationSlotStat.${field}`)">
           {{ displayValue(field) }}
         </a-descriptions-item>
       </a-descriptions>
-    </BasicModal>
+    </BusinessDetailPanel>
   </div>
 </template>
 
 <script lang="ts" setup>
   import { computed, reactive, ref, watch } from 'vue';
   import { BasicTable, TableAction } from '/@/components/Table';
-  import { BasicModal, useModal } from '/@/components/Modal';
+  import BusinessDetailPanel from '/@/components/BusinessDetail/BusinessDetailPanel.vue';
+  import { useModal } from '/@/components/Modal';
   import { useListPage } from '/@/hooks/system/useListPage';
   import { useI18n } from '/@/hooks/web/useI18n';
   import SuperQuery from '/@/views/super/online/cgform/auto/comp/superquery/SuperQuery.vue';

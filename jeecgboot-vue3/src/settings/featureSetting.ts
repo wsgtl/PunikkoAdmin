@@ -2,4 +2,6 @@
 export const featureSetting = {
   // 高级查询：所有复用 SuperQuery 的页面统一控制，开启后仍遵循页面自身权限。
   showSuperQuery: false,
+  // 门店事项、预约公告：图片、视频、链接及图片上传入口。
+  showStoreRichTextMedia: false,
 };

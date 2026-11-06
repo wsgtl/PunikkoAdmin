@@ -24,7 +24,8 @@
           :actions="[{ label: label('editAction'), auth: permission('edit'), onClick: () => openEditor(record) }]"
       /></template>
     </BasicTable>
-    <BasicModal
+    <BusinessDetailPanel
+      :detail-mode="readOnly"
       @register="registerEditor"
       :title="label(readOnly ? 'detail' : adding ? 'add' : 'edit')"
       :showOkBtn="!readOnly"
@@ -65,7 +66,10 @@
           ></a-col>
           <a-col v-for="field in richFields" :key="field" :span="24"
             ><a-form-item :name="field" :label="label(field)"
-              ><Tinymce
+              ><div v-if="readOnly" class="detail-rich-text" v-html="sanitizeHtml(draft[field] || '—')" />
+              <Tinymce
+                v-bind="storeRichTextSetting"
+                v-else
                 :key="`${editorVersion}-${field}`"
                 v-model="draft[field]"
                 :height="180"
@@ -78,7 +82,7 @@
           ></a-col>
         </a-row>
       </a-form>
-    </BasicModal>
+    </BusinessDetailPanel>
   </div>
 </template>
 <script setup lang="ts">
@@ -87,7 +91,10 @@
   import { BasicTable, TableAction } from '/@/components/Table';
   import type { BasicColumn } from '/@/components/Table';
   import type { FormSchema } from '/@/components/Form';
-  import { BasicModal, useModal } from '/@/components/Modal';
+  import sanitizeHtml from 'xss';
+  import BusinessDetailPanel from '/@/components/BusinessDetail/BusinessDetailPanel.vue';
+  import { useModal } from '/@/components/Modal';
+  import { storeRichTextSetting } from '/@/settings/storeRichTextSetting';
   import { Tinymce } from '/@/components/Tinymce';
   import { useListPage } from '/@/hooks/system/useListPage';
   import { useI18n } from '/@/hooks/web/useI18n';

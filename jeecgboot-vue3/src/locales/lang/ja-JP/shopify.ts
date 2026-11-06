@@ -1,5 +1,17 @@
 export default {
   storeReservation: {
+    cancelBooking: 'キャンセル',
+    cancelTitle: '予約キャンセルの確認',
+    cancelPrompt: '予約「{code}」をキャンセルしますか？',
+    confirmCancel: 'キャンセルを確定',
+    cancelSuccess: '予約をキャンセルしました',
+
+    verifyTitle: '利用確認',
+    confirmVerify: '利用を確定',
+    verifyPrompt: '予約内容を確認してから利用を確定してください。',
+    verifyExpired: 'この予約は期限切れのため利用できません。',
+    verifyUnavailable: '現在の予約状態では利用を確定できません。',
+
     title: '店舗予約管理',
     code: '予約コード',
     customerName: '顧客名',
@@ -180,6 +192,14 @@ export default {
     detail: '連携審査の詳細',
   },
   storeManagement: {
+    basicSection: '基本情報',
+    reservationSection: '予約設定',
+    staffSection: 'スタッフ・営業時間',
+    notesSection: '店舗案内・備考',
+    translationExpandHint: '言語行の「＋」から予約のお知らせと店舗案内を編集できます。',
+
+    translations: '多言語コンテンツ',
+    translationFallback: '空欄の場合は店舗の既定内容を使用',
     delete: '削除',
     deleteTitle: '店舗削除',
     deleteConfirm: '店舗「{name}」を削除しますか？',

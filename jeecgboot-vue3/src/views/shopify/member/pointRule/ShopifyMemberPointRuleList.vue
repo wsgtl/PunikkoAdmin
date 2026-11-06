@@ -13,7 +13,8 @@
         />
       </template>
     </BasicTable>
-    <BasicModal
+    <BusinessDetailPanel
+      :detail-mode="readonly"
       @register="registerModal"
       :title="label(readonly ? 'detailTitle' : adding ? 'addTitle' : 'editTitle')"
       :width="950"
@@ -65,7 +66,7 @@
           </a-row>
         </a-form>
       </a-spin>
-    </BasicModal>
+    </BusinessDetailPanel>
   </div>
 </template>
 <script setup lang="ts">
@@ -74,7 +75,8 @@
   import { BasicTable, TableAction } from '/@/components/Table';
   import type { BasicColumn } from '/@/components/Table';
   import type { FormSchema } from '/@/components/Form';
-  import { BasicModal, useModal } from '/@/components/Modal';
+  import BusinessDetailPanel from '/@/components/BusinessDetail/BusinessDetailPanel.vue';
+  import { useModal } from '/@/components/Modal';
   import JDictSelectTag from '/@/components/Form/src/jeecg/components/JDictSelectTag.vue';
   import { useListPage } from '/@/hooks/system/useListPage';
   import { useI18n } from '/@/hooks/web/useI18n';

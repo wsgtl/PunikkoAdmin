@@ -26,10 +26,9 @@
           ]"
       /></template>
     </BasicTable>
-    <BasicModal
+    <SectionedEditorModal
       @register="registerEdit"
       :title="label(isAdding ? 'add' : 'edit')"
-      :width="1200"
       :confirmLoading="saving"
       :okButtonProps="{ disabled: loading || !draft || !hasPermission(savePermission) }"
       :closeFunc="canClose"
@@ -37,69 +36,95 @@
     >
       <a-spin :spinning="loading">
         <a-alert v-if="editFailed" type="error" :message="label('loadFailed')" />
-        <a-form v-if="draft" ref="form" :model="draft" layout="vertical" class="compact-store-form">
-          <a-row :gutter="[16, 0]">
-            <a-col
-              v-for="field in editFields"
-              :key="field"
-              :xs="24"
-              :md="['remark', 'reservationNotice', 'storeMatters'].includes(field) ? 24 : 12"
-              :lg="fieldSpan(field)"
+        <a-form v-if="draft" ref="form" :model="draft" layout="horizontal">
+          <EditorSection v-for="section in editorSections" :key="section.title" :title="label(section.title)">
+            <a-row :gutter="[24, 0]">
+              <a-col v-for="field in section.fields" :key="field" :xs="24" :md="fieldSpan(field)">
+                <a-form-item :name="field" :label="label(field)" :rules="requiredFields.includes(field) ? [{ required: true }] : []">
+                  <Tinymce
+                    v-bind="storeRichTextSetting"
+                    v-if="['reservationNotice', 'storeMatters'].includes(field)"
+                    :key="`${draft.id}-${field}`"
+                    v-model="draft[field]"
+                    :height="180"
+                    :options="{ min_height: 150, statusbar: false }"
+                    :disabled="saving"
+                  />
+                  <a-checkbox-group v-else-if="field === 'businessDays'" v-model:value="days" :options="businessOptions" :disabled="saving" />
+                  <a-select
+                    v-else-if="dictCodes[field]"
+                    v-model:value="draft[field]"
+                    :options="dictOptions(field)"
+                    :disabled="saving || (isAdding && field === 'hasReservableProducts')"
+                  />
+                  <JSelectUser
+                    v-else-if="staffFields.includes(field)"
+                    :key="`${editorKey}-${field}`"
+                    v-model:value="draft[field]"
+                    rowKey="id"
+                    labelKey="realname"
+                    :pagination="{ pageSize: 10 }"
+                    :disabled="saving"
+                  />
+                  <a-input-number
+                    v-else-if="numberFields.includes(field)"
+                    class="editor-number"
+                    v-model:value="draft[field]"
+                    :min="0"
+                    :precision="0"
+                    :disabled="saving"
+                    style="width: 100%"
+                  />
+                  <a-time-picker
+                    v-else-if="['openTime', 'closeTime'].includes(field)"
+                    v-model:value="draft[field]"
+                    format="HH:mm"
+                    value-format="HH:mm"
+                    :disabled="saving"
+                    style="width: 100%"
+                  />
+                  <a-textarea
+                    v-else-if="['storeAddress', 'remark'].includes(field)"
+                    v-model:value="draft[field]"
+                    :auto-size="{ minRows: 1, maxRows: 2 }"
+                    :disabled="saving"
+                  />
+                  <a-input v-else v-model:value="draft[field]" :disabled="saving" allow-clear />
+                </a-form-item>
+              </a-col>
+            </a-row>
+          </EditorSection>
+          <EditorSection :title="label('translations')">
+            <p class="translation-help">{{ label('translationExpandHint') }}</p>
+            <a-table
+              :data-source="draft.shopifyStoreI18nList"
+              :columns="translationColumns"
+              row-key="language"
+              :pagination="false"
+              :scroll="{ x: 760 }"
+              size="small"
             >
-              <a-form-item :name="field" :label="label(field)" :rules="requiredFields.includes(field) ? [{ required: true }] : []">
-                <Tinymce
-                  v-if="['reservationNotice', 'storeMatters'].includes(field)"
-                  :key="`${draft.id}-${field}`"
-                  v-model="draft[field]"
-                  :height="180"
-                  :options="{ min_height: 150, statusbar: false }"
-                  :disabled="saving"
-                />
-                <a-checkbox-group v-else-if="field === 'businessDays'" v-model:value="days" :options="businessOptions" :disabled="saving" />
-                <a-select
-                  v-else-if="dictCodes[field]"
-                  v-model:value="draft[field]"
-                  :options="dictOptions(field)"
-                  :disabled="saving || (isAdding && field === 'hasReservableProducts')"
-                />
-                <JSelectUser
-                  v-else-if="staffFields.includes(field)"
-                  :key="`${editorKey}-${field}`"
-                  v-model:value="draft[field]"
-                  rowKey="id"
-                  labelKey="realname"
-                  :pagination="{ pageSize: 10 }"
-                  :disabled="saving"
-                />
-                <a-input-number
-                  v-else-if="numberFields.includes(field)"
-                  v-model:value="draft[field]"
-                  :min="0"
-                  :precision="0"
-                  :disabled="saving"
-                  style="width: 100%"
-                />
-                <a-time-picker
-                  v-else-if="['openTime', 'closeTime'].includes(field)"
-                  v-model:value="draft[field]"
-                  format="HH:mm"
-                  value-format="HH:mm"
-                  :disabled="saving"
-                  style="width: 100%"
-                />
-                <a-textarea
-                  v-else-if="['storeAddress', 'remark'].includes(field)"
-                  v-model:value="draft[field]"
-                  :auto-size="{ minRows: 1, maxRows: 2 }"
-                  :disabled="saving"
-                />
-                <a-input v-else v-model:value="draft[field]" :disabled="saving" allow-clear />
-              </a-form-item>
-            </a-col>
-          </a-row>
+              <template #bodyCell="{ column, record }">
+                <span v-if="column.dataIndex === 'language'">{{ businessDictionaryText('shopify_language', record.language) }}</span>
+                <a-input v-else v-model:value="record[column.dataIndex]" :disabled="saving" :placeholder="label('translationFallback')" />
+              </template>
+              <template #expandedRowRender="{ record }">
+                <a-form-item v-for="field in ['reservationNotice', 'storeMatters']" :key="field" :label="label(field)">
+                  <Tinymce
+                    :key="`${editorKey}-${record.language}-${field}`"
+                    v-model="record[field]"
+                    v-bind="storeRichTextSetting"
+                    :height="180"
+                    :options="{ min_height: 150, statusbar: false }"
+                    :disabled="saving"
+                  />
+                </a-form-item>
+              </template>
+            </a-table>
+          </EditorSection>
         </a-form>
       </a-spin>
-    </BasicModal>
+    </SectionedEditorModal>
     <BasicModal @register="registerSlots" :title="`${slotName} - ${label('slots')}`" :width="1100" :showOkBtn="false" @cancel="invalidateSlots">
       <a-spin :spinning="slotsLoading">
         <a-alert v-if="slotsFailed" type="error" :message="label('loadFailed')" />
@@ -130,15 +155,18 @@
   import type { FormSchema } from '/@/components/Form';
   import { BasicModal, useModal } from '/@/components/Modal';
   import JSelectUser from '/@/components/Form/src/jeecg/components/JSelectUser.vue';
+  import { storeRichTextSetting } from '/@/settings/storeRichTextSetting';
+  import SectionedEditorModal from '/@/components/SectionedEditor/SectionedEditorModal.vue';
+  import EditorSection from '/@/components/SectionedEditor/EditorSection.vue';
   import { Tinymce } from '/@/components/Tinymce';
   import { useListPage } from '/@/hooks/system/useListPage';
   import { useUserStore } from '/@/store/modules/user';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { usePermission } from '/@/hooks/web/usePermission';
-  import { list, queryForm, getBusinessDays, save, add, getSlots, createStoreDraft, deleteStore } from './store.api';
+  import { list, queryForm, getBusinessDays, save, add, getSlots, createStoreDraft, deleteStore, initializeStoreTranslations } from './store.api';
   import type { StoreRecord, StoreSlots } from './store.api';
-  import { editFields, listFields, staffFields, numberFields, dictCodes, slotFields } from './store.data';
+  import { listFields, staffFields, numberFields, dictCodes, slotFields } from './store.data';
   defineOptions({ name: 'ShopifyStoreList' });
   const { t } = useI18n();
   const { hasPermission } = usePermission();
@@ -188,6 +216,13 @@
   const [registerSlots, { openModal: showSlots }] = useModal();
   const isAdding = ref(false);
   const editorKey = ref(0);
+  const translationColumns = computed(() =>
+    ['language', 'storeName', 'storeAddress', 'remark'].map((field) => ({
+      title: field === 'language' ? t('shopify.storeI18n.language') : label(field),
+      dataIndex: field,
+      width: field === 'language' ? 110 : 220,
+    }))
+  );
   const savePermission = computed(() => `shopify:shopify_store:${isAdding.value ? 'add' : 'edit'}`);
   const draft = ref<StoreRecord>();
   const form = ref();
@@ -197,11 +232,14 @@
   const days = ref<string[]>([]);
   const businessOptions = ref<{ value: string; label: string }[]>([]);
   const requiredFields = ['code', 'storeName', 'publishStatus', 'businessDays', ...numberFields, ...staffFields, 'openTime', 'closeTime'];
+  const editorSections = [
+    { title: 'basicSection', fields: ['code', 'storeName', 'publishStatus', 'hasReservableProducts', 'storeAddress', 'reservationNotice'] },
+    { title: 'reservationSection', fields: ['businessDays', 'reservableDays', 'reservableNumber', 'dailyReservableNumber'] },
+    { title: 'staffSection', fields: ['storeManagerId', 'deputyManagerIds', 'salesclerkIds', 'phone', 'openTime', 'closeTime'] },
+    { title: 'notesSection', fields: ['storeMatters', 'remark'] },
+  ];
   function fieldSpan(field: string) {
-    if (['remark', 'reservationNotice', 'storeMatters'].includes(field)) return 24;
-    if (['storeAddress', 'businessDays'].includes(field)) return 12;
-    if (['code', 'storeName', 'publishStatus', 'hasReservableProducts'].includes(field)) return 6;
-    return 8;
+    return ['storeAddress', 'businessDays', 'reservationNotice', 'storeMatters', 'remark'].includes(field) ? 24 : 12;
   }
   const splitIds = (value: unknown) =>
     String(value ?? '')
@@ -226,7 +264,7 @@
       const [data, dict] = await Promise.all([queryForm(record.id), getBusinessDays()]);
       businessOptions.value = dict.map((x) => ({ value: String(x.value), label: businessDictionaryText('shopify_business_day', x.value) }));
       days.value = splitIds(data.businessDays);
-      draft.value = { ...data };
+      draft.value = { ...data, shopifyStoreI18nList: initializeStoreTranslations(data.shopifyStoreI18nList ?? []) };
       await nextTick();
       form.value?.clearValidate();
     } catch {
@@ -348,22 +386,9 @@
   .store-page {
     padding: 16px;
   }
-  .compact-store-form {
-    :deep(.ant-form-item) {
-      margin-bottom: 10px;
-    }
-    :deep(.ant-form-item-label) {
-      padding-bottom: 3px;
-    }
-    :deep(.ant-checkbox-group) {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 4px 10px;
-      min-height: 32px;
-      align-items: center;
-    }
-    :deep(.ant-checkbox-wrapper) {
-      margin-inline-start: 0;
-    }
+  .translation-help {
+    color: #8c8c8c;
+    font-size: 12px;
+    margin-bottom: 12px;
   }
 </style>

@@ -38,7 +38,6 @@ export const loadDictionaries = () => defHttp.get<Record<string, DictItem[]>>({ 
 
 // 核销接口要求 POST，id 保持字符串并放在 URL 查询参数中。
 export const verifyReservation = (id: string) =>
-  defHttp.post<StoreReservation>(
-    { url: `/shopify/shopifyStoreReservation/verify?id=${encodeURIComponent(id)}` },
-    { errorMessageMode: 'none' }
-  );
+  defHttp.post<StoreReservation>({ url: `/shopify/shopifyStoreReservation/verify?id=${encodeURIComponent(id)}` }, { errorMessageMode: 'none' });
+
+export const cancelReservation = (id: string) => defHttp.post({ url: `/shopify/shopifyStoreReservation/cancel?id=${encodeURIComponent(id)}` });

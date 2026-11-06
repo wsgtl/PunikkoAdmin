@@ -13,7 +13,7 @@
         />
       </template>
     </BasicTable>
-    <BasicModal @register="registerDetail" :title="label('detail')" :showOkBtn="false" :width="900" @cancel="invalidateDetail">
+    <BusinessDetailPanel @register="registerDetail" :title="label('detail')" :showOkBtn="false" :width="900" @cancel="invalidateDetail">
       <a-spin :spinning="loading">
         <a-descriptions v-if="detail" bordered :column="1" size="small">
           <a-descriptions-item v-for="field in detailFields" :key="field" :label="label(field)"
@@ -21,13 +21,14 @@
           >
         </a-descriptions>
       </a-spin>
-    </BasicModal>
+    </BusinessDetailPanel>
   </div>
 </template>
 <script lang="ts" setup>
   import { computed, ref, watch } from 'vue';
   import { BasicTable, TableAction } from '/@/components/Table';
-  import { BasicModal, useModal } from '/@/components/Modal';
+  import BusinessDetailPanel from '/@/components/BusinessDetail/BusinessDetailPanel.vue';
+  import { useModal } from '/@/components/Modal';
   import { useListPage } from '/@/hooks/system/useListPage';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useUserStore } from '/@/store/modules/user';

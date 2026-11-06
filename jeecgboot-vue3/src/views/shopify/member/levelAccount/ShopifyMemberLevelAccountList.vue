@@ -5,7 +5,7 @@
         <TableAction :actions="[{ label: label('detail'), auth: detailPermission, onClick: () => openDetail(record) }]" />
       </template>
     </BasicTable>
-    <BasicModal @register="registerDetail" :title="label('detailTitle')" :width="1000" :showOkBtn="false" @cancel="cancelDetail">
+    <BusinessDetailPanel @register="registerDetail" :title="label('detailTitle')" :width="1000" :showOkBtn="false" @cancel="cancelDetail">
       <a-spin :spinning="loading">
         <a-alert v-if="failed" type="error" :message="label('loadFailed')" show-icon>
           <template #action
@@ -33,7 +33,7 @@
           </a-row>
         </a-form>
       </a-spin>
-    </BasicModal>
+    </BusinessDetailPanel>
   </div>
 </template>
 <script setup lang="ts">
@@ -41,7 +41,8 @@
   import { BasicTable, TableAction } from '/@/components/Table';
   import type { BasicColumn } from '/@/components/Table';
   import type { FormSchema } from '/@/components/Form';
-  import { BasicModal, useModal } from '/@/components/Modal';
+  import BusinessDetailPanel from '/@/components/BusinessDetail/BusinessDetailPanel.vue';
+  import { useModal } from '/@/components/Modal';
   import JSelectSingle from '/@/components/Form/src/jeecg/components/JSelectSingle.vue';
   import { useListPage } from '/@/hooks/system/useListPage';
   import { useI18n } from '/@/hooks/web/useI18n';

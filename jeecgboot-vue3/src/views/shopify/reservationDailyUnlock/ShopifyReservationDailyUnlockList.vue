@@ -66,19 +66,20 @@
         </a-form>
       </a-spin>
     </BasicModal>
-    <BasicModal @register="registerDetail" :title="t('shopify.dailyUnlock.detail')" :showOkBtn="false" :width="760">
+    <BusinessDetailPanel @register="registerDetail" :title="t('shopify.dailyUnlock.detail')" :showOkBtn="false" :width="760">
       <a-descriptions v-if="detail" bordered :column="1"
         ><a-descriptions-item v-for="field in detailFields" :key="field" :label="t(`shopify.dailyUnlock.${field}`)">{{
           detailValue(field)
         }}</a-descriptions-item></a-descriptions
       >
-    </BasicModal>
+    </BusinessDetailPanel>
   </div>
 </template>
 <script lang="ts" setup>
   import { businessDictionaryText } from '/@/locales/business/dictionaryAdapter';
   import { computed, nextTick, ref, watch } from 'vue';
   import { BasicTable, TableAction } from '/@/components/Table';
+  import BusinessDetailPanel from '/@/components/BusinessDetail/BusinessDetailPanel.vue';
   import { BasicModal, useModal } from '/@/components/Modal';
   import { useListPage } from '/@/hooks/system/useListPage';
   import { useI18n } from '/@/hooks/web/useI18n';
