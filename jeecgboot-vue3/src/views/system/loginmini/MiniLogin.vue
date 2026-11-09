@@ -8,6 +8,7 @@
         <img :src="adTextImg" alt="Punikko" />
         <h2>Punikko Admin</h2>
         <p>{{ t('punikko.admin') }}</p>
+        <p class="environment">{{ t('punikko.serverEnvironment') }}：{{ t(`punikko.${serverEnvironment}`) }}</p>
       </div>
       <section class="login-panel">
         <h1>{{ t('sys.login.signInFormTitle') }}</h1>
@@ -96,6 +97,8 @@
   import { useMessage } from '/@/hooks/web/useMessage';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useDesign } from '/@/hooks/web/useDesign';
+  import { useGlobSetting } from '/@/hooks/setting';
+  import { getServerEnvironment } from '/@/utils/serverEnvironment';
   import { createLocalStorage } from '/@/utils/cache';
   import { encryptAESCBC } from '/@/utils/cipher';
   import adTextImg from '/@/assets/images/logo.png';
@@ -108,6 +111,8 @@
   const userStore = useUserStore();
   const localeStore = useLocaleStore();
   const showLocale = computed(() => localeStore.getShowPicker);
+  const { shopifyApiUrl } = useGlobSetting();
+  const serverEnvironment = getServerEnvironment(shopifyApiUrl);
   const route = useRoute();
   const storage = createLocalStorage();
   const REMEMBER_USERNAME_KEY = 'LOGIN_REMEMBER_USERNAME';
@@ -232,6 +237,12 @@
     background: linear-gradient(145deg, #fceef0, #f2c4cc);
     h2 { margin-top: 32px; color: #633c36; font-size: 30px; font-weight: 600; }
     p { margin-top: 12px; color: #9e6370; font-size: 18px; }
+    .environment {
+      margin-top: 16px;
+      color: #bd7a85;
+      font-size: 13px;
+      font-weight: 500;
+    }
     img {
       width: 320px;
       max-width: 100%;
@@ -352,6 +363,11 @@
       img { width: 160px; }
       h2 { margin-top: 12px; font-size: 22px; }
       p { display: none; }
+      .environment {
+        display: block;
+        margin-top: 8px;
+        font-size: 12px;
+      }
     }
     .login-panel {
       padding: 32px 24px 40px;

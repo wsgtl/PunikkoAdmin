@@ -35,3 +35,6 @@ os_del.cmd
 /.history/
 /svn clear.bat
 .claude
+
+# Dedicated /admin/ test deployment bundle
+dist-admin-test/

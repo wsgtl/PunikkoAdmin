@@ -21,6 +21,7 @@
 <script setup lang="ts">
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useGlobSetting } from '/@/hooks/setting';
+  import { getServerEnvironment } from '/@/utils/serverEnvironment';
   import { computed } from 'vue';
   import { ShopOutlined, CalendarOutlined, ClockCircleOutlined } from '@ant-design/icons-vue';
   import { RouterLink, useRouter } from 'vue-router';
@@ -30,13 +31,7 @@
   defineOptions({ name: 'PunikkoWelcomePage' });
   const { t } = useI18n();
   const { shopifyApiUrl } = useGlobSetting();
-  const serverUrl = (shopifyApiUrl || '').trim().replace(/\/+$/, '');
-  const serverEnvironment =
-    serverUrl === 'https://www-api.h94b53add.nyat.app:59382/yueran'
-      ? 'testEnvironment'
-      : serverUrl === 'https://shopify.tokotoyz.lifestyle-hobby.top/yueran'
-        ? 'productionEnvironment'
-        : 'unknownEnvironment';
+  const serverEnvironment = getServerEnvironment(shopifyApiUrl);
   const userStore = useUserStore();
   const router = useRouter();
   // 使用已注册的授权路由，兼容后台菜单自定义路径。

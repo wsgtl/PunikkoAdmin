@@ -22,7 +22,8 @@
     "upgrade:log": "conventional-changelog -p angular -i CHANGELOG.md -s",
     "husky:install": "husky install",
     "build:prod": "cross-env NODE_ENV=production NODE_OPTIONS=--max-old-space-size=8192 vite build --mode production && esno ./build/script/postBuild.ts && esno ./build/script/copyChat.ts",
-    "build:test": "cross-env NODE_ENV=production NODE_OPTIONS=--max-old-space-size=8192 vite build --mode test && esno ./build/script/postBuild.ts && esno ./build/script/copyChat.ts"
+    "build:test": "cross-env NODE_ENV=production NODE_OPTIONS=--max-old-space-size=8192 vite build --mode test && esno ./build/script/postBuild.ts && esno ./build/script/copyChat.ts",
+    "build:test:admin": "cross-env VITE_PUBLIC_PATH=/admin/ NODE_ENV=production NODE_OPTIONS=--max-old-space-size=8192 vite build --mode test --outDir dist-admin-test/dist && cross-env BUILD_OUTPUT_DIR=dist-admin-test/dist esno ./build/script/postBuild.ts && cross-env BUILD_OUTPUT_DIR=dist-admin-test/dist esno ./build/script/copyChat.ts"
   },
   "dependencies": {
     "@jeecg/aiflow": "3.9.5-beta",

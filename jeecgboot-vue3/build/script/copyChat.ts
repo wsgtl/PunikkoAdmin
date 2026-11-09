@@ -2,7 +2,7 @@ const fs = require('fs-extra');
 const path = require('path');
 
 const sourceDir = path.join(__dirname, '../../src/views/super/airag/aiapp/chat/js'); // 源目录
-const destDir = path.join(__dirname, '../../dist', 'chat'); // 目标目录
+const destDir = path.join(__dirname, '../..', process.env.BUILD_OUTPUT_DIR || 'dist', 'chat'); // 目标目录
 
 // 复制目录
 fs.copy(sourceDir, destDir)

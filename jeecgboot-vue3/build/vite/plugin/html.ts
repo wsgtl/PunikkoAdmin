@@ -18,7 +18,7 @@ export function configHtmlPlugin(env: ViteEnv, isBuild: boolean, isQiankunMicro:
 
   // 【JEECG作为乾坤子应用】补充静态资源前缀
   const {VITE_GLOB_QIANKUN_MICRO_APP_ENTRY} = env;
-  const basePublicPath = isQiankunMicro ? VITE_GLOB_QIANKUN_MICRO_APP_ENTRY : '';
+  const basePublicPath = isQiankunMicro ? VITE_GLOB_QIANKUN_MICRO_APP_ENTRY : path.replace(/\/$/, '');
 
   const htmlPlugin: PluginOption[] = createHtmlPlugin({
     minify: isBuild,

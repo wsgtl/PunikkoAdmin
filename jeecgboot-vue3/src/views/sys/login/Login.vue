@@ -27,6 +27,9 @@
             :class="`${prefixCls}-form`"
             class="relative w-full px-5 py-8 mx-auto my-auto rounded-md shadow-md xl:ml-16 xl:bg-transparent sm:px-8 xl:p-4 xl:shadow-none sm:w-3/4 lg:w-2/4 xl:w-auto enter-x"
           >
+            <div class="login-server-environment">
+              {{ t('punikko.serverEnvironment') }}：{{ t(`punikko.${serverEnvironment}`) }}
+            </div>
             <LoginForm />
             <ForgetPasswordForm />
           </div>
@@ -42,6 +45,7 @@
   import LoginForm from './LoginForm.vue';
   import ForgetPasswordForm from './ForgetPasswordForm.vue';
   import { useGlobSetting } from '/@/hooks/setting';
+  import { getServerEnvironment } from '/@/utils/serverEnvironment';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useDesign } from '/@/hooks/web/useDesign';
   import { useLocaleStore } from '/@/store/modules/locale';
@@ -58,11 +62,23 @@
   const localeStore = useLocaleStore();
   const showLocale = localeStore.getShowPicker;
   const title = computed(() => globSetting?.title ?? '');
+  const serverEnvironment = getServerEnvironment(globSetting.shopifyApiUrl);
 </script>
 <style lang="less">
   @prefix-cls: ~'@{namespace}-login';
   @logo-prefix-cls: ~'@{namespace}-app-logo';
   @countdown-prefix-cls: ~'@{namespace}-countdown-input';
+  .login-server-environment {
+    margin: 0 auto 12px;
+    padding: 6px 10px;
+    border: 1px solid rgba(217, 121, 136, 0.28);
+    border-radius: 6px;
+    background: #fff5f7;
+    color: #bd7a85;
+    font-size: 13px;
+    line-height: 20px;
+    text-align: center;
+  }
   @dark-bg: #293146;
 
   html[data-theme='dark'] {
@@ -118,7 +134,9 @@
       box-shadow: 0 2px 10px rgb(215 124 135 / 14%);
       cursor: pointer;
 
-      &:hover { background: #fceef0; }
+      &:hover {
+        background: #fceef0;
+      }
     }
     @media (max-width: @screen-xl) {
       background-color: #293146;
