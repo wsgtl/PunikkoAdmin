@@ -6,6 +6,7 @@
       <h1>{{ t('punikko.welcome') }}</h1>
       <p class="welcome-greeting">{{ t('punikko.greeting', { name: userName }) }}</p>
       <p class="welcome-description">{{ t('punikko.description') }}</p>
+      <p class="welcome-environment">{{ t('punikko.serverEnvironment') }}：{{ t(`punikko.${serverEnvironment}`) }}</p>
       <nav v-if="shortcuts.length" class="welcome-topics" :aria-label="t('punikko.shortcuts')">
         <RouterLink v-for="item in shortcuts" :key="item.path" :to="item.path" class="welcome-shortcut">
           <component :is="item.icon" class="welcome-shortcut__icon" />
@@ -19,6 +20,7 @@
 
 <script setup lang="ts">
   import { useI18n } from '/@/hooks/web/useI18n';
+  import { useGlobSetting } from '/@/hooks/setting';
   import { computed } from 'vue';
   import { ShopOutlined, CalendarOutlined, ClockCircleOutlined } from '@ant-design/icons-vue';
   import { RouterLink, useRouter } from 'vue-router';
@@ -27,6 +29,14 @@
 
   defineOptions({ name: 'PunikkoWelcomePage' });
   const { t } = useI18n();
+  const { shopifyApiUrl } = useGlobSetting();
+  const serverUrl = (shopifyApiUrl || '').trim().replace(/\/+$/, '');
+  const serverEnvironment =
+    serverUrl === 'https://www-api.h94b53add.nyat.app:59382/yueran'
+      ? 'testEnvironment'
+      : serverUrl === 'https://shopify.tokotoyz.lifestyle-hobby.top/yueran'
+        ? 'productionEnvironment'
+        : 'unknownEnvironment';
   const userStore = useUserStore();
   const router = useRouter();
   // 使用已注册的授权路由，兼容后台菜单自定义路径。
@@ -68,11 +78,39 @@
     border-radius: 20px;
     box-shadow: 0 12px 40px #b975850c;
   }
-  .welcome-label { font-size: 12px; letter-spacing: 3px; color: #bb7c85; }
-  .welcome-logo { display: block; width: 240px; max-width: 70%; height: auto; margin: 32px auto; }
-  h1 { margin: 0; color: #633c36; font-size: clamp(22px, 3vw, 32px); font-weight: 600; }
-  .welcome-greeting { margin: 20px 0 8px; color: #d77c87; font-size: 18px; }
-  .welcome-description { color: #8c8587; line-height: 1.8; }
+  .welcome-label {
+    font-size: 12px;
+    letter-spacing: 3px;
+    color: #bb7c85;
+  }
+  .welcome-logo {
+    display: block;
+    width: 240px;
+    max-width: 70%;
+    height: auto;
+    margin: 32px auto;
+  }
+  h1 {
+    margin: 0;
+    color: #633c36;
+    font-size: clamp(22px, 3vw, 32px);
+    font-weight: 600;
+  }
+  .welcome-greeting {
+    margin: 20px 0 8px;
+    color: #d77c87;
+    font-size: 18px;
+  }
+  .welcome-description {
+    color: #8c8587;
+    line-height: 1.8;
+  }
+  .welcome-environment {
+    margin: 12px 0 0;
+    color: #bd7a85;
+    font-size: 14px;
+    font-weight: 500;
+  }
   .welcome-topics {
     display: flex;
     justify-content: center;
@@ -92,11 +130,31 @@
     background: #fff5f7;
     color: #bd7a85;
     line-height: 20px;
-    transition: background 0.2s, border-color 0.2s;
-    &:hover { color: #d77c87; background: #fceef0; border-color: #edc0c8; }
-    &:focus-visible { outline: 2px solid #d77c87; outline-offset: 3px; }
-    &__icon { display: inline-flex; align-items: center; font-size: 16px; line-height: 1; }
-    &__label { line-height: 20px; }
+    transition:
+      background 0.2s,
+      border-color 0.2s;
+    &:hover {
+      color: #d77c87;
+      background: #fceef0;
+      border-color: #edc0c8;
+    }
+    &:focus-visible {
+      outline: 2px solid #d77c87;
+      outline-offset: 3px;
+    }
+    &__icon {
+      display: inline-flex;
+      align-items: center;
+      font-size: 16px;
+      line-height: 1;
+    }
+    &__label {
+      line-height: 20px;
+    }
   }
-  .welcome-footer { margin: 24px 0 0; color: #b6a5a9; font-size: 12px; }
+  .welcome-footer {
+    margin: 24px 0 0;
+    color: #b6a5a9;
+    font-size: 12px;
+  }
 </style>

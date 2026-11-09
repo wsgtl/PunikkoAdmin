@@ -57,7 +57,10 @@ function getConfFiles() {
     return ['.env', '.env.prod_electron'];
   }
 
-  const script = process.env.npm_lifecycle_script;
+  const script = process.env.npm_lifecycle_script || '';
+  // Vite mode selects deployment configuration; NODE_ENV remains production for optimized test builds.
+  const explicitMode = script.match(/--mode(?:=|\s+)([a-z_\d-]+)/i)?.[1];
+  if (explicitMode) return ['.env', `.env.${explicitMode}`];
   // 代码逻辑说明: 【QQYUN-8690】修正获取当前环境下的文件名
   const reg = new RegExp('NODE_ENV=([a-z_\\d]+)');
   const result = reg.exec(script as string) as any;
