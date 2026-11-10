@@ -8,6 +8,7 @@ export const reservationFields = [
   'customerEmail',
   'customerPhone',
   'storeName',
+  'reservationSource',
   'status',
   'reservedAt',
   'expiresAt',
@@ -16,28 +17,38 @@ export const reservationFields = [
 
 export function createColumns(): BasicColumn[] {
   const { t } = useI18n();
-  const widths = [220, 160, 230, 150, 230, 110, 180, 180, 180];
+  const widths = [220, 160, 230, 150, 230, 150, 110, 180, 180, 180];
   return reservationFields.map((field, index) => ({
     title: t(`shopify.storeReservation.${field}`),
     dataIndex: field,
     width: widths[index],
     ellipsis: true,
     align: 'center',
+    ...(field === 'reservationSource' ? { slots: { customRender: 'reservationSource' } } : {}),
     ...(field === 'status' ? { slots: { customRender: 'status' } } : {}),
   }));
 }
 
 export function createSearchSchemas(statusOptions: () => { label: string; value: string | number }[]): FormSchema[] {
   const { t } = useI18n();
-  return ['code', 'customerName', 'customerEmail', 'customerPhone', 'storeName', 'status'].map((field) => ({
+  return ['code', 'customerName', 'customerEmail', 'customerPhone', 'storeName', 'reservationSource', 'status'].map((field) => ({
     field,
     label: t(`shopify.storeReservation.${field}`),
-    component: field === 'status' ? 'Select' : 'Input',
+    component: field === 'status' || field === 'reservationSource' ? 'Select' : 'Input',
     colProps: { xs: 24, md: 12, xl: 6 },
     componentProps: () => ({
       allowClear: true,
       ...(field === 'status' ? { options: statusOptions() } : {}),
+      ...(field === 'reservationSource' ? { options: reservationSourceOptions() } : {}),
     }),
+  }));
+}
+
+export function reservationSourceOptions() {
+  const { t } = useI18n();
+  return ['MOBILE_WEB', 'PC_WEB', 'IOS', 'ANDROID', 'UNKNOWN'].map((value) => ({
+    value,
+    label: t(`shopify.storeReservation.sourceValues.${value}`),
   }));
 }
 

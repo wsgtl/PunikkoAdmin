@@ -1679,8 +1679,8 @@
 |message|返回处理消息|string||
 |code|返回代码|integer(int32)|integer(int32)|
 |result||IPageShopifyCustomerSubscriptionConfig|IPageShopifyCustomerSubscriptionConfig|
-|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;size||integer(int64)||
+|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;records||array|ShopifyCustomerSubscriptionConfig|
 |&emsp;&emsp;&emsp;&emsp;id|主键|string||
 |&emsp;&emsp;&emsp;&emsp;sysUserId|Jeecg用户ID|string||
@@ -1719,8 +1719,8 @@
 	"message": "",
 	"code": 0,
 	"result": {
-		"current": 0,
 		"size": 0,
+		"current": 0,
 		"records": [
 			{
 				"id": "",
@@ -2128,6 +2128,7 @@
   "customerEmail": "",
   "storeRef": "",
   "status": "",
+  "reservationSource": "",
   "reservedAt": "",
   "expiresAt": "",
   "remark": "",
@@ -2158,6 +2159,7 @@
 |&emsp;&emsp;customerEmail|shopify客户邮箱||false|string||
 |&emsp;&emsp;storeRef|店铺id||false|string||
 |&emsp;&emsp;status|预约状态||false|string||
+|&emsp;&emsp;reservationSource|预约来源：MOBILE_WEB、PC_WEB、IOS、ANDROID、UNKNOWN||false|string||
 |&emsp;&emsp;reservedAt|预约时间||false|string||
 |&emsp;&emsp;expiresAt|过期时间||false|string||
 |&emsp;&emsp;remark|备注||false|string||
@@ -2267,6 +2269,7 @@
   "customerEmail": "",
   "storeRef": "",
   "status": "",
+  "reservationSource": "",
   "reservedAt": "",
   "expiresAt": "",
   "remark": "",
@@ -2297,6 +2300,7 @@
 |&emsp;&emsp;customerEmail|shopify客户邮箱||false|string||
 |&emsp;&emsp;storeRef|店铺id||false|string||
 |&emsp;&emsp;status|预约状态||false|string||
+|&emsp;&emsp;reservationSource|预约来源：MOBILE_WEB、PC_WEB、IOS、ANDROID、UNKNOWN||false|string||
 |&emsp;&emsp;reservedAt|预约时间||false|string||
 |&emsp;&emsp;expiresAt|过期时间||false|string||
 |&emsp;&emsp;remark|备注||false|string||
@@ -2430,6 +2434,7 @@
 |&emsp;&emsp;customerEmail|shopify客户邮箱|string||
 |&emsp;&emsp;storeRef|店铺id|string||
 |&emsp;&emsp;status|预约状态|string||
+|&emsp;&emsp;reservationSource|预约来源：MOBILE_WEB、PC_WEB、IOS、ANDROID、UNKNOWN|string||
 |&emsp;&emsp;reservedAt|预约时间|string||
 |&emsp;&emsp;expiresAt|过期时间|string||
 |&emsp;&emsp;remark|备注|string||
@@ -2460,6 +2465,7 @@
 		"customerEmail": "",
 		"storeRef": "",
 		"status": "",
+		"reservationSource": "",
 		"reservedAt": "",
 		"expiresAt": "",
 		"remark": "",
@@ -2539,6 +2545,7 @@
 |shopifyReservationQrVerifyParam|Shopify预约二维码验签核销参数|body|true|ShopifyReservationQrVerifyParam|ShopifyReservationQrVerifyParam|
 |&emsp;&emsp;payload|扫码得到的二维码内容||false|string||
 |&emsp;&emsp;storeRef|当前核销门店ID||false|string||
+|X-Shopify-Qrcode-Version||header|false|string||
 
 
 **响应状态**:
@@ -2574,6 +2581,7 @@
 |&emsp;&emsp;customerEmail|shopify客户邮箱|string||
 |&emsp;&emsp;storeRef|店铺id|string||
 |&emsp;&emsp;status|预约状态|string||
+|&emsp;&emsp;reservationSource|预约来源：MOBILE_WEB、PC_WEB、IOS、ANDROID、UNKNOWN|string||
 |&emsp;&emsp;reservedAt|预约时间|string||
 |&emsp;&emsp;expiresAt|过期时间|string||
 |&emsp;&emsp;remark|备注|string||
@@ -2604,6 +2612,7 @@
 		"customerEmail": "",
 		"storeRef": "",
 		"status": "",
+		"reservationSource": "",
 		"reservedAt": "",
 		"expiresAt": "",
 		"remark": "",
@@ -2612,6 +2621,126 @@
 		"storeName": "",
 		"storeAddress": "",
 		"customerPhone": ""
+	},
+	"timestamp": 0
+}
+```
+
+
+**响应状态码-401**:
+
+
+**响应参数**:
+
+
+| 参数名称 | 参数说明 | 类型 | schema |
+| -------- | -------- | ----- |----- | 
+|success|成功标志|boolean||
+|message|返回处理消息|string||
+|code|返回代码|integer(int32)|integer(int32)|
+|result|返回数据对象|object||
+|timestamp|时间戳|integer(int64)|integer(int64)|
+
+
+**响应示例**:
+```javascript
+{
+	"success": true,
+	"message": "",
+	"code": 0,
+	"result": {},
+	"timestamp": 0
+}
+```
+
+
+## 查询V2动态预约二维码状态，不续期不核销
+
+
+**接口地址**:`/yueran/shopify/shopifyStoreReservation/qrcode/v2/status`
+
+
+**请求方式**:`POST`
+
+
+**请求数据类型**:`application/x-www-form-urlencoded,application/json`
+
+
+**响应数据类型**:`*/*`
+
+
+**接口描述**:<p>权限标识：shopify:shopify_store_reservation:qrcode</p>
+
+
+
+**请求示例**:
+
+
+```javascript
+{
+  "payload": "",
+  "storeRef": ""
+}
+```
+
+
+**请求参数**:
+
+
+| 参数名称 | 参数说明 | 请求类型    | 是否必须 | 数据类型 | schema |
+| -------- | -------- | ----- | -------- | -------- | ------ |
+|shopifyReservationQrVerifyParam|Shopify预约二维码验签核销参数|body|true|ShopifyReservationQrVerifyParam|ShopifyReservationQrVerifyParam|
+|&emsp;&emsp;payload|扫码得到的二维码内容||false|string||
+|&emsp;&emsp;storeRef|当前核销门店ID||false|string||
+
+
+**响应状态**:
+
+
+| 状态码 | 说明 | schema |
+| -------- | -------- | ----- | 
+|200|OK|ResultShopifyReservationQrStatusVO|
+|401|Unauthorized|ResultObject|
+
+
+**响应状态码-200**:
+
+
+**响应参数**:
+
+
+| 参数名称 | 参数说明 | 类型 | schema |
+| -------- | -------- | ----- |----- | 
+|success|成功标志|boolean||
+|message|返回处理消息|string||
+|code|返回代码|integer(int32)|integer(int32)|
+|result||ShopifyReservationQrStatusVO|ShopifyReservationQrStatusVO|
+|&emsp;&emsp;version||string||
+|&emsp;&emsp;qrTokenId||string||
+|&emsp;&emsp;serverTime||integer(int64)||
+|&emsp;&emsp;qrExpiresAt||integer(int64)||
+|&emsp;&emsp;remainingSeconds||integer(int64)||
+|&emsp;&emsp;valid||boolean||
+|&emsp;&emsp;redeemable||boolean||
+|&emsp;&emsp;state|VALID/EXPIRED/REPLACED/RESERVATION_CHANGED/RESERVATION_CLOSED|string||
+|timestamp|时间戳|integer(int64)|integer(int64)|
+
+
+**响应示例**:
+```javascript
+{
+	"success": true,
+	"message": "",
+	"code": 0,
+	"result": {
+		"version": "",
+		"qrTokenId": "",
+		"serverTime": 0,
+		"qrExpiresAt": 0,
+		"remainingSeconds": 0,
+		"valid": true,
+		"redeemable": true,
+		"state": ""
 	},
 	"timestamp": 0
 }
@@ -2705,6 +2834,7 @@
 |&emsp;&emsp;customerEmail|shopify客户邮箱|string||
 |&emsp;&emsp;storeRef|店铺id|string||
 |&emsp;&emsp;status|预约状态|string||
+|&emsp;&emsp;reservationSource|预约来源：MOBILE_WEB、PC_WEB、IOS、ANDROID、UNKNOWN|string||
 |&emsp;&emsp;reservedAt|预约时间|string||
 |&emsp;&emsp;expiresAt|过期时间|string||
 |&emsp;&emsp;remark|备注|string||
@@ -2735,6 +2865,7 @@
 		"customerEmail": "",
 		"storeRef": "",
 		"status": "",
+		"reservationSource": "",
 		"reservedAt": "",
 		"expiresAt": "",
 		"remark": "",
@@ -2812,6 +2943,7 @@
   "customerEmail": "",
   "storeRef": "",
   "status": "",
+  "reservationSource": "",
   "reservedAt": "",
   "expiresAt": "",
   "remark": "",
@@ -2842,6 +2974,7 @@
 |&emsp;&emsp;customerEmail|shopify客户邮箱||false|string||
 |&emsp;&emsp;storeRef|店铺id||false|string||
 |&emsp;&emsp;status|预约状态||false|string||
+|&emsp;&emsp;reservationSource|预约来源：MOBILE_WEB、PC_WEB、IOS、ANDROID、UNKNOWN||false|string||
 |&emsp;&emsp;reservedAt|预约时间||false|string||
 |&emsp;&emsp;expiresAt|过期时间||false|string||
 |&emsp;&emsp;remark|备注||false|string||
@@ -2975,6 +3108,7 @@
 |&emsp;&emsp;customerEmail|shopify客户邮箱|string||
 |&emsp;&emsp;storeRef|店铺id|string||
 |&emsp;&emsp;status|预约状态|string||
+|&emsp;&emsp;reservationSource|预约来源：MOBILE_WEB、PC_WEB、IOS、ANDROID、UNKNOWN|string||
 |&emsp;&emsp;reservedAt|预约时间|string||
 |&emsp;&emsp;expiresAt|过期时间|string||
 |&emsp;&emsp;remark|备注|string||
@@ -3005,6 +3139,7 @@
 		"customerEmail": "",
 		"storeRef": "",
 		"status": "",
+		"reservationSource": "",
 		"reservedAt": "",
 		"expiresAt": "",
 		"remark": "",
@@ -3101,6 +3236,11 @@
 |&emsp;&emsp;expiresAt|过期时间|string||
 |&emsp;&emsp;payload|二维码内容|string||
 |&emsp;&emsp;imageDataUrl|二维码PNG DataURL|string||
+|&emsp;&emsp;version|二维码协议版本，V2返回2；旧接口不改变原协议|string||
+|&emsp;&emsp;qrTokenId|当前动态二维码凭证ID|string||
+|&emsp;&emsp;serverTime|服务器时间，Unix毫秒|integer(int64)||
+|&emsp;&emsp;qrExpiresAt|二维码自身失效时间，Unix毫秒，独立于预约截止时间|integer(int64)||
+|&emsp;&emsp;remainingSeconds|二维码剩余有效秒数|integer(int64)||
 |timestamp|时间戳|integer(int64)|integer(int64)|
 
 
@@ -3117,7 +3257,127 @@
 		"reservedAt": "",
 		"expiresAt": "",
 		"payload": "",
-		"imageDataUrl": ""
+		"imageDataUrl": "",
+		"version": "",
+		"qrTokenId": "",
+		"serverTime": 0,
+		"qrExpiresAt": 0,
+		"remainingSeconds": 0
+	},
+	"timestamp": 0
+}
+```
+
+
+**响应状态码-401**:
+
+
+**响应参数**:
+
+
+| 参数名称 | 参数说明 | 类型 | schema |
+| -------- | -------- | ----- |----- | 
+|success|成功标志|boolean||
+|message|返回处理消息|string||
+|code|返回代码|integer(int32)|integer(int32)|
+|result|返回数据对象|object||
+|timestamp|时间戳|integer(int64)|integer(int64)|
+
+
+**响应示例**:
+```javascript
+{
+	"success": true,
+	"message": "",
+	"code": 0,
+	"result": {},
+	"timestamp": 0
+}
+```
+
+
+## 生成V2动态预约二维码
+
+
+**接口地址**:`/yueran/shopify/shopifyStoreReservation/qrcode/v2`
+
+
+**请求方式**:`GET`
+
+
+**请求数据类型**:`application/x-www-form-urlencoded`
+
+
+**响应数据类型**:`*/*`
+
+
+**接口描述**:<p>权限标识：shopify:shopify_store_reservation:qrcode</p>
+
+
+
+**请求参数**:
+
+
+| 参数名称 | 参数说明 | 请求类型    | 是否必须 | 数据类型 | schema |
+| -------- | -------- | ----- | -------- | -------- | ------ |
+|id||query|true|string||
+
+
+**响应状态**:
+
+
+| 状态码 | 说明 | schema |
+| -------- | -------- | ----- | 
+|200|OK|ResultShopifyReservationQrCodeVO|
+|401|Unauthorized|ResultObject|
+
+
+**响应状态码-200**:
+
+
+**响应参数**:
+
+
+| 参数名称 | 参数说明 | 类型 | schema |
+| -------- | -------- | ----- |----- | 
+|success|成功标志|boolean||
+|message|返回处理消息|string||
+|code|返回代码|integer(int32)|integer(int32)|
+|result||ShopifyReservationQrCodeVO|ShopifyReservationQrCodeVO|
+|&emsp;&emsp;reservationId|预约ID|string||
+|&emsp;&emsp;code|预约码|string||
+|&emsp;&emsp;storeRef|门店ID|string||
+|&emsp;&emsp;reservedAt|预约时间|string||
+|&emsp;&emsp;expiresAt|过期时间|string||
+|&emsp;&emsp;payload|二维码内容|string||
+|&emsp;&emsp;imageDataUrl|二维码PNG DataURL|string||
+|&emsp;&emsp;version|二维码协议版本，V2返回2；旧接口不改变原协议|string||
+|&emsp;&emsp;qrTokenId|当前动态二维码凭证ID|string||
+|&emsp;&emsp;serverTime|服务器时间，Unix毫秒|integer(int64)||
+|&emsp;&emsp;qrExpiresAt|二维码自身失效时间，Unix毫秒，独立于预约截止时间|integer(int64)||
+|&emsp;&emsp;remainingSeconds|二维码剩余有效秒数|integer(int64)||
+|timestamp|时间戳|integer(int64)|integer(int64)|
+
+
+**响应示例**:
+```javascript
+{
+	"success": true,
+	"message": "",
+	"code": 0,
+	"result": {
+		"reservationId": "",
+		"code": "",
+		"storeRef": "",
+		"reservedAt": "",
+		"expiresAt": "",
+		"payload": "",
+		"imageDataUrl": "",
+		"version": "",
+		"qrTokenId": "",
+		"serverTime": 0,
+		"qrExpiresAt": 0,
+		"remainingSeconds": 0
 	},
 	"timestamp": 0
 }
@@ -3188,6 +3448,7 @@
 |&emsp;&emsp;customerEmail|shopify客户邮箱||false|string||
 |&emsp;&emsp;storeRef|店铺id||false|string||
 |&emsp;&emsp;status|预约状态||false|string||
+|&emsp;&emsp;reservationSource|预约来源：MOBILE_WEB、PC_WEB、IOS、ANDROID、UNKNOWN||false|string||
 |&emsp;&emsp;reservedAt|预约时间||false|string||
 |&emsp;&emsp;expiresAt|过期时间||false|string||
 |&emsp;&emsp;remark|备注||false|string||
@@ -3221,8 +3482,8 @@
 |message|返回处理消息|string||
 |code|返回代码|integer(int32)|integer(int32)|
 |result||IPageShopifyStoreReservation|IPageShopifyStoreReservation|
-|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;size||integer(int64)||
+|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;records||array|ShopifyStoreReservation|
 |&emsp;&emsp;&emsp;&emsp;id|id|string||
 |&emsp;&emsp;&emsp;&emsp;createBy|createBy|string||
@@ -3236,6 +3497,7 @@
 |&emsp;&emsp;&emsp;&emsp;customerEmail|shopify客户邮箱|string||
 |&emsp;&emsp;&emsp;&emsp;storeRef|店铺id|string||
 |&emsp;&emsp;&emsp;&emsp;status|预约状态|string||
+|&emsp;&emsp;&emsp;&emsp;reservationSource|预约来源：MOBILE_WEB、PC_WEB、IOS、ANDROID、UNKNOWN|string||
 |&emsp;&emsp;&emsp;&emsp;reservedAt|预约时间|string||
 |&emsp;&emsp;&emsp;&emsp;expiresAt|过期时间|string||
 |&emsp;&emsp;&emsp;&emsp;remark|备注|string||
@@ -3256,8 +3518,8 @@
 	"message": "",
 	"code": 0,
 	"result": {
-		"current": 0,
 		"size": 0,
+		"current": 0,
 		"records": [
 			{
 				"id": "",
@@ -3272,6 +3534,7 @@
 				"customerEmail": "",
 				"storeRef": "",
 				"status": "",
+				"reservationSource": "",
 				"reservedAt": "",
 				"expiresAt": "",
 				"remark": "",
@@ -4150,8 +4413,8 @@
 |message|返回处理消息|string||
 |code|返回代码|integer(int32)|integer(int32)|
 |result||IPageShopifyStoreI18n|IPageShopifyStoreI18n|
-|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;size||integer(int64)||
+|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;records||array|ShopifyStoreI18n|
 |&emsp;&emsp;&emsp;&emsp;id|主键|string||
 |&emsp;&emsp;&emsp;&emsp;storeId|门店 ID|string||
@@ -4178,8 +4441,8 @@
 	"message": "",
 	"code": 0,
 	"result": {
-		"current": 0,
 		"size": 0,
+		"current": 0,
 		"records": [
 			{
 				"id": "",
@@ -4950,8 +5213,8 @@
 |message|返回处理消息|string||
 |code|返回代码|integer(int32)|integer(int32)|
 |result||IPageShopifyStoreCalendar|IPageShopifyStoreCalendar|
-|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;size||integer(int64)||
+|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;records||array|ShopifyStoreCalendar|
 |&emsp;&emsp;&emsp;&emsp;id|id|string||
 |&emsp;&emsp;&emsp;&emsp;createBy|createBy|string||
@@ -4976,8 +5239,8 @@
 	"message": "",
 	"code": 0,
 	"result": {
-		"current": 0,
 		"size": 0,
+		"current": 0,
 		"records": [
 			{
 				"id": "",
@@ -5250,6 +5513,7 @@
   "reservableDays": 0,
   "reservableNumber": 0,
   "dailyReservableNumber": 0,
+  "qrcodeValidSeconds": 0,
   "salesclerkIds": "",
   "storeManagerId": "",
   "deputyManagerIds": "",
@@ -5258,7 +5522,24 @@
   "remark": "",
   "publishStatus": "",
   "hasReservableProducts": "",
-  "reservationNotice": ""
+  "reservationNotice": "",
+  "shopifyStoreI18nList": [
+    {
+      "id": "",
+      "storeId": "",
+      "language": "",
+      "storeName": "",
+      "storeAddress": "",
+      "storeMatters": "",
+      "reservationNotice": "",
+      "remark": "",
+      "createBy": "",
+      "createTime": "",
+      "updateBy": "",
+      "updateTime": "",
+      "sysOrgCode": ""
+    }
+  ]
 }
 ```
 
@@ -5268,7 +5549,7 @@
 
 | 参数名称 | 参数说明 | 请求类型    | 是否必须 | 数据类型 | schema |
 | -------- | -------- | ----- | -------- | -------- | ------ |
-|shopifyStore|门店信息|body|true|ShopifyStore|ShopifyStore|
+|shopifyStoreForm|门店基础信息及固定三语言子表|body|true|ShopifyStoreForm|ShopifyStoreForm|
 |&emsp;&emsp;id|id||false|string||
 |&emsp;&emsp;createBy|createBy||false|string||
 |&emsp;&emsp;createTime|createTime||false|string(date-time)||
@@ -5284,6 +5565,7 @@
 |&emsp;&emsp;reservableDays|可预约周期||false|integer(int32)||
 |&emsp;&emsp;reservableNumber|时间段可预约人数||false|integer(int32)||
 |&emsp;&emsp;dailyReservableNumber|每人当天可预约次数||false|integer(int32)||
+|&emsp;&emsp;qrcodeValidSeconds|V2预约二维码有效秒数，15到300，默认60||false|integer(int32)||
 |&emsp;&emsp;salesclerkIds|店员||false|string||
 |&emsp;&emsp;storeManagerId|店长||false|string||
 |&emsp;&emsp;deputyManagerIds|副店长||false|string||
@@ -5293,6 +5575,20 @@
 |&emsp;&emsp;publishStatus|发布状态||false|string||
 |&emsp;&emsp;hasReservableProducts|是否可预约||false|string||
 |&emsp;&emsp;reservationNotice|预约公告富文本||false|string||
+|&emsp;&emsp;shopifyStoreI18nList|中英日翻译；编辑时未传、null、空数组均不修改翻译||false|array|ShopifyStoreI18n|
+|&emsp;&emsp;&emsp;&emsp;id|主键||false|string||
+|&emsp;&emsp;&emsp;&emsp;storeId|门店 ID||false|string||
+|&emsp;&emsp;&emsp;&emsp;language|语言编码，支持 zh、en、ja||false|string||
+|&emsp;&emsp;&emsp;&emsp;storeName|门店名称||false|string||
+|&emsp;&emsp;&emsp;&emsp;storeAddress|门店地址||false|string||
+|&emsp;&emsp;&emsp;&emsp;storeMatters|门店事项富文本||false|string||
+|&emsp;&emsp;&emsp;&emsp;reservationNotice|预约公告富文本||false|string||
+|&emsp;&emsp;&emsp;&emsp;remark|备注||false|string||
+|&emsp;&emsp;&emsp;&emsp;createBy|创建人||false|string||
+|&emsp;&emsp;&emsp;&emsp;createTime|创建时间||false|string(date-time)||
+|&emsp;&emsp;&emsp;&emsp;updateBy|更新人||false|string||
+|&emsp;&emsp;&emsp;&emsp;updateTime|更新时间||false|string(date-time)||
+|&emsp;&emsp;&emsp;&emsp;sysOrgCode|所属部门||false|string||
 
 
 **响应状态**:
@@ -5397,6 +5693,7 @@
   "reservableDays": 0,
   "reservableNumber": 0,
   "dailyReservableNumber": 0,
+  "qrcodeValidSeconds": 0,
   "salesclerkIds": "",
   "storeManagerId": "",
   "deputyManagerIds": "",
@@ -5405,7 +5702,24 @@
   "remark": "",
   "publishStatus": "",
   "hasReservableProducts": "",
-  "reservationNotice": ""
+  "reservationNotice": "",
+  "shopifyStoreI18nList": [
+    {
+      "id": "",
+      "storeId": "",
+      "language": "",
+      "storeName": "",
+      "storeAddress": "",
+      "storeMatters": "",
+      "reservationNotice": "",
+      "remark": "",
+      "createBy": "",
+      "createTime": "",
+      "updateBy": "",
+      "updateTime": "",
+      "sysOrgCode": ""
+    }
+  ]
 }
 ```
 
@@ -5415,7 +5729,7 @@
 
 | 参数名称 | 参数说明 | 请求类型    | 是否必须 | 数据类型 | schema |
 | -------- | -------- | ----- | -------- | -------- | ------ |
-|shopifyStore|门店信息|body|true|ShopifyStore|ShopifyStore|
+|shopifyStoreForm|门店基础信息及固定三语言子表|body|true|ShopifyStoreForm|ShopifyStoreForm|
 |&emsp;&emsp;id|id||false|string||
 |&emsp;&emsp;createBy|createBy||false|string||
 |&emsp;&emsp;createTime|createTime||false|string(date-time)||
@@ -5431,6 +5745,7 @@
 |&emsp;&emsp;reservableDays|可预约周期||false|integer(int32)||
 |&emsp;&emsp;reservableNumber|时间段可预约人数||false|integer(int32)||
 |&emsp;&emsp;dailyReservableNumber|每人当天可预约次数||false|integer(int32)||
+|&emsp;&emsp;qrcodeValidSeconds|V2预约二维码有效秒数，15到300，默认60||false|integer(int32)||
 |&emsp;&emsp;salesclerkIds|店员||false|string||
 |&emsp;&emsp;storeManagerId|店长||false|string||
 |&emsp;&emsp;deputyManagerIds|副店长||false|string||
@@ -5440,6 +5755,20 @@
 |&emsp;&emsp;publishStatus|发布状态||false|string||
 |&emsp;&emsp;hasReservableProducts|是否可预约||false|string||
 |&emsp;&emsp;reservationNotice|预约公告富文本||false|string||
+|&emsp;&emsp;shopifyStoreI18nList|中英日翻译；编辑时未传、null、空数组均不修改翻译||false|array|ShopifyStoreI18n|
+|&emsp;&emsp;&emsp;&emsp;id|主键||false|string||
+|&emsp;&emsp;&emsp;&emsp;storeId|门店 ID||false|string||
+|&emsp;&emsp;&emsp;&emsp;language|语言编码，支持 zh、en、ja||false|string||
+|&emsp;&emsp;&emsp;&emsp;storeName|门店名称||false|string||
+|&emsp;&emsp;&emsp;&emsp;storeAddress|门店地址||false|string||
+|&emsp;&emsp;&emsp;&emsp;storeMatters|门店事项富文本||false|string||
+|&emsp;&emsp;&emsp;&emsp;reservationNotice|预约公告富文本||false|string||
+|&emsp;&emsp;&emsp;&emsp;remark|备注||false|string||
+|&emsp;&emsp;&emsp;&emsp;createBy|创建人||false|string||
+|&emsp;&emsp;&emsp;&emsp;createTime|创建时间||false|string(date-time)||
+|&emsp;&emsp;&emsp;&emsp;updateBy|更新人||false|string||
+|&emsp;&emsp;&emsp;&emsp;updateTime|更新时间||false|string(date-time)||
+|&emsp;&emsp;&emsp;&emsp;sysOrgCode|所属部门||false|string||
 
 
 **响应状态**:
@@ -5634,6 +5963,7 @@
   "reservableDays": 0,
   "reservableNumber": 0,
   "dailyReservableNumber": 0,
+  "qrcodeValidSeconds": 0,
   "salesclerkIds": "",
   "storeManagerId": "",
   "deputyManagerIds": "",
@@ -5642,7 +5972,24 @@
   "remark": "",
   "publishStatus": "",
   "hasReservableProducts": "",
-  "reservationNotice": ""
+  "reservationNotice": "",
+  "shopifyStoreI18nList": [
+    {
+      "id": "",
+      "storeId": "",
+      "language": "",
+      "storeName": "",
+      "storeAddress": "",
+      "storeMatters": "",
+      "reservationNotice": "",
+      "remark": "",
+      "createBy": "",
+      "createTime": "",
+      "updateBy": "",
+      "updateTime": "",
+      "sysOrgCode": ""
+    }
+  ]
 }
 ```
 
@@ -5652,7 +5999,7 @@
 
 | 参数名称 | 参数说明 | 请求类型    | 是否必须 | 数据类型 | schema |
 | -------- | -------- | ----- | -------- | -------- | ------ |
-|shopifyStore|门店信息|body|true|ShopifyStore|ShopifyStore|
+|shopifyStoreForm|门店基础信息及固定三语言子表|body|true|ShopifyStoreForm|ShopifyStoreForm|
 |&emsp;&emsp;id|id||false|string||
 |&emsp;&emsp;createBy|createBy||false|string||
 |&emsp;&emsp;createTime|createTime||false|string(date-time)||
@@ -5668,6 +6015,7 @@
 |&emsp;&emsp;reservableDays|可预约周期||false|integer(int32)||
 |&emsp;&emsp;reservableNumber|时间段可预约人数||false|integer(int32)||
 |&emsp;&emsp;dailyReservableNumber|每人当天可预约次数||false|integer(int32)||
+|&emsp;&emsp;qrcodeValidSeconds|V2预约二维码有效秒数，15到300，默认60||false|integer(int32)||
 |&emsp;&emsp;salesclerkIds|店员||false|string||
 |&emsp;&emsp;storeManagerId|店长||false|string||
 |&emsp;&emsp;deputyManagerIds|副店长||false|string||
@@ -5677,6 +6025,20 @@
 |&emsp;&emsp;publishStatus|发布状态||false|string||
 |&emsp;&emsp;hasReservableProducts|是否可预约||false|string||
 |&emsp;&emsp;reservationNotice|预约公告富文本||false|string||
+|&emsp;&emsp;shopifyStoreI18nList|中英日翻译；编辑时未传、null、空数组均不修改翻译||false|array|ShopifyStoreI18n|
+|&emsp;&emsp;&emsp;&emsp;id|主键||false|string||
+|&emsp;&emsp;&emsp;&emsp;storeId|门店 ID||false|string||
+|&emsp;&emsp;&emsp;&emsp;language|语言编码，支持 zh、en、ja||false|string||
+|&emsp;&emsp;&emsp;&emsp;storeName|门店名称||false|string||
+|&emsp;&emsp;&emsp;&emsp;storeAddress|门店地址||false|string||
+|&emsp;&emsp;&emsp;&emsp;storeMatters|门店事项富文本||false|string||
+|&emsp;&emsp;&emsp;&emsp;reservationNotice|预约公告富文本||false|string||
+|&emsp;&emsp;&emsp;&emsp;remark|备注||false|string||
+|&emsp;&emsp;&emsp;&emsp;createBy|创建人||false|string||
+|&emsp;&emsp;&emsp;&emsp;createTime|创建时间||false|string(date-time)||
+|&emsp;&emsp;&emsp;&emsp;updateBy|更新人||false|string||
+|&emsp;&emsp;&emsp;&emsp;updateTime|更新时间||false|string(date-time)||
+|&emsp;&emsp;&emsp;&emsp;sysOrgCode|所属部门||false|string||
 
 
 **响应状态**:
@@ -5782,6 +6144,7 @@
 |&emsp;&emsp;reservableDays|可预约周期||false|integer(int32)||
 |&emsp;&emsp;reservableNumber|时间段可预约人数||false|integer(int32)||
 |&emsp;&emsp;dailyReservableNumber|每人当天可预约次数||false|integer(int32)||
+|&emsp;&emsp;qrcodeValidSeconds|V2预约二维码有效秒数，15到300，默认60||false|integer(int32)||
 |&emsp;&emsp;salesclerkIds|店员||false|string||
 |&emsp;&emsp;storeManagerId|店长||false|string||
 |&emsp;&emsp;deputyManagerIds|副店长||false|string||
@@ -5816,8 +6179,8 @@
 |message|返回处理消息|string||
 |code|返回代码|integer(int32)|integer(int32)|
 |result||IPageShopifyStore|IPageShopifyStore|
-|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;size||integer(int64)||
+|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;records||array|ShopifyStore|
 |&emsp;&emsp;&emsp;&emsp;id|id|string||
 |&emsp;&emsp;&emsp;&emsp;createBy|createBy|string||
@@ -5834,6 +6197,7 @@
 |&emsp;&emsp;&emsp;&emsp;reservableDays|可预约周期|integer(int32)||
 |&emsp;&emsp;&emsp;&emsp;reservableNumber|时间段可预约人数|integer(int32)||
 |&emsp;&emsp;&emsp;&emsp;dailyReservableNumber|每人当天可预约次数|integer(int32)||
+|&emsp;&emsp;&emsp;&emsp;qrcodeValidSeconds|V2预约二维码有效秒数，15到300，默认60|integer(int32)||
 |&emsp;&emsp;&emsp;&emsp;salesclerkIds|店员|string||
 |&emsp;&emsp;&emsp;&emsp;storeManagerId|店长|string||
 |&emsp;&emsp;&emsp;&emsp;deputyManagerIds|副店长|string||
@@ -5855,8 +6219,8 @@
 	"message": "",
 	"code": 0,
 	"result": {
-		"current": 0,
 		"size": 0,
+		"current": 0,
 		"records": [
 			{
 				"id": "",
@@ -5874,6 +6238,7 @@
 				"reservableDays": 0,
 				"reservableNumber": 0,
 				"dailyReservableNumber": 0,
+				"qrcodeValidSeconds": 0,
 				"salesclerkIds": "",
 				"storeManagerId": "",
 				"deputyManagerIds": "",
@@ -5952,7 +6317,7 @@
 
 | 状态码 | 说明 | schema |
 | -------- | -------- | ----- | 
-|200|OK|ResultShopifyStore|
+|200|OK|ResultShopifyStoreForm|
 |401|Unauthorized|ResultObject|
 
 
@@ -5967,7 +6332,7 @@
 |success|成功标志|boolean||
 |message|返回处理消息|string||
 |code|返回代码|integer(int32)|integer(int32)|
-|result||ShopifyStore|ShopifyStore|
+|result||ShopifyStoreForm|ShopifyStoreForm|
 |&emsp;&emsp;id|id|string||
 |&emsp;&emsp;createBy|createBy|string||
 |&emsp;&emsp;createTime|createTime|string(date-time)||
@@ -5983,6 +6348,7 @@
 |&emsp;&emsp;reservableDays|可预约周期|integer(int32)||
 |&emsp;&emsp;reservableNumber|时间段可预约人数|integer(int32)||
 |&emsp;&emsp;dailyReservableNumber|每人当天可预约次数|integer(int32)||
+|&emsp;&emsp;qrcodeValidSeconds|V2预约二维码有效秒数，15到300，默认60|integer(int32)||
 |&emsp;&emsp;salesclerkIds|店员|string||
 |&emsp;&emsp;storeManagerId|店长|string||
 |&emsp;&emsp;deputyManagerIds|副店长|string||
@@ -5992,6 +6358,20 @@
 |&emsp;&emsp;publishStatus|发布状态|string||
 |&emsp;&emsp;hasReservableProducts|是否可预约|string||
 |&emsp;&emsp;reservationNotice|预约公告富文本|string||
+|&emsp;&emsp;shopifyStoreI18nList|中英日翻译；编辑时未传、null、空数组均不修改翻译|array|ShopifyStoreI18n|
+|&emsp;&emsp;&emsp;&emsp;id|主键|string||
+|&emsp;&emsp;&emsp;&emsp;storeId|门店 ID|string||
+|&emsp;&emsp;&emsp;&emsp;language|语言编码，支持 zh、en、ja|string||
+|&emsp;&emsp;&emsp;&emsp;storeName|门店名称|string||
+|&emsp;&emsp;&emsp;&emsp;storeAddress|门店地址|string||
+|&emsp;&emsp;&emsp;&emsp;storeMatters|门店事项富文本|string||
+|&emsp;&emsp;&emsp;&emsp;reservationNotice|预约公告富文本|string||
+|&emsp;&emsp;&emsp;&emsp;remark|备注|string||
+|&emsp;&emsp;&emsp;&emsp;createBy|创建人|string||
+|&emsp;&emsp;&emsp;&emsp;createTime|创建时间|string(date-time)||
+|&emsp;&emsp;&emsp;&emsp;updateBy|更新人|string||
+|&emsp;&emsp;&emsp;&emsp;updateTime|更新时间|string(date-time)||
+|&emsp;&emsp;&emsp;&emsp;sysOrgCode|所属部门|string||
 |timestamp|时间戳|integer(int64)|integer(int64)|
 
 
@@ -6017,6 +6397,7 @@
 		"reservableDays": 0,
 		"reservableNumber": 0,
 		"dailyReservableNumber": 0,
+		"qrcodeValidSeconds": 0,
 		"salesclerkIds": "",
 		"storeManagerId": "",
 		"deputyManagerIds": "",
@@ -6025,7 +6406,24 @@
 		"remark": "",
 		"publishStatus": "",
 		"hasReservableProducts": "",
-		"reservationNotice": ""
+		"reservationNotice": "",
+		"shopifyStoreI18nList": [
+			{
+				"id": "",
+				"storeId": "",
+				"language": "",
+				"storeName": "",
+				"storeAddress": "",
+				"storeMatters": "",
+				"reservationNotice": "",
+				"remark": "",
+				"createBy": "",
+				"createTime": "",
+				"updateBy": "",
+				"updateTime": "",
+				"sysOrgCode": ""
+			}
+		]
 	},
 	"timestamp": 0
 }
@@ -6099,6 +6497,7 @@
 |&emsp;&emsp;reservableDays|可预约周期||false|integer(int32)||
 |&emsp;&emsp;reservableNumber|时间段可预约人数||false|integer(int32)||
 |&emsp;&emsp;dailyReservableNumber|每人当天可预约次数||false|integer(int32)||
+|&emsp;&emsp;qrcodeValidSeconds|V2预约二维码有效秒数，15到300，默认60||false|integer(int32)||
 |&emsp;&emsp;salesclerkIds|店员||false|string||
 |&emsp;&emsp;storeManagerId|店长||false|string||
 |&emsp;&emsp;deputyManagerIds|副店长||false|string||
@@ -6133,8 +6532,8 @@
 |message|返回处理消息|string||
 |code|返回代码|integer(int32)|integer(int32)|
 |result||IPageShopifyStore|IPageShopifyStore|
-|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;size||integer(int64)||
+|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;records||array|ShopifyStore|
 |&emsp;&emsp;&emsp;&emsp;id|id|string||
 |&emsp;&emsp;&emsp;&emsp;createBy|createBy|string||
@@ -6151,6 +6550,7 @@
 |&emsp;&emsp;&emsp;&emsp;reservableDays|可预约周期|integer(int32)||
 |&emsp;&emsp;&emsp;&emsp;reservableNumber|时间段可预约人数|integer(int32)||
 |&emsp;&emsp;&emsp;&emsp;dailyReservableNumber|每人当天可预约次数|integer(int32)||
+|&emsp;&emsp;&emsp;&emsp;qrcodeValidSeconds|V2预约二维码有效秒数，15到300，默认60|integer(int32)||
 |&emsp;&emsp;&emsp;&emsp;salesclerkIds|店员|string||
 |&emsp;&emsp;&emsp;&emsp;storeManagerId|店长|string||
 |&emsp;&emsp;&emsp;&emsp;deputyManagerIds|副店长|string||
@@ -6172,8 +6572,8 @@
 	"message": "",
 	"code": 0,
 	"result": {
-		"current": 0,
 		"size": 0,
+		"current": 0,
 		"records": [
 			{
 				"id": "",
@@ -6191,6 +6591,7 @@
 				"reservableDays": 0,
 				"reservableNumber": 0,
 				"dailyReservableNumber": 0,
+				"qrcodeValidSeconds": 0,
 				"salesclerkIds": "",
 				"storeManagerId": "",
 				"deputyManagerIds": "",
@@ -6204,6 +6605,178 @@
 		],
 		"total": 0,
 		"pages": 0
+	},
+	"timestamp": 0
+}
+```
+
+
+**响应状态码-401**:
+
+
+**响应参数**:
+
+
+| 参数名称 | 参数说明 | 类型 | schema |
+| -------- | -------- | ----- |----- | 
+|success|成功标志|boolean||
+|message|返回处理消息|string||
+|code|返回代码|integer(int32)|integer(int32)|
+|result|返回数据对象|object||
+|timestamp|时间戳|integer(int64)|integer(int64)|
+
+
+**响应示例**:
+```javascript
+{
+	"success": true,
+	"message": "",
+	"code": 0,
+	"result": {},
+	"timestamp": 0
+}
+```
+
+
+## Shopify门店管理-主子表表单详情
+
+
+**接口地址**:`/yueran/shopify/shopifyStore/queryFormById`
+
+
+**请求方式**:`GET`
+
+
+**请求数据类型**:`application/x-www-form-urlencoded`
+
+
+**响应数据类型**:`*/*`
+
+
+**接口描述**:<p>权限标识：shopify:shopify_store:queryById, shopify:shopify_store:edit</p>
+
+
+
+**请求参数**:
+
+
+| 参数名称 | 参数说明 | 请求类型    | 是否必须 | 数据类型 | schema |
+| -------- | -------- | ----- | -------- | -------- | ------ |
+|id||query|true|string||
+
+
+**响应状态**:
+
+
+| 状态码 | 说明 | schema |
+| -------- | -------- | ----- | 
+|200|OK|ResultShopifyStoreForm|
+|401|Unauthorized|ResultObject|
+
+
+**响应状态码-200**:
+
+
+**响应参数**:
+
+
+| 参数名称 | 参数说明 | 类型 | schema |
+| -------- | -------- | ----- |----- | 
+|success|成功标志|boolean||
+|message|返回处理消息|string||
+|code|返回代码|integer(int32)|integer(int32)|
+|result||ShopifyStoreForm|ShopifyStoreForm|
+|&emsp;&emsp;id|id|string||
+|&emsp;&emsp;createBy|createBy|string||
+|&emsp;&emsp;createTime|createTime|string(date-time)||
+|&emsp;&emsp;updateBy|updateBy|string||
+|&emsp;&emsp;updateTime|updateTime|string(date-time)||
+|&emsp;&emsp;delFlag|逻辑删除|string||
+|&emsp;&emsp;storeName|实际店铺名|string||
+|&emsp;&emsp;code|店铺代码|string||
+|&emsp;&emsp;storeAddress|实际店铺地址|string||
+|&emsp;&emsp;businessDays|工作日|string||
+|&emsp;&emsp;openTime|实际店铺开店时间|string||
+|&emsp;&emsp;closeTime|实际店铺打烊时间|string||
+|&emsp;&emsp;reservableDays|可预约周期|integer(int32)||
+|&emsp;&emsp;reservableNumber|时间段可预约人数|integer(int32)||
+|&emsp;&emsp;dailyReservableNumber|每人当天可预约次数|integer(int32)||
+|&emsp;&emsp;qrcodeValidSeconds|V2预约二维码有效秒数，15到300，默认60|integer(int32)||
+|&emsp;&emsp;salesclerkIds|店员|string||
+|&emsp;&emsp;storeManagerId|店长|string||
+|&emsp;&emsp;deputyManagerIds|副店长|string||
+|&emsp;&emsp;phone|实际店铺电话|string||
+|&emsp;&emsp;storeMatters|门店事项|string||
+|&emsp;&emsp;remark|备注|string||
+|&emsp;&emsp;publishStatus|发布状态|string||
+|&emsp;&emsp;hasReservableProducts|是否可预约|string||
+|&emsp;&emsp;reservationNotice|预约公告富文本|string||
+|&emsp;&emsp;shopifyStoreI18nList|中英日翻译；编辑时未传、null、空数组均不修改翻译|array|ShopifyStoreI18n|
+|&emsp;&emsp;&emsp;&emsp;id|主键|string||
+|&emsp;&emsp;&emsp;&emsp;storeId|门店 ID|string||
+|&emsp;&emsp;&emsp;&emsp;language|语言编码，支持 zh、en、ja|string||
+|&emsp;&emsp;&emsp;&emsp;storeName|门店名称|string||
+|&emsp;&emsp;&emsp;&emsp;storeAddress|门店地址|string||
+|&emsp;&emsp;&emsp;&emsp;storeMatters|门店事项富文本|string||
+|&emsp;&emsp;&emsp;&emsp;reservationNotice|预约公告富文本|string||
+|&emsp;&emsp;&emsp;&emsp;remark|备注|string||
+|&emsp;&emsp;&emsp;&emsp;createBy|创建人|string||
+|&emsp;&emsp;&emsp;&emsp;createTime|创建时间|string(date-time)||
+|&emsp;&emsp;&emsp;&emsp;updateBy|更新人|string||
+|&emsp;&emsp;&emsp;&emsp;updateTime|更新时间|string(date-time)||
+|&emsp;&emsp;&emsp;&emsp;sysOrgCode|所属部门|string||
+|timestamp|时间戳|integer(int64)|integer(int64)|
+
+
+**响应示例**:
+```javascript
+{
+	"success": true,
+	"message": "",
+	"code": 0,
+	"result": {
+		"id": "",
+		"createBy": "",
+		"createTime": "",
+		"updateBy": "",
+		"updateTime": "",
+		"delFlag": "",
+		"storeName": "",
+		"code": "",
+		"storeAddress": "",
+		"businessDays": "",
+		"openTime": "",
+		"closeTime": "",
+		"reservableDays": 0,
+		"reservableNumber": 0,
+		"dailyReservableNumber": 0,
+		"qrcodeValidSeconds": 0,
+		"salesclerkIds": "",
+		"storeManagerId": "",
+		"deputyManagerIds": "",
+		"phone": "",
+		"storeMatters": "",
+		"remark": "",
+		"publishStatus": "",
+		"hasReservableProducts": "",
+		"reservationNotice": "",
+		"shopifyStoreI18nList": [
+			{
+				"id": "",
+				"storeId": "",
+				"language": "",
+				"storeName": "",
+				"storeAddress": "",
+				"storeMatters": "",
+				"reservationNotice": "",
+				"remark": "",
+				"createBy": "",
+				"createTime": "",
+				"updateBy": "",
+				"updateTime": "",
+				"sysOrgCode": ""
+			}
+		]
 	},
 	"timestamp": 0
 }
@@ -6300,6 +6873,7 @@
 |&emsp;&emsp;reservableDays|可预约周期|integer(int32)||
 |&emsp;&emsp;reservableNumber|时间段可预约人数|integer(int32)||
 |&emsp;&emsp;dailyReservableNumber|每人当天可预约次数|integer(int32)||
+|&emsp;&emsp;qrcodeValidSeconds|V2预约二维码有效秒数，15到300，默认60|integer(int32)||
 |&emsp;&emsp;salesclerkIds|店员|string||
 |&emsp;&emsp;storeManagerId|店长|string||
 |&emsp;&emsp;deputyManagerIds|副店长|string||
@@ -6334,6 +6908,7 @@
 		"reservableDays": 0,
 		"reservableNumber": 0,
 		"dailyReservableNumber": 0,
+		"qrcodeValidSeconds": 0,
 		"salesclerkIds": "",
 		"storeManagerId": "",
 		"deputyManagerIds": "",
@@ -6415,6 +6990,7 @@
 |&emsp;&emsp;reservableDays|可预约周期||false|integer(int32)||
 |&emsp;&emsp;reservableNumber|时间段可预约人数||false|integer(int32)||
 |&emsp;&emsp;dailyReservableNumber|每人当天可预约次数||false|integer(int32)||
+|&emsp;&emsp;qrcodeValidSeconds|V2预约二维码有效秒数，15到300，默认60||false|integer(int32)||
 |&emsp;&emsp;salesclerkIds|店员||false|string||
 |&emsp;&emsp;storeManagerId|店长||false|string||
 |&emsp;&emsp;deputyManagerIds|副店长||false|string||
@@ -6449,8 +7025,8 @@
 |message|返回处理消息|string||
 |code|返回代码|integer(int32)|integer(int32)|
 |result||IPageShopifyStore|IPageShopifyStore|
-|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;size||integer(int64)||
+|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;records||array|ShopifyStore|
 |&emsp;&emsp;&emsp;&emsp;id|id|string||
 |&emsp;&emsp;&emsp;&emsp;createBy|createBy|string||
@@ -6467,6 +7043,7 @@
 |&emsp;&emsp;&emsp;&emsp;reservableDays|可预约周期|integer(int32)||
 |&emsp;&emsp;&emsp;&emsp;reservableNumber|时间段可预约人数|integer(int32)||
 |&emsp;&emsp;&emsp;&emsp;dailyReservableNumber|每人当天可预约次数|integer(int32)||
+|&emsp;&emsp;&emsp;&emsp;qrcodeValidSeconds|V2预约二维码有效秒数，15到300，默认60|integer(int32)||
 |&emsp;&emsp;&emsp;&emsp;salesclerkIds|店员|string||
 |&emsp;&emsp;&emsp;&emsp;storeManagerId|店长|string||
 |&emsp;&emsp;&emsp;&emsp;deputyManagerIds|副店长|string||
@@ -6488,8 +7065,8 @@
 	"message": "",
 	"code": 0,
 	"result": {
-		"current": 0,
 		"size": 0,
+		"current": 0,
 		"records": [
 			{
 				"id": "",
@@ -6507,6 +7084,7 @@
 				"reservableDays": 0,
 				"reservableNumber": 0,
 				"dailyReservableNumber": 0,
+				"qrcodeValidSeconds": 0,
 				"salesclerkIds": "",
 				"storeManagerId": "",
 				"deputyManagerIds": "",
@@ -6866,6 +7444,7 @@
   "productImageUrl": "",
   "productDescription": "",
   "status": "",
+  "reservationSource": "",
   "reservedAt": "",
   "expiresAt": "",
   "keyword": "",
@@ -6899,6 +7478,7 @@
 |&emsp;&emsp;productImageUrl|商品图片||false|string||
 |&emsp;&emsp;productDescription|商品描述||false|string||
 |&emsp;&emsp;status|预约状态||false|string||
+|&emsp;&emsp;reservationSource|预约来源：MOBILE_WEB、PC_WEB、IOS、ANDROID、UNKNOWN||false|string||
 |&emsp;&emsp;reservedAt|预约时间||false|string||
 |&emsp;&emsp;expiresAt|过期时间||false|string||
 |&emsp;&emsp;keyword|列表搜索关键字||false|string||
@@ -7011,6 +7591,7 @@
   "productImageUrl": "",
   "productDescription": "",
   "status": "",
+  "reservationSource": "",
   "reservedAt": "",
   "expiresAt": "",
   "keyword": "",
@@ -7044,6 +7625,7 @@
 |&emsp;&emsp;productImageUrl|商品图片||false|string||
 |&emsp;&emsp;productDescription|商品描述||false|string||
 |&emsp;&emsp;status|预约状态||false|string||
+|&emsp;&emsp;reservationSource|预约来源：MOBILE_WEB、PC_WEB、IOS、ANDROID、UNKNOWN||false|string||
 |&emsp;&emsp;reservedAt|预约时间||false|string||
 |&emsp;&emsp;expiresAt|过期时间||false|string||
 |&emsp;&emsp;keyword|列表搜索关键字||false|string||
@@ -7180,6 +7762,7 @@
 |&emsp;&emsp;productImageUrl|商品图片|string||
 |&emsp;&emsp;productDescription|商品描述|string||
 |&emsp;&emsp;status|预约状态|string||
+|&emsp;&emsp;reservationSource|预约来源：MOBILE_WEB、PC_WEB、IOS、ANDROID、UNKNOWN|string||
 |&emsp;&emsp;reservedAt|预约时间|string||
 |&emsp;&emsp;expiresAt|过期时间|string||
 |&emsp;&emsp;keyword|列表搜索关键字|string||
@@ -7213,6 +7796,7 @@
 		"productImageUrl": "",
 		"productDescription": "",
 		"status": "",
+		"reservationSource": "",
 		"reservedAt": "",
 		"expiresAt": "",
 		"keyword": "",
@@ -7291,6 +7875,7 @@
 |shopifyReservationQrVerifyParam|Shopify预约二维码验签核销参数|body|true|ShopifyReservationQrVerifyParam|ShopifyReservationQrVerifyParam|
 |&emsp;&emsp;payload|扫码得到的二维码内容||false|string||
 |&emsp;&emsp;storeRef|当前核销门店ID||false|string||
+|X-Shopify-Qrcode-Version||header|false|string||
 
 
 **响应状态**:
@@ -7330,6 +7915,7 @@
 |&emsp;&emsp;productImageUrl|商品图片|string||
 |&emsp;&emsp;productDescription|商品描述|string||
 |&emsp;&emsp;status|预约状态|string||
+|&emsp;&emsp;reservationSource|预约来源：MOBILE_WEB、PC_WEB、IOS、ANDROID、UNKNOWN|string||
 |&emsp;&emsp;reservedAt|预约时间|string||
 |&emsp;&emsp;expiresAt|过期时间|string||
 |&emsp;&emsp;keyword|列表搜索关键字|string||
@@ -7363,6 +7949,7 @@
 		"productImageUrl": "",
 		"productDescription": "",
 		"status": "",
+		"reservationSource": "",
 		"reservedAt": "",
 		"expiresAt": "",
 		"keyword": "",
@@ -7370,6 +7957,126 @@
 		"storeName": "",
 		"storeAddress": "",
 		"customerPhone": ""
+	},
+	"timestamp": 0
+}
+```
+
+
+**响应状态码-401**:
+
+
+**响应参数**:
+
+
+| 参数名称 | 参数说明 | 类型 | schema |
+| -------- | -------- | ----- |----- | 
+|success|成功标志|boolean||
+|message|返回处理消息|string||
+|code|返回代码|integer(int32)|integer(int32)|
+|result|返回数据对象|object||
+|timestamp|时间戳|integer(int64)|integer(int64)|
+
+
+**响应示例**:
+```javascript
+{
+	"success": true,
+	"message": "",
+	"code": 0,
+	"result": {},
+	"timestamp": 0
+}
+```
+
+
+## 查询V2动态预约二维码状态，不续期不核销
+
+
+**接口地址**:`/yueran/shopify/shopifyReservation/qrcode/v2/status`
+
+
+**请求方式**:`POST`
+
+
+**请求数据类型**:`application/x-www-form-urlencoded,application/json`
+
+
+**响应数据类型**:`*/*`
+
+
+**接口描述**:<p>权限标识：shopify:shopify_reservation:qrcode</p>
+
+
+
+**请求示例**:
+
+
+```javascript
+{
+  "payload": "",
+  "storeRef": ""
+}
+```
+
+
+**请求参数**:
+
+
+| 参数名称 | 参数说明 | 请求类型    | 是否必须 | 数据类型 | schema |
+| -------- | -------- | ----- | -------- | -------- | ------ |
+|shopifyReservationQrVerifyParam|Shopify预约二维码验签核销参数|body|true|ShopifyReservationQrVerifyParam|ShopifyReservationQrVerifyParam|
+|&emsp;&emsp;payload|扫码得到的二维码内容||false|string||
+|&emsp;&emsp;storeRef|当前核销门店ID||false|string||
+
+
+**响应状态**:
+
+
+| 状态码 | 说明 | schema |
+| -------- | -------- | ----- | 
+|200|OK|ResultShopifyReservationQrStatusVO|
+|401|Unauthorized|ResultObject|
+
+
+**响应状态码-200**:
+
+
+**响应参数**:
+
+
+| 参数名称 | 参数说明 | 类型 | schema |
+| -------- | -------- | ----- |----- | 
+|success|成功标志|boolean||
+|message|返回处理消息|string||
+|code|返回代码|integer(int32)|integer(int32)|
+|result||ShopifyReservationQrStatusVO|ShopifyReservationQrStatusVO|
+|&emsp;&emsp;version||string||
+|&emsp;&emsp;qrTokenId||string||
+|&emsp;&emsp;serverTime||integer(int64)||
+|&emsp;&emsp;qrExpiresAt||integer(int64)||
+|&emsp;&emsp;remainingSeconds||integer(int64)||
+|&emsp;&emsp;valid||boolean||
+|&emsp;&emsp;redeemable||boolean||
+|&emsp;&emsp;state|VALID/EXPIRED/REPLACED/RESERVATION_CHANGED/RESERVATION_CLOSED|string||
+|timestamp|时间戳|integer(int64)|integer(int64)|
+
+
+**响应示例**:
+```javascript
+{
+	"success": true,
+	"message": "",
+	"code": 0,
+	"result": {
+		"version": "",
+		"qrTokenId": "",
+		"serverTime": 0,
+		"qrExpiresAt": 0,
+		"remainingSeconds": 0,
+		"valid": true,
+		"redeemable": true,
+		"state": ""
 	},
 	"timestamp": 0
 }
@@ -7467,6 +8174,7 @@
 |&emsp;&emsp;productImageUrl|商品图片|string||
 |&emsp;&emsp;productDescription|商品描述|string||
 |&emsp;&emsp;status|预约状态|string||
+|&emsp;&emsp;reservationSource|预约来源：MOBILE_WEB、PC_WEB、IOS、ANDROID、UNKNOWN|string||
 |&emsp;&emsp;reservedAt|预约时间|string||
 |&emsp;&emsp;expiresAt|过期时间|string||
 |&emsp;&emsp;keyword|列表搜索关键字|string||
@@ -7500,6 +8208,7 @@
 		"productImageUrl": "",
 		"productDescription": "",
 		"status": "",
+		"reservationSource": "",
 		"reservedAt": "",
 		"expiresAt": "",
 		"keyword": "",
@@ -7580,6 +8289,7 @@
   "productImageUrl": "",
   "productDescription": "",
   "status": "",
+  "reservationSource": "",
   "reservedAt": "",
   "expiresAt": "",
   "keyword": "",
@@ -7613,6 +8323,7 @@
 |&emsp;&emsp;productImageUrl|商品图片||false|string||
 |&emsp;&emsp;productDescription|商品描述||false|string||
 |&emsp;&emsp;status|预约状态||false|string||
+|&emsp;&emsp;reservationSource|预约来源：MOBILE_WEB、PC_WEB、IOS、ANDROID、UNKNOWN||false|string||
 |&emsp;&emsp;reservedAt|预约时间||false|string||
 |&emsp;&emsp;expiresAt|过期时间||false|string||
 |&emsp;&emsp;keyword|列表搜索关键字||false|string||
@@ -7749,6 +8460,7 @@
 |&emsp;&emsp;productImageUrl|商品图片|string||
 |&emsp;&emsp;productDescription|商品描述|string||
 |&emsp;&emsp;status|预约状态|string||
+|&emsp;&emsp;reservationSource|预约来源：MOBILE_WEB、PC_WEB、IOS、ANDROID、UNKNOWN|string||
 |&emsp;&emsp;reservedAt|预约时间|string||
 |&emsp;&emsp;expiresAt|过期时间|string||
 |&emsp;&emsp;keyword|列表搜索关键字|string||
@@ -7782,6 +8494,7 @@
 		"productImageUrl": "",
 		"productDescription": "",
 		"status": "",
+		"reservationSource": "",
 		"reservedAt": "",
 		"expiresAt": "",
 		"keyword": "",
@@ -7877,6 +8590,11 @@
 |&emsp;&emsp;expiresAt|过期时间|string||
 |&emsp;&emsp;payload|二维码内容|string||
 |&emsp;&emsp;imageDataUrl|二维码PNG DataURL|string||
+|&emsp;&emsp;version|二维码协议版本，V2返回2；旧接口不改变原协议|string||
+|&emsp;&emsp;qrTokenId|当前动态二维码凭证ID|string||
+|&emsp;&emsp;serverTime|服务器时间，Unix毫秒|integer(int64)||
+|&emsp;&emsp;qrExpiresAt|二维码自身失效时间，Unix毫秒，独立于预约截止时间|integer(int64)||
+|&emsp;&emsp;remainingSeconds|二维码剩余有效秒数|integer(int64)||
 |timestamp|时间戳|integer(int64)|integer(int64)|
 
 
@@ -7893,7 +8611,127 @@
 		"reservedAt": "",
 		"expiresAt": "",
 		"payload": "",
-		"imageDataUrl": ""
+		"imageDataUrl": "",
+		"version": "",
+		"qrTokenId": "",
+		"serverTime": 0,
+		"qrExpiresAt": 0,
+		"remainingSeconds": 0
+	},
+	"timestamp": 0
+}
+```
+
+
+**响应状态码-401**:
+
+
+**响应参数**:
+
+
+| 参数名称 | 参数说明 | 类型 | schema |
+| -------- | -------- | ----- |----- | 
+|success|成功标志|boolean||
+|message|返回处理消息|string||
+|code|返回代码|integer(int32)|integer(int32)|
+|result|返回数据对象|object||
+|timestamp|时间戳|integer(int64)|integer(int64)|
+
+
+**响应示例**:
+```javascript
+{
+	"success": true,
+	"message": "",
+	"code": 0,
+	"result": {},
+	"timestamp": 0
+}
+```
+
+
+## 生成V2动态预约二维码
+
+
+**接口地址**:`/yueran/shopify/shopifyReservation/qrcode/v2`
+
+
+**请求方式**:`GET`
+
+
+**请求数据类型**:`application/x-www-form-urlencoded`
+
+
+**响应数据类型**:`*/*`
+
+
+**接口描述**:<p>权限标识：shopify:shopify_reservation:qrcode</p>
+
+
+
+**请求参数**:
+
+
+| 参数名称 | 参数说明 | 请求类型    | 是否必须 | 数据类型 | schema |
+| -------- | -------- | ----- | -------- | -------- | ------ |
+|id||query|true|string||
+
+
+**响应状态**:
+
+
+| 状态码 | 说明 | schema |
+| -------- | -------- | ----- | 
+|200|OK|ResultShopifyReservationQrCodeVO|
+|401|Unauthorized|ResultObject|
+
+
+**响应状态码-200**:
+
+
+**响应参数**:
+
+
+| 参数名称 | 参数说明 | 类型 | schema |
+| -------- | -------- | ----- |----- | 
+|success|成功标志|boolean||
+|message|返回处理消息|string||
+|code|返回代码|integer(int32)|integer(int32)|
+|result||ShopifyReservationQrCodeVO|ShopifyReservationQrCodeVO|
+|&emsp;&emsp;reservationId|预约ID|string||
+|&emsp;&emsp;code|预约码|string||
+|&emsp;&emsp;storeRef|门店ID|string||
+|&emsp;&emsp;reservedAt|预约时间|string||
+|&emsp;&emsp;expiresAt|过期时间|string||
+|&emsp;&emsp;payload|二维码内容|string||
+|&emsp;&emsp;imageDataUrl|二维码PNG DataURL|string||
+|&emsp;&emsp;version|二维码协议版本，V2返回2；旧接口不改变原协议|string||
+|&emsp;&emsp;qrTokenId|当前动态二维码凭证ID|string||
+|&emsp;&emsp;serverTime|服务器时间，Unix毫秒|integer(int64)||
+|&emsp;&emsp;qrExpiresAt|二维码自身失效时间，Unix毫秒，独立于预约截止时间|integer(int64)||
+|&emsp;&emsp;remainingSeconds|二维码剩余有效秒数|integer(int64)||
+|timestamp|时间戳|integer(int64)|integer(int64)|
+
+
+**响应示例**:
+```javascript
+{
+	"success": true,
+	"message": "",
+	"code": 0,
+	"result": {
+		"reservationId": "",
+		"code": "",
+		"storeRef": "",
+		"reservedAt": "",
+		"expiresAt": "",
+		"payload": "",
+		"imageDataUrl": "",
+		"version": "",
+		"qrTokenId": "",
+		"serverTime": 0,
+		"qrExpiresAt": 0,
+		"remainingSeconds": 0
 	},
 	"timestamp": 0
 }
@@ -7968,6 +8806,7 @@
 |&emsp;&emsp;productImageUrl|商品图片||false|string||
 |&emsp;&emsp;productDescription|商品描述||false|string||
 |&emsp;&emsp;status|预约状态||false|string||
+|&emsp;&emsp;reservationSource|预约来源：MOBILE_WEB、PC_WEB、IOS、ANDROID、UNKNOWN||false|string||
 |&emsp;&emsp;reservedAt|预约时间||false|string||
 |&emsp;&emsp;expiresAt|过期时间||false|string||
 |&emsp;&emsp;keyword|列表搜索关键字||false|string||
@@ -8000,8 +8839,8 @@
 |message|返回处理消息|string||
 |code|返回代码|integer(int32)|integer(int32)|
 |result||IPageShopifyReservation|IPageShopifyReservation|
-|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;size||integer(int64)||
+|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;records||array|ShopifyReservation|
 |&emsp;&emsp;&emsp;&emsp;id|id|string||
 |&emsp;&emsp;&emsp;&emsp;createBy|createBy|string||
@@ -8019,6 +8858,7 @@
 |&emsp;&emsp;&emsp;&emsp;productImageUrl|商品图片|string||
 |&emsp;&emsp;&emsp;&emsp;productDescription|商品描述|string||
 |&emsp;&emsp;&emsp;&emsp;status|预约状态|string||
+|&emsp;&emsp;&emsp;&emsp;reservationSource|预约来源：MOBILE_WEB、PC_WEB、IOS、ANDROID、UNKNOWN|string||
 |&emsp;&emsp;&emsp;&emsp;reservedAt|预约时间|string||
 |&emsp;&emsp;&emsp;&emsp;expiresAt|过期时间|string||
 |&emsp;&emsp;&emsp;&emsp;keyword|列表搜索关键字|string||
@@ -8038,8 +8878,8 @@
 	"message": "",
 	"code": 0,
 	"result": {
-		"current": 0,
 		"size": 0,
+		"current": 0,
 		"records": [
 			{
 				"id": "",
@@ -8058,6 +8898,7 @@
 				"productImageUrl": "",
 				"productDescription": "",
 				"status": "",
+				"reservationSource": "",
 				"reservedAt": "",
 				"expiresAt": "",
 				"keyword": "",
@@ -8908,8 +9749,8 @@
 |message|返回处理消息|string||
 |code|返回代码|integer(int32)|integer(int32)|
 |result||IPageShopifyMemberLevelI18n|IPageShopifyMemberLevelI18n|
-|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;size||integer(int64)||
+|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;records||array|ShopifyMemberLevelI18n|
 |&emsp;&emsp;&emsp;&emsp;id|主键|string||
 |&emsp;&emsp;&emsp;&emsp;levelId|会员等级ID|string||
@@ -8933,8 +9774,8 @@
 	"message": "",
 	"code": 0,
 	"result": {
-		"current": 0,
 		"size": 0,
+		"current": 0,
 		"records": [
 			{
 				"id": "",
@@ -9982,8 +10823,8 @@
 |message|返回处理消息|string||
 |code|返回代码|integer(int32)|integer(int32)|
 |result||IPageShopifyWebhookSubscriptionConfig|IPageShopifyWebhookSubscriptionConfig|
-|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;size||integer(int64)||
+|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;records||array|ShopifyWebhookSubscriptionConfig|
 |&emsp;&emsp;&emsp;&emsp;id|主键|string||
 |&emsp;&emsp;&emsp;&emsp;topic|Webhook主题|string||
@@ -10023,8 +10864,8 @@
 	"message": "",
 	"code": 0,
 	"result": {
-		"current": 0,
 		"size": 0,
+		"current": 0,
 		"records": [
 			{
 				"id": "",
@@ -10980,8 +11821,8 @@
 |message|返回处理消息|string||
 |code|返回代码|integer(int32)|integer(int32)|
 |result||IPageShopifySmaregiTerminalMapping|IPageShopifySmaregiTerminalMapping|
-|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;size||integer(int64)||
+|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;records||array|ShopifySmaregiTerminalMapping|
 |&emsp;&emsp;&emsp;&emsp;id|主键|string||
 |&emsp;&emsp;&emsp;&emsp;storeId|本地门店ID|string||
@@ -11009,8 +11850,8 @@
 	"message": "",
 	"code": 0,
 	"result": {
-		"current": 0,
 		"size": 0,
+		"current": 0,
 		"records": [
 			{
 				"id": "",
@@ -12027,8 +12868,8 @@
 |message|返回处理消息|string||
 |code|返回代码|integer(int32)|integer(int32)|
 |result||IPageShopifySmaregiCustomerSync|IPageShopifySmaregiCustomerSync|
-|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;size||integer(int64)||
+|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;records||array|ShopifySmaregiCustomerSync|
 |&emsp;&emsp;&emsp;&emsp;id||string||
 |&emsp;&emsp;&emsp;&emsp;createBy||string||
@@ -12060,8 +12901,8 @@
 	"message": "",
 	"code": 0,
 	"result": {
-		"current": 0,
 		"size": 0,
+		"current": 0,
 		"records": [
 			{
 				"id": "",
@@ -13002,8 +13843,8 @@
 |message|返回处理消息|string||
 |code|返回代码|integer(int32)|integer(int32)|
 |result||IPageShopifyPaymentReconcile|IPageShopifyPaymentReconcile|
-|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;size||integer(int64)||
+|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;records||array|ShopifyPaymentReconcile|
 |&emsp;&emsp;&emsp;&emsp;id|主键|string||
 |&emsp;&emsp;&emsp;&emsp;smaregiTransactionId|Smaregi交易ID|string||
@@ -13036,8 +13877,8 @@
 	"message": "",
 	"code": 0,
 	"result": {
-		"current": 0,
 		"size": 0,
+		"current": 0,
 		"records": [
 			{
 				"id": "",
@@ -14200,8 +15041,8 @@
 |message|返回处理消息|string||
 |code|返回代码|integer(int32)|integer(int32)|
 |result||IPageShopifyOnlinePaymentOrder|IPageShopifyOnlinePaymentOrder|
-|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;size||integer(int64)||
+|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;records||array|ShopifyOnlinePaymentOrder|
 |&emsp;&emsp;&emsp;&emsp;id|主键|string||
 |&emsp;&emsp;&emsp;&emsp;shopifyOrderGid|Shopify订单GID|string||
@@ -14235,8 +15076,8 @@
 	"message": "",
 	"code": 0,
 	"result": {
-		"current": 0,
 		"size": 0,
+		"current": 0,
 		"records": [
 			{
 				"id": "",
@@ -15106,8 +15947,8 @@
 |message|返回处理消息|string||
 |code|返回代码|integer(int32)|integer(int32)|
 |result||IPageShopifyOnlineOrderSyncEvent|IPageShopifyOnlineOrderSyncEvent|
-|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;size||integer(int64)||
+|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;records||array|ShopifyOnlineOrderSyncEvent|
 |&emsp;&emsp;&emsp;&emsp;id|主键|string||
 |&emsp;&emsp;&emsp;&emsp;shopifyOrderGid|Shopify订单GID|string||
@@ -15142,8 +15983,8 @@
 	"message": "",
 	"code": 0,
 	"result": {
-		"current": 0,
 		"size": 0,
+		"current": 0,
 		"records": [
 			{
 				"id": "",
@@ -16005,8 +16846,8 @@
 |message|返回处理消息|string||
 |code|返回代码|integer(int32)|integer(int32)|
 |result||IPageShopifyMetaobjectSync|IPageShopifyMetaobjectSync|
-|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;size||integer(int64)||
+|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;records||array|ShopifyMetaobjectSync|
 |&emsp;&emsp;&emsp;&emsp;id|主键|string||
 |&emsp;&emsp;&emsp;&emsp;targetType|目标类型|string||
@@ -16040,8 +16881,8 @@
 	"message": "",
 	"code": 0,
 	"result": {
-		"current": 0,
 		"size": 0,
+		"current": 0,
 		"records": [
 			{
 				"id": "",
@@ -16875,8 +17716,8 @@
 |message|返回处理消息|string||
 |code|返回代码|integer(int32)|integer(int32)|
 |result||IPageShopifyMemberPointLedger|IPageShopifyMemberPointLedger|
-|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;size||integer(int64)||
+|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;records||array|ShopifyMemberPointLedger|
 |&emsp;&emsp;&emsp;&emsp;id|主键|string||
 |&emsp;&emsp;&emsp;&emsp;memberId|会员主档ID|string||
@@ -16907,8 +17748,8 @@
 	"message": "",
 	"code": 0,
 	"result": {
-		"current": 0,
 		"size": 0,
+		"current": 0,
 		"records": [
 			{
 				"id": "",
@@ -17712,8 +18553,8 @@
 |message|返回处理消息|string||
 |code|返回代码|integer(int32)|integer(int32)|
 |result||IPageShopifyMemberOperationLog|IPageShopifyMemberOperationLog|
-|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;size||integer(int64)||
+|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;records||array|ShopifyMemberOperationLog|
 |&emsp;&emsp;&emsp;&emsp;id|主键|string||
 |&emsp;&emsp;&emsp;&emsp;memberId|会员ID|string||
@@ -17741,8 +18582,8 @@
 	"message": "",
 	"code": 0,
 	"result": {
-		"current": 0,
 		"size": 0,
+		"current": 0,
 		"records": [
 			{
 				"id": "",
@@ -18561,8 +19402,8 @@
 |message|返回处理消息|string||
 |code|返回代码|integer(int32)|integer(int32)|
 |result||IPageShopifyMemberMessageTask|IPageShopifyMemberMessageTask|
-|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;size||integer(int64)||
+|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;records||array|ShopifyMemberMessageTask|
 |&emsp;&emsp;&emsp;&emsp;id|主键|string||
 |&emsp;&emsp;&emsp;&emsp;eventNo|事件号|string||
@@ -18592,8 +19433,8 @@
 	"message": "",
 	"code": 0,
 	"result": {
-		"current": 0,
 		"size": 0,
+		"current": 0,
 		"records": [
 			{
 				"id": "",
@@ -19414,8 +20255,8 @@
 |message|返回处理消息|string||
 |code|返回代码|integer(int32)|integer(int32)|
 |result||IPageShopifyMemberLevelDiscount|IPageShopifyMemberLevelDiscount|
-|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;size||integer(int64)||
+|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;records||array|ShopifyMemberLevelDiscount|
 |&emsp;&emsp;&emsp;&emsp;id|主键|string||
 |&emsp;&emsp;&emsp;&emsp;levelCode|等级编码|string||
@@ -19445,8 +20286,8 @@
 	"message": "",
 	"code": 0,
 	"result": {
-		"current": 0,
 		"size": 0,
+		"current": 0,
 		"records": [
 			{
 				"id": "",
@@ -20258,8 +21099,8 @@
 |message|返回处理消息|string||
 |code|返回代码|integer(int32)|integer(int32)|
 |result||IPageShopifyMemberLevel|IPageShopifyMemberLevel|
-|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;size||integer(int64)||
+|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;records||array|ShopifyMemberLevel|
 |&emsp;&emsp;&emsp;&emsp;id|主键|string||
 |&emsp;&emsp;&emsp;&emsp;levelCode|等级编码|string||
@@ -20288,8 +21129,8 @@
 	"message": "",
 	"code": 0,
 	"result": {
-		"current": 0,
 		"size": 0,
+		"current": 0,
 		"records": [
 			{
 				"id": "",
@@ -21082,8 +21923,8 @@
 |message|返回处理消息|string||
 |code|返回代码|integer(int32)|integer(int32)|
 |result||IPageShopifyMemberEventLog|IPageShopifyMemberEventLog|
-|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;size||integer(int64)||
+|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;records||array|ShopifyMemberEventLog|
 |&emsp;&emsp;&emsp;&emsp;id|主键|string||
 |&emsp;&emsp;&emsp;&emsp;eventNo|事件号|string||
@@ -21110,8 +21951,8 @@
 	"message": "",
 	"code": 0,
 	"result": {
-		"current": 0,
 		"size": 0,
+		"current": 0,
 		"records": [
 			{
 				"id": "",
@@ -21911,8 +22752,8 @@
 |message|返回处理消息|string||
 |code|返回代码|integer(int32)|integer(int32)|
 |result||IPageShopifyMemberDiscountCalcLog|IPageShopifyMemberDiscountCalcLog|
-|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;size||integer(int64)||
+|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;records||array|ShopifyMemberDiscountCalcLog|
 |&emsp;&emsp;&emsp;&emsp;id|主键|string||
 |&emsp;&emsp;&emsp;&emsp;memberId|会员ID|string||
@@ -21940,8 +22781,8 @@
 	"message": "",
 	"code": 0,
 	"result": {
-		"current": 0,
 		"size": 0,
+		"current": 0,
 		"records": [
 			{
 				"id": "",
@@ -23230,8 +24071,8 @@
 |message|返回处理消息|string||
 |code|返回代码|integer(int32)|integer(int32)|
 |result||IPageShopifyMemberSyncUserVO|IPageShopifyMemberSyncUserVO|
-|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;size||integer(int64)||
+|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;records||array|ShopifyMemberSyncUserVO|
 |&emsp;&emsp;&emsp;&emsp;sysUserId|Jeecg 用户ID|string||
 |&emsp;&emsp;&emsp;&emsp;username|Jeecg 登录账号|string||
@@ -23251,8 +24092,8 @@
 	"message": "",
 	"code": 0,
 	"result": {
-		"current": 0,
 		"size": 0,
+		"current": 0,
 		"records": [
 			{
 				"sysUserId": "",
@@ -23372,8 +24213,8 @@
 |message|返回处理消息|string||
 |code|返回代码|integer(int32)|integer(int32)|
 |result||IPageShopifyMemberCustomer|IPageShopifyMemberCustomer|
-|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;size||integer(int64)||
+|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;records||array|ShopifyMemberCustomer|
 |&emsp;&emsp;&emsp;&emsp;id|主键|string||
 |&emsp;&emsp;&emsp;&emsp;memberCode|会员码|string||
@@ -23411,8 +24252,8 @@
 	"message": "",
 	"code": 0,
 	"result": {
-		"current": 0,
 		"size": 0,
+		"current": 0,
 		"records": [
 			{
 				"id": "",
@@ -24286,8 +25127,8 @@
 |message|返回处理消息|string||
 |code|返回代码|integer(int32)|integer(int32)|
 |result||IPageShopifyMemberCouponTemplate|IPageShopifyMemberCouponTemplate|
-|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;size||integer(int64)||
+|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;records||array|ShopifyMemberCouponTemplate|
 |&emsp;&emsp;&emsp;&emsp;id|主键|string||
 |&emsp;&emsp;&emsp;&emsp;couponCode|优惠券模板编码|string||
@@ -24322,8 +25163,8 @@
 	"message": "",
 	"code": 0,
 	"result": {
-		"current": 0,
 		"size": 0,
+		"current": 0,
 		"records": [
 			{
 				"id": "",
@@ -25149,8 +25990,8 @@
 |message|返回处理消息|string||
 |code|返回代码|integer(int32)|integer(int32)|
 |result||IPageShopifyMemberCouponLedger|IPageShopifyMemberCouponLedger|
-|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;size||integer(int64)||
+|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;records||array|ShopifyMemberCouponLedger|
 |&emsp;&emsp;&emsp;&emsp;id|主键|string||
 |&emsp;&emsp;&emsp;&emsp;couponId|会员优惠券ID|string||
@@ -25180,8 +26021,8 @@
 	"message": "",
 	"code": 0,
 	"result": {
-		"current": 0,
 		"size": 0,
+		"current": 0,
 		"records": [
 			{
 				"id": "",
@@ -26038,8 +26879,8 @@
 |message|返回处理消息|string||
 |code|返回代码|integer(int32)|integer(int32)|
 |result||IPageShopifyMemberCoupon|IPageShopifyMemberCoupon|
-|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;size||integer(int64)||
+|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;records||array|ShopifyMemberCoupon|
 |&emsp;&emsp;&emsp;&emsp;id|主键|string||
 |&emsp;&emsp;&emsp;&emsp;couponTemplateId|优惠券模板ID|string||
@@ -26073,8 +26914,8 @@
 	"message": "",
 	"code": 0,
 	"result": {
-		"current": 0,
 		"size": 0,
+		"current": 0,
 		"records": [
 			{
 				"id": "",
@@ -26935,8 +27776,8 @@
 |message|返回处理消息|string||
 |code|返回代码|integer(int32)|integer(int32)|
 |result||IPageShopifyMemberBenefitGrant|IPageShopifyMemberBenefitGrant|
-|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;size||integer(int64)||
+|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;records||array|ShopifyMemberBenefitGrant|
 |&emsp;&emsp;&emsp;&emsp;id|主键|string||
 |&emsp;&emsp;&emsp;&emsp;memberId|会员ID|string||
@@ -26970,8 +27811,8 @@
 	"message": "",
 	"code": 0,
 	"result": {
-		"current": 0,
 		"size": 0,
+		"current": 0,
 		"records": [
 			{
 				"id": "",
@@ -27805,8 +28646,8 @@
 |message|返回处理消息|string||
 |code|返回代码|integer(int32)|integer(int32)|
 |result||IPageShopifyMemberBenefit|IPageShopifyMemberBenefit|
-|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;size||integer(int64)||
+|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;records||array|ShopifyMemberBenefit|
 |&emsp;&emsp;&emsp;&emsp;id|主键|string||
 |&emsp;&emsp;&emsp;&emsp;benefitCode|权益编码|string||
@@ -27837,8 +28678,8 @@
 	"message": "",
 	"code": 0,
 	"result": {
-		"current": 0,
 		"size": 0,
+		"current": 0,
 		"records": [
 			{
 				"id": "",
@@ -28660,8 +29501,8 @@
 |message|返回处理消息|string||
 |code|返回代码|integer(int32)|integer(int32)|
 |result||IPageShopifyAnnualMemberPointAccount|IPageShopifyAnnualMemberPointAccount|
-|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;size||integer(int64)||
+|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;records||array|ShopifyAnnualMemberPointAccount|
 |&emsp;&emsp;&emsp;&emsp;id|主键|string||
 |&emsp;&emsp;&emsp;&emsp;memberId|会员ID|string||
@@ -28691,8 +29532,8 @@
 	"message": "",
 	"code": 0,
 	"result": {
-		"current": 0,
 		"size": 0,
+		"current": 0,
 		"records": [
 			{
 				"id": "",
@@ -29708,8 +30549,8 @@
 |message|返回处理消息|string||
 |code|返回代码|integer(int32)|integer(int32)|
 |result||IPageShopifyI18nFieldConfig|IPageShopifyI18nFieldConfig|
-|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;size||integer(int64)||
+|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;records||array|ShopifyI18nFieldConfig|
 |&emsp;&emsp;&emsp;&emsp;id|主键|string||
 |&emsp;&emsp;&emsp;&emsp;resourceCode|业务资源编码，例如 store、member_level|string||
@@ -29737,8 +30578,8 @@
 	"message": "",
 	"code": 0,
 	"result": {
-		"current": 0,
 		"size": 0,
+		"current": 0,
 		"records": [
 			{
 				"id": "",
@@ -30653,8 +31494,8 @@
 |message|返回处理消息|string||
 |code|返回代码|integer(int32)|integer(int32)|
 |result||IPageShopifyReservationSlotStat|IPageShopifyReservationSlotStat|
-|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;size||integer(int64)||
+|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;records||array|ShopifyReservationSlotStat|
 |&emsp;&emsp;&emsp;&emsp;id|id|string||
 |&emsp;&emsp;&emsp;&emsp;createBy|createBy|string||
@@ -30689,8 +31530,8 @@
 	"message": "",
 	"code": 0,
 	"result": {
-		"current": 0,
 		"size": 0,
+		"current": 0,
 		"records": [
 			{
 				"id": "",
@@ -31459,8 +32300,8 @@
 |message|返回处理消息|string||
 |code|返回代码|integer(int32)|integer(int32)|
 |result||IPageShopifyReservationDailyUnlock|IPageShopifyReservationDailyUnlock|
-|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;size||integer(int64)||
+|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;records||array|ShopifyReservationDailyUnlock|
 |&emsp;&emsp;&emsp;&emsp;id|id|string||
 |&emsp;&emsp;&emsp;&emsp;createBy|创建人|string||
@@ -31488,8 +32329,8 @@
 	"message": "",
 	"code": 0,
 	"result": {
-		"current": 0,
 		"size": 0,
+		"current": 0,
 		"records": [
 			{
 				"id": "",
@@ -32184,8 +33025,8 @@
 |message|返回处理消息|string||
 |code|返回代码|integer(int32)|integer(int32)|
 |result||IPageShopifyMemberPointRule|IPageShopifyMemberPointRule|
-|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;size||integer(int64)||
+|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;records||array|ShopifyMemberPointRule|
 |&emsp;&emsp;&emsp;&emsp;id|主键|string||
 |&emsp;&emsp;&emsp;&emsp;ruleCode|规则编码|string||
@@ -32216,8 +33057,8 @@
 	"message": "",
 	"code": 0,
 	"result": {
-		"current": 0,
 		"size": 0,
+		"current": 0,
 		"records": [
 			{
 				"id": "",
@@ -32908,8 +33749,8 @@
 |message|返回处理消息|string||
 |code|返回代码|integer(int32)|integer(int32)|
 |result||IPageShopifyMemberBenefitRule|IPageShopifyMemberBenefitRule|
-|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;size||integer(int64)||
+|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;records||array|ShopifyMemberBenefitRule|
 |&emsp;&emsp;&emsp;&emsp;id|主键|string||
 |&emsp;&emsp;&emsp;&emsp;benefitId|关联权益ID|string||
@@ -32939,8 +33780,8 @@
 	"message": "",
 	"code": 0,
 	"result": {
-		"current": 0,
 		"size": 0,
+		"current": 0,
 		"records": [
 			{
 				"id": "",
@@ -33704,8 +34545,8 @@
 |message|返回处理消息|string||
 |code|返回代码|integer(int32)|integer(int32)|
 |result||IPageShopifyMetaobjectMapping|IPageShopifyMetaobjectMapping|
-|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;size||integer(int64)||
+|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;records||array|ShopifyMetaobjectMapping|
 |&emsp;&emsp;&emsp;&emsp;id|id|string||
 |&emsp;&emsp;&emsp;&emsp;createBy|创建人|string||
@@ -33732,8 +34573,8 @@
 	"message": "",
 	"code": 0,
 	"result": {
-		"current": 0,
 		"size": 0,
+		"current": 0,
 		"records": [
 			{
 				"id": "",
@@ -35728,8 +36569,8 @@
 |message|返回处理消息|string||
 |code|返回代码|integer(int32)|integer(int32)|
 |result||IPageShopifyThirdAccountBindingReview|IPageShopifyThirdAccountBindingReview|
-|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;size||integer(int64)||
+|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;records||array|ShopifyThirdAccountBindingReview|
 |&emsp;&emsp;&emsp;&emsp;id||string||
 |&emsp;&emsp;&emsp;&emsp;createBy||string||
@@ -35769,8 +36610,8 @@
 	"message": "",
 	"code": 0,
 	"result": {
-		"current": 0,
 		"size": 0,
+		"current": 0,
 		"records": [
 			{
 				"id": "",
@@ -36121,8 +36962,8 @@
 |message|返回处理消息|string||
 |code|返回代码|integer(int32)|integer(int32)|
 |result||IPageShopifyCustomerWebhookEvent|IPageShopifyCustomerWebhookEvent|
-|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;size||integer(int64)||
+|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;records||array|ShopifyCustomerWebhookEvent|
 |&emsp;&emsp;&emsp;&emsp;id|主键|string||
 |&emsp;&emsp;&emsp;&emsp;createBy|创建人|string||
@@ -36153,8 +36994,8 @@
 	"message": "",
 	"code": 0,
 	"result": {
-		"current": 0,
 		"size": 0,
+		"current": 0,
 		"records": [
 			{
 				"id": "",
@@ -36534,8 +37375,8 @@
 |message|返回处理消息|string||
 |code|返回代码|integer(int32)|integer(int32)|
 |result||IPageShopifyMemberPurchaseArchive|IPageShopifyMemberPurchaseArchive|
-|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;size||integer(int64)||
+|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;records||array|ShopifyMemberPurchaseArchive|
 |&emsp;&emsp;&emsp;&emsp;id||string||
 |&emsp;&emsp;&emsp;&emsp;archiveNo||string||
@@ -36589,8 +37430,8 @@
 	"message": "",
 	"code": 0,
 	"result": {
-		"current": 0,
 		"size": 0,
+		"current": 0,
 		"records": [
 			{
 				"id": "",
@@ -36849,8 +37690,8 @@
 |message|返回处理消息|string||
 |code|返回代码|integer(int32)|integer(int32)|
 |result||IPageShopifyMemberPurchaseArchive|IPageShopifyMemberPurchaseArchive|
-|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;size||integer(int64)||
+|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;records||array|ShopifyMemberPurchaseArchive|
 |&emsp;&emsp;&emsp;&emsp;id||string||
 |&emsp;&emsp;&emsp;&emsp;archiveNo||string||
@@ -36904,8 +37745,8 @@
 	"message": "",
 	"code": 0,
 	"result": {
-		"current": 0,
 		"size": 0,
+		"current": 0,
 		"records": [
 			{
 				"id": "",
@@ -37290,6 +38131,127 @@
 
 
 # Shopify客户
+
+
+## 当前用户会员资料录入并同步Shopify
+
+
+**接口地址**:`/yueran/shopify/customer/updateProfile`
+
+
+**请求方式**:`POST`
+
+
+**请求数据类型**:`application/x-www-form-urlencoded,application/json`
+
+
+**响应数据类型**:`*/*`
+
+
+**接口描述**:
+
+
+**请求示例**:
+
+
+```javascript
+{
+  "firstName": "",
+  "lastName": "",
+  "sex": 0,
+  "birthday": "",
+  "phone": ""
+}
+```
+
+
+**请求参数**:
+
+
+| 参数名称 | 参数说明 | 请求类型    | 是否必须 | 数据类型 | schema |
+| -------- | -------- | ----- | -------- | -------- | ------ |
+|shopifyCustomerProfileUpdateParam|当前登录用户会员资料录入参数|body|true|ShopifyCustomerProfileUpdateParam|ShopifyCustomerProfileUpdateParam|
+|&emsp;&emsp;firstName|名，必填||false|string||
+|&emsp;&emsp;lastName|姓，必填||false|string||
+|&emsp;&emsp;sex|性别：1男、2女；null保留原值||false|integer(int32)||
+|&emsp;&emsp;birthday|生日，yyyy-MM-dd；null保留原值||false|string(date)||
+|&emsp;&emsp;phone|手机号；null保留原值，空字符串清空||false|string||
+
+
+**响应状态**:
+
+
+| 状态码 | 说明 | schema |
+| -------- | -------- | ----- | 
+|200|OK|ResultShopifyCustomerProfileVO|
+|401|Unauthorized|ResultObject|
+
+
+**响应状态码-200**:
+
+
+**响应参数**:
+
+
+| 参数名称 | 参数说明 | 类型 | schema |
+| -------- | -------- | ----- |----- | 
+|success|成功标志|boolean||
+|message|返回处理消息|string||
+|code|返回代码|integer(int32)|integer(int32)|
+|result||ShopifyCustomerProfileVO|ShopifyCustomerProfileVO|
+|&emsp;&emsp;firstName|名|string||
+|&emsp;&emsp;lastName|姓|string||
+|&emsp;&emsp;realname|展示姓名|string||
+|&emsp;&emsp;phone|手机号|string||
+|&emsp;&emsp;sex|性别：1男、2女|integer(int32)||
+|&emsp;&emsp;birthday|生日|string(date)||
+|timestamp|时间戳|integer(int64)|integer(int64)|
+
+
+**响应示例**:
+```javascript
+{
+	"success": true,
+	"message": "",
+	"code": 0,
+	"result": {
+		"firstName": "",
+		"lastName": "",
+		"realname": "",
+		"phone": "",
+		"sex": 0,
+		"birthday": ""
+	},
+	"timestamp": 0
+}
+```
+
+
+**响应状态码-401**:
+
+
+**响应参数**:
+
+
+| 参数名称 | 参数说明 | 类型 | schema |
+| -------- | -------- | ----- |----- | 
+|success|成功标志|boolean||
+|message|返回处理消息|string||
+|code|返回代码|integer(int32)|integer(int32)|
+|result|返回数据对象|object||
+|timestamp|时间戳|integer(int64)|integer(int64)|
+
+
+**响应示例**:
+```javascript
+{
+	"success": true,
+	"message": "",
+	"code": 0,
+	"result": {},
+	"timestamp": 0
+}
+```
 
 
 ## Shopify首次登录账号资料更新
@@ -38293,8 +39255,8 @@
 |message|返回处理消息|string||
 |code|返回代码|integer(int32)|integer(int32)|
 |result||IPageShopifyAccountDeletionRequest|IPageShopifyAccountDeletionRequest|
-|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;size||integer(int64)||
+|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;records||array|ShopifyAccountDeletionRequest|
 |&emsp;&emsp;&emsp;&emsp;id|主键|string||
 |&emsp;&emsp;&emsp;&emsp;createBy|创建人|string||
@@ -38340,8 +39302,8 @@
 	"message": "",
 	"code": 0,
 	"result": {
-		"current": 0,
 		"size": 0,
+		"current": 0,
 		"records": [
 			{
 				"id": "",
@@ -39464,8 +40426,8 @@
 |message|返回处理消息|string||
 |code|返回代码|integer(int32)|integer(int32)|
 |result||IPageShopifyMemberLevelAccount|IPageShopifyMemberLevelAccount|
-|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;size||integer(int64)||
+|&emsp;&emsp;current||integer(int64)||
 |&emsp;&emsp;records||array|ShopifyMemberLevelAccount|
 |&emsp;&emsp;&emsp;&emsp;id|主键|string||
 |&emsp;&emsp;&emsp;&emsp;memberId|会员主档ID|string||
@@ -39503,8 +40465,8 @@
 	"message": "",
 	"code": 0,
 	"result": {
-		"current": 0,
 		"size": 0,
+		"current": 0,
 		"records": [
 			{
 				"id": "",

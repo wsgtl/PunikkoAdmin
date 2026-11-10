@@ -1,6 +1,7 @@
 import { defHttp } from '/@/utils/http/axios';
 export interface StoreRecord {
   id?: string;
+  qrcodeValidSeconds?: number;
   [key: string]: any;
 }
 export interface StoreTranslation {
@@ -68,6 +69,7 @@ export function payload(record: StoreRecord) {
     'reservableDays',
     'reservableNumber',
     'dailyReservableNumber',
+    'qrcodeValidSeconds',
     'storeManagerId',
     'deputyManagerIds',
     'salesclerkIds',
@@ -99,6 +101,7 @@ export function createStoreDraft(): StoreRecord {
     reservableDays: 1,
     reservableNumber: 40,
     dailyReservableNumber: 1,
+    qrcodeValidSeconds: 60,
     storeManagerId: '',
     deputyManagerIds: '',
     salesclerkIds: '',

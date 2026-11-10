@@ -12,6 +12,7 @@ export const listFields = [
   'productReservedNumber',
   'storeReservedNumber',
   'reservedNumber',
+  'disabledReason',
 ] as const;
 export const detailFields = [
   ...listFields,
@@ -30,7 +31,7 @@ export function createColumns(): BasicColumn[] {
   return listFields.map((field) => ({
     title: t(`shopify.reservationSlotStat.${field}`),
     dataIndex: field,
-    width: field === 'storeRef' || field === 'storeName' ? 230 : 140,
+    width: field === 'storeRef' || field === 'storeName' ? 230 : field === 'disabledReason' ? 200 : 140,
     align: 'center',
     ellipsis: true,
     ...(field === 'storeRef' ? { customRender: ({ record }) => record.storeRef_dictText ?? record.storeRef } : {}),

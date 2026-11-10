@@ -13,6 +13,9 @@
           statusText(record)
         }}</a-tag>
       </template>
+      <template #reservationSource="{ record }">
+        {{ reservationSourceText(record) }}
+      </template>
       <template #action="{ record }">
         <TableAction
           :actions="[
@@ -58,7 +61,7 @@
     <BusinessDetailPanel @register="registerDetail" :title="t('shopify.storeReservation.detail')" :showOkBtn="false" :width="760">
       <a-descriptions v-if="detail" bordered :column="1" size="small">
         <a-descriptions-item v-for="field in detailFields" :key="field" :label="t(`shopify.storeReservation.${field}`)">
-          {{ field === 'status' ? statusText(detail) : detail[field] || '—' }}
+          {{ field === 'status' ? statusText(detail) : field === 'reservationSource' ? reservationSourceText(detail) : detail[field] || '—' }}
         </a-descriptions-item>
       </a-descriptions>
     </BusinessDetailPanel>
@@ -135,6 +138,10 @@
   watch(schemas, (value) => getForm().updateSchema(value));
   function statusText(record: StoreReservation) {
     return businessDictionaryText(statusDictCode.value, record.status, undefined, record.status_dictText);
+  }
+  function reservationSourceText(record: StoreReservation) {
+    const value = record.reservationSource;
+    return value ? t(`shopify.storeReservation.sourceValues.${value}`, record.reservationSource_dictText || value) : '—';
   }
   function handleSuperQuery(params?: Record<string, unknown>) {
     Object.keys(superQueryParams).forEach((key) => delete superQueryParams[key]);

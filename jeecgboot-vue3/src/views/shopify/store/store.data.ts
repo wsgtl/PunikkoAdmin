@@ -8,6 +8,7 @@ export const editFields = [
   'reservableDays',
   'reservableNumber',
   'dailyReservableNumber',
+  'qrcodeValidSeconds',
   'storeManagerId',
   'deputyManagerIds',
   'salesclerkIds',
@@ -19,7 +20,7 @@ export const editFields = [
   'storeMatters',
 ];
 export const staffFields = ['storeManagerId', 'deputyManagerIds', 'salesclerkIds'];
-export const numberFields = ['reservableDays', 'reservableNumber', 'dailyReservableNumber'];
+export const numberFields = ['reservableDays', 'reservableNumber', 'dailyReservableNumber', 'qrcodeValidSeconds'];
 export const dictCodes: Record<string, string> = {
   publishStatus: 'shopify_store_publish_status',
   hasReservableProducts: 'shopify_store_reservation_status',
@@ -34,6 +35,7 @@ export const listFields = [
   'reservableDays',
   'reservableNumber',
   'dailyReservableNumber',
+  'qrcodeValidSeconds',
   'storeManagerId',
   'deputyManagerIds',
   'salesclerkIds',

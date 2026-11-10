@@ -10,6 +10,8 @@ export interface StoreReservation {
   storeRef?: string;
   storeName?: string;
   storeAddress?: string;
+  reservationSource?: string;
+  reservationSource_dictText?: string;
   status: string;
   status_dictText?: string;
   reservedAt?: string;
@@ -31,7 +33,11 @@ export interface DictItem {
   label?: string;
 }
 
-export const list = (params: Record<string, unknown>) => defHttp.get<ReservationPage>({ url: '/shopify/shopifyStoreReservation/list', params });
+export const list = (params: Record<string, unknown>) =>
+  defHttp.get<ReservationPage>({
+    url: '/shopify/shopifyStoreReservation/list',
+    params: { ...params, column: 'reservedAt', order: 'desc' },
+  });
 
 // 当前兼容全量字典，页面按 code 选择一组，选项值始终使用后端 value。
 export const loadDictionaries = () => defHttp.get<Record<string, DictItem[]>>({ url: '/sys/dict/queryAllDictItems' });

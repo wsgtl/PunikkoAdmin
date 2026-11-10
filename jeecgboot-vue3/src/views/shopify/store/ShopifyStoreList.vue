@@ -40,7 +40,17 @@
           <EditorSection v-for="section in editorSections" :key="section.title" :title="label(section.title)">
             <a-row :gutter="[24, 0]">
               <a-col v-for="field in section.fields" :key="field" :xs="24" :md="fieldSpan(field)">
-                <a-form-item :name="field" :label="label(field)" :rules="requiredFields.includes(field) ? [{ required: true }] : []">
+                <a-form-item
+                  :name="field"
+                  :label="label(field)"
+                  :rules="
+                    field === 'qrcodeValidSeconds'
+                      ? [{ required: true, type: 'integer', min: 15, max: 300, message: label('qrcodeValidSecondsHint') }]
+                      : requiredFields.includes(field)
+                        ? [{ required: true }]
+                        : []
+                  "
+                >
                   <Tinymce
                     v-bind="storeRichTextSetting"
                     v-if="['reservationNotice', 'storeMatters'].includes(field)"
@@ -70,7 +80,8 @@
                     v-else-if="numberFields.includes(field)"
                     class="editor-number"
                     v-model:value="draft[field]"
-                    :min="0"
+                    :min="field === 'qrcodeValidSeconds' ? 15 : 0"
+                    :max="field === 'qrcodeValidSeconds' ? 300 : undefined"
                     :precision="0"
                     :disabled="saving"
                     style="width: 100%"
@@ -234,7 +245,7 @@
   const requiredFields = ['code', 'storeName', 'publishStatus', 'businessDays', ...numberFields, ...staffFields, 'openTime', 'closeTime'];
   const editorSections = [
     { title: 'basicSection', fields: ['code', 'storeName', 'publishStatus', 'hasReservableProducts', 'storeAddress', 'reservationNotice'] },
-    { title: 'reservationSection', fields: ['businessDays', 'reservableDays', 'reservableNumber', 'dailyReservableNumber'] },
+    { title: 'reservationSection', fields: ['businessDays', 'reservableDays', 'reservableNumber', 'dailyReservableNumber', 'qrcodeValidSeconds'] },
     { title: 'staffSection', fields: ['storeManagerId', 'deputyManagerIds', 'salesclerkIds', 'phone', 'openTime', 'closeTime'] },
     { title: 'notesSection', fields: ['storeMatters', 'remark'] },
   ];
@@ -264,7 +275,11 @@
       const [data, dict] = await Promise.all([queryForm(record.id), getBusinessDays()]);
       businessOptions.value = dict.map((x) => ({ value: String(x.value), label: businessDictionaryText('shopify_business_day', x.value) }));
       days.value = splitIds(data.businessDays);
-      draft.value = { ...data, shopifyStoreI18nList: initializeStoreTranslations(data.shopifyStoreI18nList ?? []) };
+      draft.value = {
+        ...data,
+        qrcodeValidSeconds: data.qrcodeValidSeconds ?? 60,
+        shopifyStoreI18nList: initializeStoreTranslations(data.shopifyStoreI18nList ?? []),
+      };
       await nextTick();
       form.value?.clearValidate();
     } catch {
