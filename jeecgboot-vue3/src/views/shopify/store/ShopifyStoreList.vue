@@ -44,11 +44,20 @@
                   :name="field"
                   :label="label(field)"
                   :rules="
-                    field === 'qrcodeValidSeconds'
-                      ? [{ required: true, type: 'integer', min: 15, max: 300, message: label('qrcodeValidSecondsHint') }]
-                      : requiredFields.includes(field)
-                        ? [{ required: true }]
-                        : []
+                    ['longitude', 'latitude'].includes(field)
+                      ? [
+                          {
+                            type: 'number',
+                            min: field === 'longitude' ? -180 : -90,
+                            max: field === 'longitude' ? 180 : 90,
+                            message: label(field + 'Hint'),
+                          },
+                        ]
+                      : field === 'qrcodeValidSeconds'
+                        ? [{ required: true, type: 'integer', min: 15, max: 300, message: label('qrcodeValidSecondsHint') }]
+                        : requiredFields.includes(field)
+                          ? [{ required: true }]
+                          : []
                   "
                 >
                   <Tinymce
@@ -75,6 +84,17 @@
                     labelKey="realname"
                     :pagination="{ pageSize: 10 }"
                     :disabled="saving"
+                  />
+                  <a-input-number
+                    v-else-if="['longitude', 'latitude'].includes(field)"
+                    v-model:value="draft[field]"
+                    :min="field === 'longitude' ? -180 : -90"
+                    :max="field === 'longitude' ? 180 : 90"
+                    :precision="7"
+                    :step="0.0000001"
+                    :placeholder="label(field + 'Hint')"
+                    :disabled="saving"
+                    style="width: 100%"
                   />
                   <a-input-number
                     v-else-if="numberFields.includes(field)"
@@ -244,7 +264,10 @@
   const businessOptions = ref<{ value: string; label: string }[]>([]);
   const requiredFields = ['code', 'storeName', 'publishStatus', 'businessDays', ...numberFields, ...staffFields, 'openTime', 'closeTime'];
   const editorSections = [
-    { title: 'basicSection', fields: ['code', 'storeName', 'publishStatus', 'hasReservableProducts', 'storeAddress', 'reservationNotice'] },
+    {
+      title: 'basicSection',
+      fields: ['code', 'storeName', 'publishStatus', 'hasReservableProducts', 'storeAddress', 'longitude', 'latitude', 'reservationNotice'],
+    },
     { title: 'reservationSection', fields: ['businessDays', 'reservableDays', 'reservableNumber', 'dailyReservableNumber', 'qrcodeValidSeconds'] },
     { title: 'staffSection', fields: ['storeManagerId', 'deputyManagerIds', 'salesclerkIds', 'phone', 'openTime', 'closeTime'] },
     { title: 'notesSection', fields: ['storeMatters', 'remark'] },

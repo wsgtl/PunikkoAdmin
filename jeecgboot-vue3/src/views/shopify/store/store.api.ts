@@ -2,6 +2,8 @@ import { defHttp } from '/@/utils/http/axios';
 export interface StoreRecord {
   id?: string;
   qrcodeValidSeconds?: number;
+  longitude?: number | null;
+  latitude?: number | null;
   [key: string]: any;
 }
 export interface StoreTranslation {
@@ -20,6 +22,8 @@ export function initializeStoreTranslations(rows: StoreTranslation[] = []): Stor
     ...languages.map((language) => ({
       storeName: '',
       storeAddress: '',
+      longitude: null,
+      latitude: null,
       remark: '',
       reservationNotice: '',
       storeMatters: '',
@@ -65,6 +69,8 @@ export function payload(record: StoreRecord) {
     'hasReservableProducts',
     'reservationNotice',
     'storeAddress',
+    'longitude',
+    'latitude',
     'businessDays',
     'reservableDays',
     'reservableNumber',
@@ -110,6 +116,8 @@ export function createStoreDraft(): StoreRecord {
     reservationNotice: '',
     storeMatters: '',
     storeAddress: '',
+    longitude: null,
+    latitude: null,
     phone: '',
     remark: '',
   };
