@@ -1,6 +1,6 @@
 <template>
   <div class="mapping-page">
-    <BasicTable @register="registerTable" :columns="columns" :rowSelection="rowSelection">
+    <BasicTable @register="registerTable" :columns="columns" :rowSelection="featureSetting.showBusinessBatchSelection ? rowSelection : undefined">
       <template #action="{ record }"
         ><TableAction
           :actions="[
@@ -76,6 +76,7 @@
   </div>
 </template>
 <script lang="ts" setup>
+  import { featureSetting } from '/@/settings/featureSetting';
   import { computed, nextTick, ref, watch } from 'vue';
   import { BasicTable, TableAction } from '/@/components/Table';
   import { BasicModal, useModal } from '/@/components/Modal';

@@ -1,6 +1,6 @@
 <template>
   <div class="slot-stat-page">
-    <BasicTable @register="registerTable" :columns="columns" :rowSelection="rowSelection">
+    <BasicTable @register="registerTable" :columns="columns" :rowSelection="featureSetting.showBusinessBatchSelection ? rowSelection : undefined">
       <template #tableTitle>
         <SuperQuery
           :config="superQueryConfig"
@@ -23,6 +23,7 @@
 </template>
 
 <script lang="ts" setup>
+  import { featureSetting } from '/@/settings/featureSetting';
   import { computed, reactive, ref, watch } from 'vue';
   import { BasicTable, TableAction } from '/@/components/Table';
   import BusinessDetailPanel from '/@/components/BusinessDetail/BusinessDetailPanel.vue';

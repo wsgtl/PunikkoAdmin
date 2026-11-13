@@ -1,6 +1,6 @@
 <template>
   <div class="reservation-page">
-    <BasicTable @register="registerTable" :columns="columns" :rowSelection="rowSelection">
+    <BasicTable @register="registerTable" :columns="columns" :rowSelection="featureSetting.showBusinessBatchSelection ? rowSelection : undefined">
       <template v-if="featureSetting.showSuperQuery" #tableTitle>
         <SuperQuery
           :config="superQueryConfig"

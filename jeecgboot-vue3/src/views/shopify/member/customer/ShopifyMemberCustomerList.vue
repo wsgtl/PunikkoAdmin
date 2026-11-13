@@ -12,13 +12,17 @@
         <div v-for="(message, index) in syncResult.failedMessages" :key="index">{{ message }}</div>
       </template>
     </a-alert>
-    <BasicTable @register="registerTable" :columns="columns" :rowSelection="rowSelection">
+    <BasicTable @register="registerTable" :columns="columns" :rowSelection="featureSetting.showBusinessBatchSelection ? rowSelection : undefined">
       <template #tableTitle>
         <a-space wrap>
           <a-button v-auth="permission('list')" type="primary" :disabled="busy" @click="openHistory">{{ label('history') }}</a-button>
-          <a-button v-auth="permission('edit')" :disabled="busy || !selectedRowKeys.length" @click="sync('selectedLevels')">{{
-            label('selectedLevels')
-          }}</a-button>
+          <a-button
+            v-if="featureSetting.showBusinessBatchSelection"
+            v-auth="permission('edit')"
+            :disabled="busy || !selectedRowKeys.length"
+            @click="sync('selectedLevels')"
+            >{{ label('selectedLevels') }}</a-button
+          >
           <a-button v-auth="permission('edit')" type="primary" :loading="operation === 'allLevels'" :disabled="busy" @click="sync('allLevels')">{{
             label('allLevels')
           }}</a-button>
@@ -37,9 +41,13 @@
           style="width: 320px; max-width: 100%"
           @search="searchHistory"
         />
-        <a-button v-auth="permission('list')" :disabled="busy || !pendingKeys.length" @click="sync('selectedUsers')">{{
-          label('selectedUsers')
-        }}</a-button>
+        <a-button
+          v-if="featureSetting.showBusinessBatchSelection"
+          v-auth="permission('list')"
+          :disabled="busy || !pendingKeys.length"
+          @click="sync('selectedUsers')"
+          >{{ label('selectedUsers') }}</a-button
+        >
         <a-button v-auth="permission('list')" type="primary" :loading="operation === 'allUsers'" :disabled="busy" @click="sync('allUsers')">{{
           label('allUsers')
         }}</a-button>
@@ -56,7 +64,11 @@
         :loading="pendingLoading"
         :scroll="{ x: 900 }"
         :pagination="{ current: pendingPage, pageSize: pendingSize, total: pendingTotal, showSizeChanger: true }"
-        :row-selection="{ selectedRowKeys: pendingKeys, onChange: selectPending, getCheckboxProps: () => ({ disabled: busy }) }"
+        :row-selection="
+          featureSetting.showBusinessBatchSelection
+            ? { selectedRowKeys: pendingKeys, onChange: selectPending, getCheckboxProps: () => ({ disabled: busy }) }
+            : undefined
+        "
         @change="changePendingPage"
       />
     </BasicModal>
@@ -93,6 +105,7 @@
   </div>
 </template>
 <script setup lang="ts">
+  import { featureSetting } from '/@/settings/featureSetting';
   import { computed, nextTick, onBeforeUnmount, ref } from 'vue';
   import { BasicTable, TableAction } from '/@/components/Table';
   import type { BasicColumn } from '/@/components/Table';
