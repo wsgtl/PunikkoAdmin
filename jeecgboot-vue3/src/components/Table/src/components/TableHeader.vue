@@ -35,15 +35,15 @@
           <template #message>
             <template v-if="selectRowKeys.length > 0">
               <span>
-                <span>已选中 {{ selectRowKeys.length }} 条记录</span>
-                <span v-if="isAcrossPage">(可跨页)</span>
+                <span>{{ t('common.selectedRecords', { count: selectRowKeys.length }) }}</span>
+                <span v-if="isAcrossPage">{{ t('common.acrossPages') }}</span>
               </span>
               <a-divider type="vertical" />
-              <a @click="setSelectedRowKeys([])">清空</a>
+              <a @click="setSelectedRowKeys([])">{{ t('common.clearSelection') }}</a>
               <slot name="alertAfter" />
             </template>
             <template v-else>
-              <span>未选中任何数据</span>
+              <span>{{ t('common.noSelection') }}</span>
             </template>
           </template>
         </a-alert>
@@ -59,6 +59,7 @@
   import { Divider } from 'ant-design-vue';
   import TableSettingComponent from './settings/index.vue';
   import TableTitle from './TableTitle.vue';
+  import { useI18n } from '/@/hooks/web/useI18n';
   import { useDesign } from '/@/hooks/web/useDesign';
   import { useTableContext } from '../hooks/useTableContext';
 
@@ -86,6 +87,7 @@
     },
     emits: ['columns-change'],
     setup(_, { emit }) {
+      const { t } = useI18n();
       const { prefixCls } = useDesign('basic-table-header');
 
       function handleColumnChange(data: ColumnChangeParam[]) {
@@ -98,7 +100,7 @@
       // 是否允许跨页选择
       const isAcrossPage = computed(() => openRowSelection.value?.preserveSelectedRowKeys === true);
 
-      return { prefixCls, handleColumnChange, selectRowKeys, setSelectedRowKeys, openRowSelection, isAcrossPage };
+      return { t, prefixCls, handleColumnChange, selectRowKeys, setSelectedRowKeys, openRowSelection, isAcrossPage };
     },
   });
 </script>

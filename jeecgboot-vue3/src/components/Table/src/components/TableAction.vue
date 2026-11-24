@@ -33,7 +33,7 @@
         <slot :name="item.slot"></slot>
       </template>
 
-      <a-button type="link" size="small" v-if="!$slots.more"> 更多 <Icon icon="mdi-light:chevron-down"></Icon> </a-button>
+      <a-button type="link" size="small" v-if="!$slots.more"> {{ t('common.moreText') }} <Icon icon="mdi-light:chevron-down"></Icon> </a-button>
     </Dropdown>
   </div>
 </template>
@@ -45,6 +45,7 @@
   import { ActionItem, TableActionType } from '/@/components/Table';
   import { PopConfirmButton } from '/@/components/Button';
   import { Dropdown } from '/@/components/Dropdown';
+  import { useI18n } from '/@/hooks/web/useI18n';
   import { useDesign } from '/@/hooks/web/useDesign';
   import { useTableContext } from '../hooks/useTableContext';
   import { usePermission } from '/@/hooks/web/usePermission';
@@ -69,6 +70,7 @@
       stopButtonPropagation: propTypes.bool.def(false),
     },
     setup(props) {
+      const { t } = useI18n();
       const { prefixCls } = useDesign('basic-table-action');
       const dropdownCls = `${prefixCls}-dropdown`;
       let table: Partial<TableActionType> = {};
@@ -227,7 +229,18 @@
       const dropdownGetPopupContainer = () => {
         return (table as any)?.wrapRef?.value ?? document.body;
       };
-      return { prefixCls, getActions, getDropdownList, getDropdownSlotList, getAlign, onCellClick, getTooltip, dropdownCls, dropdownGetPopupContainer };
+      return {
+        t,
+        prefixCls,
+        getActions,
+        getDropdownList,
+        getDropdownSlotList,
+        getAlign,
+        onCellClick,
+        getTooltip,
+        dropdownCls,
+        dropdownGetPopupContainer,
+      };
     },
   });
 </script>

@@ -156,24 +156,63 @@
         </a-form>
       </a-spin>
     </SectionedEditorModal>
-    <BasicModal @register="registerSlots" :title="`${slotName} - ${label('slots')}`" :width="1100" :showOkBtn="false" @cancel="invalidateSlots">
+    <BasicModal
+      @register="registerSlots"
+      :title="`${slotName} - ${label('slots')}`"
+      :width="1320"
+      :showOkBtn="false"
+      :cancelText="t('common.closeText')"
+      :closeFunc="async () => !slotSaving"
+      @cancel="invalidateSlots"
+    >
       <a-spin :spinning="slotsLoading">
         <a-alert v-if="slotsFailed" type="error" :message="label('loadFailed')" />
-        <a-tabs v-else-if="slotDays.length" v-model:activeKey="activeDate">
-          <a-tab-pane v-for="day in slotDays" :key="day.date" :tab="day.date">
-            <a-table :columns="slotColumns" :dataSource="day.slots" rowKey="reservedAt" :pagination="false" :scroll="{ x: 1000 }">
+        <a-tabs v-else-if="slotDays.length" v-model:activeKey="activeDate" class="slot-tabs">
+          <a-tab-pane v-for="day in slotDays" :key="day.date" :tab="day.date" :disabled="slotSaving">
+            <a-table :columns="slotColumns" :dataSource="day.slots" rowKey="reservedAt" :pagination="false" :scroll="{ x: 1200, y: 520 }" bordered>
               <template #bodyCell="{ column, record }">
                 <a-tag v-if="column.dataIndex === 'available'" :color="record.available && !record.full ? 'green' : 'red'">{{
                   label(record.full ? 'full' : record.available ? 'bookable' : 'unavailable')
                 }}</a-tag>
-                <a-tag v-else-if="column.dataIndex === 'remainingNumber'" :color="record.remainingNumber > 0 ? 'green' : 'red'">{{
-                  record.remainingNumber
-                }}</a-tag>
+                <template v-else-if="column.dataIndex === 'limitNumber'">
+                  <a-space>
+                    <template v-if="editingSlot === record.reservedAt">
+                      <a-input-number
+                        v-model:value="slotLimit"
+                        :min="0"
+                        :max="2147483647"
+                        :precision="0"
+                        :disabled="slotSaving"
+                        style="width: 85px"
+                      />
+                      <a-button size="small" type="primary" :loading="slotSaving" @click="saveSlotLimit(record.reservedAt)">{{
+                        t('common.saveText')
+                      }}</a-button>
+                      <a-button size="small" :disabled="slotSaving" @click="editingSlot = ''">{{ t('common.cancelText') }}</a-button>
+                    </template>
+                    <template v-else>
+                      <span>{{ record.limitNumber }}</span>
+                      <a-button
+                        v-if="hasPermission('shopify:shopify_store:edit')"
+                        size="small"
+                        :disabled="slotSaving"
+                        @click="
+                          editingSlot = record.reservedAt;
+                          slotLimit = record.limitNumber;
+                        "
+                        >{{ label('modifySlotLimit') }}</a-button
+                      >
+                    </template>
+                  </a-space>
+                </template>
               </template>
             </a-table>
           </a-tab-pane>
         </a-tabs>
         <a-empty v-else-if="!slotsLoading" />
+        <div v-if="slotDays.length" class="slot-summary">{{
+          t('shopify.storeManagement.slotSummary', { count: slotDays.find((day) => day.date === activeDate)?.slots.length ?? 0 })
+        }}</div>
       </a-spin>
     </BasicModal>
   </div>
@@ -195,13 +234,24 @@
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { usePermission } from '/@/hooks/web/usePermission';
-  import { list, queryForm, getBusinessDays, save, add, getSlots, createStoreDraft, deleteStore, initializeStoreTranslations } from './store.api';
+  import {
+    list,
+    queryForm,
+    getBusinessDays,
+    save,
+    add,
+    getSlots,
+    updateSlotLimit,
+    createStoreDraft,
+    deleteStore,
+    initializeStoreTranslations,
+  } from './store.api';
   import type { StoreRecord, StoreSlots } from './store.api';
   import { listFields, staffFields, numberFields, dictCodes, slotFields } from './store.data';
   defineOptions({ name: 'ShopifyStoreList' });
   const { t } = useI18n();
   const { hasPermission } = usePermission();
-  const { createMessage, createConfirm } = useMessage();
+  const { createMessage, createConfirm, createConfirmSync } = useMessage();
   const label = (key: string) => t(`shopify.storeManagement.${key}`);
   const userStore = useUserStore();
   const dictionaries = computed(
@@ -256,6 +306,7 @@
   );
   const savePermission = computed(() => `shopify:shopify_store:${isAdding.value ? 'add' : 'edit'}`);
   const draft = ref<StoreRecord>();
+  const originalReservableNumber = ref<number>();
   const form = ref();
   const loading = ref(false);
   const saving = ref(false);
@@ -297,6 +348,7 @@
     try {
       const [data, dict] = await Promise.all([queryForm(record.id), getBusinessDays()]);
       businessOptions.value = dict.map((x) => ({ value: String(x.value), label: businessDictionaryText('shopify_business_day', x.value) }));
+      originalReservableNumber.value = data.reservableNumber == null ? undefined : Number(data.reservableNumber);
       days.value = splitIds(data.businessDays);
       draft.value = {
         ...data,
@@ -342,6 +394,18 @@
     }
     saving.value = true;
     try {
+      if (!isAdding.value && Number(draft.value.reservableNumber) !== originalReservableNumber.value) {
+        const confirmed = await createConfirmSync({
+          title: label('capacityResetTitle'),
+          content: t('shopify.storeManagement.capacityResetConfirm', {
+            before: originalReservableNumber.value ?? '—',
+            after: draft.value.reservableNumber,
+          }),
+          okText: label('capacityResetSave'),
+          cancelText: t('common.cancelText'),
+        });
+        if (!confirmed) return;
+      }
       await (isAdding.value ? add : save)(draft.value);
       createMessage.success(label('saved'));
       saving.value = false;
@@ -385,11 +449,43 @@
   const slotsLoading = ref(false);
   const slotsFailed = ref(false);
   let slotVersion = 0;
+  const slotStoreRef = ref('');
+  const editingSlot = ref('');
+  const slotLimit = ref<number | null>(null);
+  const slotSaving = ref(false);
+  watch(activeDate, () => {
+    editingSlot.value = '';
+  });
+  async function saveSlotLimit(reservedAt: string) {
+    if (slotSaving.value || !hasPermission('shopify:shopify_store:edit')) return;
+    const value = slotLimit.value;
+    if (value == null || !Number.isInteger(value) || value < 0 || value > 2147483647) {
+      createMessage.warning(label('slotLimitInvalid'));
+      return;
+    }
+    slotSaving.value = true;
+    const version = slotVersion;
+    try {
+      await updateSlotLimit(slotStoreRef.value, reservedAt, value);
+      createMessage.success(label('saved'));
+      editingSlot.value = '';
+      try {
+        const data = await getSlots(slotStoreRef.value);
+        if (version === slotVersion) slotDays.value = data.slotList ?? [];
+      } catch {
+        if (version === slotVersion) slotsFailed.value = true;
+      }
+    } catch {
+      // HTTP 客户端显示错误，保留输入以便重试。
+    } finally {
+      slotSaving.value = false;
+    }
+  }
   const slotColumns = computed(() =>
     slotFields.map((field) => ({
       title: label(field),
       dataIndex: field,
-      width: field === 'reservedAt' ? 190 : field === 'disabledReason' ? 180 : 110,
+      width: field === 'limitNumber' ? 280 : field === 'reservedAt' ? 190 : field === 'disabledReason' ? 180 : 110,
     }))
   );
   function invalidateSlots() {
@@ -397,6 +493,9 @@
     slotsLoading.value = false;
   }
   async function openSlots(record: StoreRecord) {
+    if (slotSaving.value) return;
+    slotStoreRef.value = record.id;
+    editingSlot.value = '';
     const version = ++slotVersion;
     slotDays.value = [];
     activeDate.value = '';
@@ -421,6 +520,16 @@
   });
 </script>
 <style lang="less" scoped>
+  .slot-summary {
+    padding: 16px 0 4px;
+    color: #8c8c8c;
+  }
+  .slot-tabs :deep(.ant-tabs-tab-active) {
+    background: #fceef1;
+  }
+  .slot-tabs :deep(.ant-tabs-tab) {
+    padding: 12px 24px;
+  }
   .store-page {
     padding: 16px;
   }

@@ -200,6 +200,13 @@ export default {
     detail: 'Binding review details',
   },
   storeManagement: {
+    modifySlotLimit: 'Edit',
+    slotLimitInvalid: 'Enter a non-negative integer',
+    slotSummary: '{count} time slots · Scroll to view all reservation statuses',
+    capacityResetTitle: 'Confirm reservation limit change',
+    capacityResetConfirm:
+      'Saving will update the reservation limit for all time slots at this store to the number you entered. However, individually configured limits will remain unchanged. Do you want to save?',
+    capacityResetSave: 'Confirm and save',
     basicSection: 'Basic information',
     reservationSection: 'Reservation settings',
     staffSection: 'Staff and business hours',

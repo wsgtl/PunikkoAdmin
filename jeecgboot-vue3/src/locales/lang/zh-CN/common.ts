@@ -1,4 +1,11 @@
 export default {
+  selectedRecords: '已选中 {count} 条记录',
+  acrossPages: '（可跨页）',
+  clearSelection: '清空',
+  noSelection: '未选中任何数据',
+  collapsePanel: '收起',
+  expandPanel: '展开',
+  moreText: '更多',
   okText: '确认',
   closeText: '关闭',
   cancelText: '取消',

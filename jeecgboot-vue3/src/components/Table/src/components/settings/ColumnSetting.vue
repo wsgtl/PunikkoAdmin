@@ -1,5 +1,5 @@
 <template>
-  <Tooltip placement="top" v-bind="getBindProps" >
+  <Tooltip placement="top" v-bind="getBindProps">
     <template #title>
       <span>{{ t('component.table.settingColumn') }}</span>
     </template>
@@ -82,7 +82,7 @@
           <a-button size="small" @click="reset">
             {{ t('common.resetText') }}
           </a-button>
-          <a-button size="small" type="primary" @click="saveSetting"> 保存 </a-button>
+          <a-button size="small" type="primary" @click="saveSetting"> {{ t('common.saveText') }} </a-button>
         </div>
       </template>
       <SettingOutlined />

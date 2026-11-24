@@ -200,6 +200,13 @@ export default {
     detail: '連携審査の詳細',
   },
   storeManagement: {
+    modifySlotLimit: '変更',
+    slotLimitInvalid: '0以上の整数を入力してください',
+    slotSummary: '全{count}枠 · スクロールして予約状況を確認',
+    capacityResetTitle: '予約上限の変更確認',
+    capacityResetConfirm:
+      '保存すると、この店舗のすべての時間帯の予約上限が、今回入力した人数に変更されます。ただし、個別に設定した上限は変更されません。保存してもよろしいですか？',
+    capacityResetSave: '保存する',
     basicSection: '基本情報',
     reservationSection: '予約設定',
     staffSection: 'スタッフ・営業時間',

@@ -1,4 +1,11 @@
 export default {
+  selectedRecords: '{count}件を選択中',
+  acrossPages: '（ページをまたいで選択可能）',
+  clearSelection: '選択を解除',
+  noSelection: 'データが選択されていません',
+  collapsePanel: '折りたたむ',
+  expandPanel: '展開',
+  moreText: 'その他',
   okText: '確認',
   closeText: '閉じる',
   cancelText: 'キャンセル',

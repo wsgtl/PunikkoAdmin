@@ -48,7 +48,6 @@ export const listFields = [
 ];
 export const slotFields = [
   'time',
-  'limitNumber',
   'productReservedNumber',
   'storeReservedNumber',
   'reservedNumber',
@@ -56,4 +55,5 @@ export const slotFields = [
   'available',
   'disabledReason',
   'reservedAt',
+  'limitNumber',
 ];

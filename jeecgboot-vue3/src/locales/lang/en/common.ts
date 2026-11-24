@@ -1,4 +1,11 @@
 export default {
+  selectedRecords: '{count} records selected',
+  acrossPages: '(across pages)',
+  clearSelection: 'Clear selection',
+  noSelection: 'No records selected',
+  collapsePanel: 'Collapse',
+  expandPanel: 'Expand',
+  moreText: 'More',
   okText: 'OK',
   closeText: 'Close',
   cancelText: 'Cancel',

@@ -200,6 +200,12 @@ export default {
     detail: '绑定审核详情',
   },
   storeManagement: {
+    modifySlotLimit: '修改',
+    slotLimitInvalid: '请输入不小于0的整数',
+    slotSummary: '共 {count} 个时段 · 滚动表格查看全部预约状态',
+    capacityResetTitle: '确认修改预约上限',
+    capacityResetConfirm: '保存后，本门店各时段的预约上限将调整为本次输入的人数，但单独设置过的时段上限保持不变。确定保存吗？',
+    capacityResetSave: '确认保存',
     basicSection: '基本信息',
     reservationSection: '预约设置',
     staffSection: '人员与营业信息',

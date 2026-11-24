@@ -129,3 +129,9 @@ export const add = (record: StoreRecord) => {
 };
 
 export const deleteStore = (id: string) => defHttp.delete({ url: `${base}/delete?id=${encodeURIComponent(id)}` });
+
+// 单时段调整：后端要求参数放在查询字符串中。
+export const updateSlotLimit = (storeRef: string, reservedAt: string, limitNumber: number) =>
+  defHttp.post({
+    url: '/shopify/user/reservationSlots/updateLimit?' + new URLSearchParams({ storeRef, reservedAt, limitNumber: String(limitNumber) }).toString(),
+  });
