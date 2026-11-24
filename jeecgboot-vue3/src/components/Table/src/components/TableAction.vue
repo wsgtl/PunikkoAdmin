@@ -1,5 +1,5 @@
 <template>
-  <div :class="[prefixCls, getAlign]" @click="onCellClick">
+  <div ref="actionElement" :class="[prefixCls, getAlign, { 'auto-width': autoWidth }]" @click="onCellClick">
     <template v-for="(action, index) in getActions" :key="`${index}-${action.label}`">
       <template v-if="action.slot">
         <slot name="customButton"></slot>
@@ -38,7 +38,7 @@
   </div>
 </template>
 <script lang="ts">
-  import { defineComponent, PropType, computed, toRaw, unref } from 'vue';
+  import { defineComponent, PropType, computed, toRaw, unref, ref, inject, onMounted, onBeforeUnmount } from 'vue';
   import { MoreOutlined } from '@ant-design/icons-vue';
   import { Divider, Tooltip, TooltipProps } from 'ant-design-vue';
   import Icon from '/@/components/Icon/index';
@@ -52,6 +52,7 @@
   import { isBoolean, isFunction, isString } from '/@/utils/is';
   import { propTypes } from '/@/utils/propTypes';
   import { ACTION_COLUMN_FLAG } from '../const';
+  import { actionWidthKey } from '../hooks/useActionWidth';
 
   export default defineComponent({
     name: 'TableAction',
@@ -71,6 +72,27 @@
     },
     setup(props) {
       const { t } = useI18n();
+      const reportWidth = inject(actionWidthKey, undefined);
+      const autoWidth = !!reportWidth && !props.outside;
+      const actionElement = ref<HTMLElement>();
+      let observer: ResizeObserver | undefined;
+      onMounted(() => {
+        const element = actionElement.value;
+        if (!autoWidth || !element) return;
+        const measure = () => {
+          const cell = element.closest('td');
+          const style = cell ? getComputedStyle(cell) : undefined;
+          const padding = style ? parseFloat(style.paddingLeft) + parseFloat(style.paddingRight) : 32;
+          reportWidth?.(element, Math.ceil(element.getBoundingClientRect().width + padding + 2));
+        };
+        observer = new ResizeObserver(measure);
+        observer.observe(element);
+        measure();
+      });
+      onBeforeUnmount(() => {
+        observer?.disconnect();
+        if (autoWidth && actionElement.value) reportWidth?.(actionElement.value);
+      });
       const { prefixCls } = useDesign('basic-table-action');
       const dropdownCls = `${prefixCls}-dropdown`;
       let table: Partial<TableActionType> = {};
@@ -231,6 +253,8 @@
       };
       return {
         t,
+        actionElement,
+        autoWidth,
         prefixCls,
         getActions,
         getDropdownList,
@@ -248,6 +272,22 @@
   @prefix-cls: ~'@{namespace}-basic-table-action';
 
   .@{prefix-cls} {
+    &.auto-width {
+      width: max-content;
+      flex-wrap: nowrap;
+      &.center {
+        margin-inline: auto;
+      }
+      &.right {
+        margin-left: auto;
+      }
+      > * {
+        flex-shrink: 0;
+      }
+      button {
+        white-space: nowrap;
+      }
+    }
     display: flex;
     align-items: center;
     /* update-begin-author:taoyan date:2022-11-18 for: 表格默认行高比官方示例多出2px*/

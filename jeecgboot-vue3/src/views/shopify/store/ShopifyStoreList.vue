@@ -6,6 +6,7 @@
       </template>
       <template #action="{ record }"
         ><TableAction
+          :divider="false"
           :dropDownActions="[
             {
               label: label('delete'),
@@ -34,98 +35,134 @@
       :closeFunc="canClose"
       @ok="submit"
     >
-      <a-spin :spinning="loading">
+      <a-spin :spinning="loading" class="store-editor-loading">
         <a-alert v-if="editFailed" type="error" :message="label('loadFailed')" />
         <a-form v-if="draft" ref="form" :model="draft" layout="horizontal">
-          <EditorSection v-for="section in editorSections" :key="section.title" :title="label(section.title)">
-            <a-row :gutter="[24, 0]">
-              <a-col v-for="field in section.fields" :key="field" :xs="24" :md="fieldSpan(field)">
-                <a-form-item
-                  :name="field"
-                  :label="label(field)"
-                  :rules="
-                    ['longitude', 'latitude'].includes(field)
-                      ? [
-                          {
-                            type: 'number',
-                            min: field === 'longitude' ? -180 : -90,
-                            max: field === 'longitude' ? 180 : 90,
-                            message: label(field + 'Hint'),
-                          },
-                        ]
-                      : field === 'qrcodeValidSeconds'
-                        ? [{ required: true, type: 'integer', min: 15, max: 300, message: label('qrcodeValidSecondsHint') }]
-                        : requiredFields.includes(field)
-                          ? [{ required: true }]
-                          : []
-                  "
+          <a-tabs v-model:activeKey="activeEditorSection" class="store-editor-tabs">
+            <a-tab-pane v-for="tab in editorTabs" :key="tab.key" :tab="tab.label" />
+          </a-tabs>
+          <template v-if="activeEditorSection !== 'translations'">
+            <EditorSection v-for="section in visibleEditorSections" :key="section.title" :title="label(section.title)">
+              <a-row :gutter="[24, 0]">
+                <a-col v-for="field in section.fields" :key="field" :xs="24" :md="fieldSpan(field)">
+                  <a-form-item
+                    :name="field"
+                    :label="label(field)"
+                    :rules="
+                      ['longitude', 'latitude'].includes(field)
+                        ? [
+                            {
+                              type: 'number',
+                              min: field === 'longitude' ? -180 : -90,
+                              max: field === 'longitude' ? 180 : 90,
+                              message: label(field + 'Hint'),
+                            },
+                          ]
+                        : field === 'qrcodeValidSeconds'
+                          ? [{ required: true, type: 'integer', min: 15, max: 300, message: label('qrcodeValidSecondsHint') }]
+                          : requiredFields.includes(field)
+                            ? [{ required: true }]
+                            : []
+                    "
+                  >
+                    <Tinymce
+                      :autoFocus="false"
+                      v-bind="storeRichTextSetting"
+                      v-if="['reservationNotice', 'storeMatters'].includes(field)"
+                      :key="`${draft.id}-${field}`"
+                      v-model="draft[field]"
+                      :height="180"
+                      :options="{ min_height: 150, statusbar: false }"
+                      :disabled="saving"
+                    />
+                    <a-checkbox-group v-else-if="field === 'businessDays'" v-model:value="days" :options="businessOptions" :disabled="saving" />
+                    <a-select
+                      v-else-if="dictCodes[field]"
+                      v-model:value="draft[field]"
+                      :options="dictOptions(field)"
+                      :disabled="saving || (isAdding && field === 'hasReservableProducts')"
+                    />
+                    <JSelectUser
+                      v-else-if="staffFields.includes(field)"
+                      :key="`${editorKey}-${field}`"
+                      v-model:value="draft[field]"
+                      rowKey="id"
+                      labelKey="realname"
+                      :pagination="{ pageSize: 10 }"
+                      :disabled="saving"
+                    />
+                    <a-input-number
+                      v-else-if="['longitude', 'latitude'].includes(field)"
+                      v-model:value="draft[field]"
+                      :min="field === 'longitude' ? -180 : -90"
+                      :max="field === 'longitude' ? 180 : 90"
+                      :precision="7"
+                      :step="0.0000001"
+                      :placeholder="label(field + 'Hint')"
+                      :disabled="saving"
+                      style="width: 100%"
+                    />
+                    <a-input-number
+                      v-else-if="numberFields.includes(field)"
+                      class="editor-number"
+                      v-model:value="draft[field]"
+                      :min="field === 'qrcodeValidSeconds' ? 15 : 0"
+                      :max="field === 'qrcodeValidSeconds' ? 300 : undefined"
+                      :precision="0"
+                      :disabled="saving"
+                      style="width: 100%"
+                    />
+                    <a-time-picker
+                      v-else-if="['openTime', 'closeTime'].includes(field)"
+                      v-model:value="draft[field]"
+                      format="HH:mm"
+                      value-format="HH:mm"
+                      :disabled="saving"
+                      style="width: 100%"
+                    />
+                    <a-textarea
+                      v-else-if="['storeAddress', 'remark'].includes(field)"
+                      v-model:value="draft[field]"
+                      :auto-size="{ minRows: 1, maxRows: 2 }"
+                      :disabled="saving"
+                    />
+                    <a-input v-else v-model:value="draft[field]" :disabled="saving" allow-clear />
+                  </a-form-item>
+                </a-col>
+              </a-row>
+              <template v-if="section.title === 'reservationSection'">
+                <div class="slot-limit-heading">{{ label('reservationSlotLimits') }}</div>
+                <a-alert class="slot-limit-hint" type="info" :show-icon="true" :message="label('reservationSlotLimitsHint')" />
+                <a-table
+                  class="slot-limit-table"
+                  :columns="reservationLimitColumns"
+                  :data-source="reservationLimitRows"
+                  row-key="time"
+                  size="small"
+                  bordered
+                  :pagination="false"
+                  :scroll="{ y: 600 }"
                 >
-                  <Tinymce
-                    v-bind="storeRichTextSetting"
-                    v-if="['reservationNotice', 'storeMatters'].includes(field)"
-                    :key="`${draft.id}-${field}`"
-                    v-model="draft[field]"
-                    :height="180"
-                    :options="{ min_height: 150, statusbar: false }"
-                    :disabled="saving"
-                  />
-                  <a-checkbox-group v-else-if="field === 'businessDays'" v-model:value="days" :options="businessOptions" :disabled="saving" />
-                  <a-select
-                    v-else-if="dictCodes[field]"
-                    v-model:value="draft[field]"
-                    :options="dictOptions(field)"
-                    :disabled="saving || (isAdding && field === 'hasReservableProducts')"
-                  />
-                  <JSelectUser
-                    v-else-if="staffFields.includes(field)"
-                    :key="`${editorKey}-${field}`"
-                    v-model:value="draft[field]"
-                    rowKey="id"
-                    labelKey="realname"
-                    :pagination="{ pageSize: 10 }"
-                    :disabled="saving"
-                  />
-                  <a-input-number
-                    v-else-if="['longitude', 'latitude'].includes(field)"
-                    v-model:value="draft[field]"
-                    :min="field === 'longitude' ? -180 : -90"
-                    :max="field === 'longitude' ? 180 : 90"
-                    :precision="7"
-                    :step="0.0000001"
-                    :placeholder="label(field + 'Hint')"
-                    :disabled="saving"
-                    style="width: 100%"
-                  />
-                  <a-input-number
-                    v-else-if="numberFields.includes(field)"
-                    class="editor-number"
-                    v-model:value="draft[field]"
-                    :min="field === 'qrcodeValidSeconds' ? 15 : 0"
-                    :max="field === 'qrcodeValidSeconds' ? 300 : undefined"
-                    :precision="0"
-                    :disabled="saving"
-                    style="width: 100%"
-                  />
-                  <a-time-picker
-                    v-else-if="['openTime', 'closeTime'].includes(field)"
-                    v-model:value="draft[field]"
-                    format="HH:mm"
-                    value-format="HH:mm"
-                    :disabled="saving"
-                    style="width: 100%"
-                  />
-                  <a-textarea
-                    v-else-if="['storeAddress', 'remark'].includes(field)"
-                    v-model:value="draft[field]"
-                    :auto-size="{ minRows: 1, maxRows: 2 }"
-                    :disabled="saving"
-                  />
-                  <a-input v-else v-model:value="draft[field]" :disabled="saving" allow-clear />
-                </a-form-item>
-              </a-col>
-            </a-row>
-          </EditorSection>
-          <EditorSection :title="label('translations')">
+                  <template #bodyCell="{ column, record }">
+                    <template v-if="column.dataIndex === 'limit'">
+                      <a-input-number
+                        v-model:value="slotLimitDraft[record.time]"
+                        :min="0"
+                        :max="2147483647"
+                        :precision="0"
+                        :disabled="saving"
+                        :placeholder="t('shopify.storeManagement.inheritSlotLimit', { count: draft?.reservableNumber ?? 0 })"
+                        style="width: 100%"
+                      />
+                    </template>
+                    <span v-else-if="column.dataIndex === 'defaultLimit'">{{ draft?.reservableNumber ?? '—' }}</span>
+                    <span v-else-if="column.dataIndex === 'businessRange'">{{ label('withinBusinessHours') }}</span>
+                  </template>
+                </a-table>
+              </template>
+            </EditorSection>
+          </template>
+          <EditorSection v-else :title="label('translations')">
             <p class="translation-help">{{ label('translationExpandHint') }}</p>
             <a-table
               :data-source="draft.shopifyStoreI18nList"
@@ -142,6 +179,7 @@
               <template #expandedRowRender="{ record }">
                 <a-form-item v-for="field in ['reservationNotice', 'storeMatters']" :key="field" :label="label(field)">
                   <Tinymce
+                    :autoFocus="false"
                     :key="`${editorKey}-${record.language}-${field}`"
                     v-model="record[field]"
                     v-bind="storeRichTextSetting"
@@ -304,6 +342,81 @@
       width: field === 'language' ? 110 : 220,
     }))
   );
+  const activeEditorSection = ref('all');
+  const editorSectionFields: Record<string, string[]> = {
+    basicSection: ['code', 'storeName', 'storeAddress', 'longitude', 'latitude', 'phone'],
+    publishSection: ['publishStatus', 'hasReservableProducts', 'reservationNotice'],
+    businessSection: ['businessDays', 'openTime', 'closeTime'],
+    reservationSection: ['reservableDays', 'reservableNumber', 'dailyReservableNumber', 'qrcodeValidSeconds'],
+    staffSection: ['storeManagerId', 'deputyManagerIds', 'salesclerkIds'],
+    notesSection: ['storeMatters', 'remark'],
+  };
+  const editorSections = [
+    { title: 'basicSection', fields: editorSectionFields.basicSection },
+    { title: 'publishSection', fields: editorSectionFields.publishSection },
+    { title: 'businessSection', fields: editorSectionFields.businessSection },
+    { title: 'reservationSection', fields: editorSectionFields.reservationSection },
+    { title: 'staffSection', fields: editorSectionFields.staffSection },
+    { title: 'notesSection', fields: editorSectionFields.notesSection },
+  ];
+  const visibleEditorSections = computed(() =>
+    activeEditorSection.value === 'all'
+      ? editorSections
+      : activeEditorSection.value === 'translations'
+        ? []
+        : editorSections.filter((section) => section.title === activeEditorSection.value)
+  );
+  const editorTabs = computed(() =>
+    ['all', ...editorSections.map((section) => section.title), 'translations'].map((key) => ({ key, label: label(key) }))
+  );
+  const slotLimitDraft = ref<Record<string, number | null>>({});
+  const originalSlotLimits = ref<Record<string, number | null>>({});
+  const reservationLimitColumns = computed(() =>
+    ['time', 'limit', 'defaultLimit', 'businessRange'].map((key) => ({ title: label(key), dataIndex: key, width: key === 'limit' ? 220 : 140 }))
+  );
+  const reservationLimitRows = computed(() => {
+    const start = parseTime(draft.value?.openTime);
+    const end = parseTime(draft.value?.closeTime);
+    if (start == null || end == null || end <= start) return [];
+    const rows: { time: string }[] = [];
+    for (let minutes = Math.ceil(start / 30) * 30; minutes < end; minutes += 30) {
+      rows.push({ time: `${String(Math.floor(minutes / 60)).padStart(2, '0')}:${String(minutes % 60).padStart(2, '0')}` });
+    }
+    return rows;
+  });
+  function parseTime(value: unknown): number | null {
+    const match = /^(\d{1,2}):(\d{2})$/.exec(String(value ?? ''));
+    if (!match) return null;
+    const hour = Number(match[1]);
+    const minute = Number(match[2]);
+    return hour < 24 && minute < 60 ? hour * 60 + minute : null;
+  }
+  function parseReservationSlotLimits(value: unknown): Record<string, number | null> {
+    if (!value) return {};
+    try {
+      const parsed = typeof value === 'string' ? JSON.parse(value) : value;
+      if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) return {};
+      return Object.fromEntries(Object.entries(parsed).map(([time, limit]) => [time, limit === '' || limit == null ? null : Number(limit)]));
+    } catch {
+      return {};
+    }
+  }
+  function loadSlotLimitDraft(value: unknown) {
+    originalSlotLimits.value = parseReservationSlotLimits(value);
+    slotLimitDraft.value = { ...originalSlotLimits.value };
+  }
+  function serializeSlotLimits(): string {
+    const visibleTimes = new Set(reservationLimitRows.value.map((row) => row.time));
+    const limits: Record<string, number> = {};
+    Object.entries(originalSlotLimits.value).forEach(([time, limit]) => {
+      if (!visibleTimes.has(time) && limit != null && Number.isInteger(limit) && limit >= 0) limits[time] = limit;
+    });
+    reservationLimitRows.value.forEach(({ time }) => {
+      const limit = slotLimitDraft.value[time];
+      if (limit != null && Number.isInteger(Number(limit)) && Number(limit) >= 0) limits[time] = Number(limit);
+    });
+    return JSON.stringify(limits);
+  }
   const savePermission = computed(() => `shopify:shopify_store:${isAdding.value ? 'add' : 'edit'}`);
   const draft = ref<StoreRecord>();
   const originalReservableNumber = ref<number>();
@@ -314,15 +427,6 @@
   const days = ref<string[]>([]);
   const businessOptions = ref<{ value: string; label: string }[]>([]);
   const requiredFields = ['code', 'storeName', 'publishStatus', 'businessDays', ...numberFields, ...staffFields, 'openTime', 'closeTime'];
-  const editorSections = [
-    {
-      title: 'basicSection',
-      fields: ['code', 'storeName', 'publishStatus', 'hasReservableProducts', 'storeAddress', 'longitude', 'latitude', 'reservationNotice'],
-    },
-    { title: 'reservationSection', fields: ['businessDays', 'reservableDays', 'reservableNumber', 'dailyReservableNumber', 'qrcodeValidSeconds'] },
-    { title: 'staffSection', fields: ['storeManagerId', 'deputyManagerIds', 'salesclerkIds', 'phone', 'openTime', 'closeTime'] },
-    { title: 'notesSection', fields: ['storeMatters', 'remark'] },
-  ];
   function fieldSpan(field: string) {
     return ['storeAddress', 'businessDays', 'reservationNotice', 'storeMatters', 'remark'].includes(field) ? 24 : 12;
   }
@@ -343,6 +447,7 @@
     editFailed.value = false;
     draft.value = undefined;
     isAdding.value = false;
+    activeEditorSection.value = 'all';
     editorKey.value++;
     showEdit(true);
     try {
@@ -355,6 +460,7 @@
         qrcodeValidSeconds: data.qrcodeValidSeconds ?? 60,
         shopifyStoreI18nList: initializeStoreTranslations(data.shopifyStoreI18nList ?? []),
       };
+      loadSlotLimitDraft(data.reservationSlotLimits);
       await nextTick();
       form.value?.clearValidate();
     } catch {
@@ -366,6 +472,7 @@
   async function openAdd() {
     if (loading.value || saving.value || !hasPermission('shopify:shopify_store:add')) return;
     isAdding.value = true;
+    activeEditorSection.value = 'all';
     editorKey.value++;
     loading.value = true;
     editFailed.value = false;
@@ -377,6 +484,7 @@
       const initial = createStoreDraft();
       days.value = splitIds(initial.businessDays);
       draft.value = initial;
+      loadSlotLimitDraft(initial.reservationSlotLimits);
       await nextTick();
       form.value?.clearValidate();
     } catch {
@@ -406,7 +514,7 @@
         });
         if (!confirmed) return;
       }
-      await (isAdding.value ? add : save)(draft.value);
+      await (isAdding.value ? add : save)({ ...draft.value, reservationSlotLimits: serializeSlotLimits() });
       createMessage.success(label('saved'));
       saving.value = false;
       closeEdit();
@@ -520,6 +628,19 @@
   });
 </script>
 <style lang="less" scoped>
+  .store-editor-loading :deep(> .ant-spin-container) {
+    overflow: visible;
+  }
+  .store-editor-tabs {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: var(--component-background, #fff);
+    :deep(.ant-tabs-nav) {
+      margin-bottom: 0;
+    }
+    margin-bottom: 16px;
+  }
   .slot-summary {
     padding: 16px 0 4px;
     color: #8c8c8c;

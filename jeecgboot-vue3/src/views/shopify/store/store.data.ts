@@ -9,6 +9,7 @@ export const editFields = [
   'businessDays',
   'reservableDays',
   'reservableNumber',
+  'reservationSlotLimits',
   'dailyReservableNumber',
   'qrcodeValidSeconds',
   'storeManagerId',

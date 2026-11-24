@@ -11,6 +11,7 @@ import { cloneDeep, isEqual } from 'lodash-es';
 import { formatToDate } from '/@/utils/dateUtil';
 import { ACTION_COLUMN_FLAG, DEFAULT_ALIGN, INDEX_COLUMN_FLAG, PAGE_SIZE } from '../const';
 import { CUS_SEL_COLUMN_KEY } from './useCustomSelection';
+import { provideActionWidth } from './useActionWidth';
 
 function handleItem(item: BasicColumn, ellipsis: boolean) {
   const { key, dataIndex, children } = item;
@@ -109,6 +110,7 @@ export function useColumns(
   getPaginationRef: ComputedRef<boolean | PaginationProps>,
   handleCustomSelectColumn: Fn
 ) {
+  const actionWidth = provideActionWidth();
   const columnsRef = ref(unref(propsRef).columns) as unknown as Ref<BasicColumn[]>;
   let cacheColumns = unref(propsRef).columns;
 
@@ -122,6 +124,11 @@ export function useColumns(
     }
     handleIndexColumn(propsRef, getPaginationRef, columns);
     handleActionColumn(propsRef, columns);
+    columns.forEach((column) => {
+      if (column.flag === ACTION_COLUMN_FLAG || column.dataIndex === 'action') {
+        column.width = Math.max(Number(column.width) || 0, actionWidth.value);
+      }
+    });
     // 代码逻辑说明: 【QQYUN-5571】自封装选择列，解决数据行选择卡顿问题
     handleCustomSelectColumn(columns);
 
@@ -160,7 +167,7 @@ export function useColumns(
     const formatEditColumn = (columns) => {
       return columns.map((column) => {
         // 代码逻辑说明: 【issues-179】antd3 一些警告以及报错(针对表格)
-        if(column.slots?.customRender) {
+        if (column.slots?.customRender) {
           // slots的备份，兼容老的写法，转成新写法避免控制台警告
           column.slotsBak = column.slots;
           delete column.slots;
@@ -373,4 +380,3 @@ export function formatCell(text: string, format: CellFormat, record: Recordable,
     return text;
   }
 }
-
