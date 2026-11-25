@@ -24,8 +24,11 @@
       :showOkBtn="!readonly"
       :confirmLoading="saving"
       :okButtonProps="{ disabled: loading || failed || !draft || !hasPermission(permission(adding ? 'add' : 'edit')) }"
+      :confirmDiscard="true"
+      :editData="draft"
       :closeFunc="canClose"
       @cancel="cancel"
+      :okText="t('common.saveText')"
       @ok="submit"
     >
       <a-spin :spinning="loading">

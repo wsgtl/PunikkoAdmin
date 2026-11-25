@@ -11,6 +11,7 @@
     </BasicTable>
     <BasicModal
       @register="registerRelease"
+      :confirmDiscard="true" :editData="draft"
       :title="t('shopify.dailyUnlock.confirmRelease')"
       :okText="t('shopify.dailyUnlock.confirmRelease')"
       :width="900"

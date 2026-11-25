@@ -31,8 +31,11 @@
       :showOkBtn="!readOnly"
       :width="1100"
       :confirmLoading="saving"
+      :confirmDiscard="true"
+      :editData="draft"
       :closeFunc="canClose"
       :okButtonProps="{ disabled: !storesReady || !languages.length || !hasPermission(permission(adding ? 'add' : 'edit')) }"
+      :okText="t('common.saveText')"
       @ok="submit"
     >
       <a-alert v-if="!storesReady && !storesLoading" type="error" :message="t('shopify.storeCalendar.storeLoadFailed')"

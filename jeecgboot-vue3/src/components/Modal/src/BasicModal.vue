@@ -59,10 +59,12 @@
   import ModalFooter from './components/ModalFooter.vue';
   import ModalHeader from './components/ModalHeader.vue';
   import { isFunction } from '/@/utils/is';
+  import { useI18n } from '/@/hooks/web/useI18n';
+  import { useMessage } from '/@/hooks/web/useMessage';
   import { deepMerge } from '/@/utils';
   import { basicProps } from './props';
   import { useFullScreen } from './hooks/useModalFullScreen';
-  import { omit } from 'lodash-es';
+  import { omit, cloneDeep, isEqual } from 'lodash-es';
   import { useDesign } from '/@/hooks/web/useDesign';
   import { useAppInject } from '/@/hooks/web/useAppInject';
 
@@ -77,6 +79,10 @@
       const visibleRef = ref(false);
       const propsRef = ref<Partial<ModalProps> | null>(null);
       const modalWrapperRef = ref<any>(null);
+      const { t } = useI18n();
+      const { createConfirmSync } = useMessage();
+      const initialFormData = ref<unknown>();
+      let closePending = false;
       const { prefixCls } = useDesign('basic-modal');
       // modal   Bottom and top height
       const extHeightRef = ref(0);
@@ -152,6 +158,15 @@
         return omit(attr, ['title', 'visible']);
       });
 
+      // Capture after opening or asynchronous draft replacement, never on nested edits.
+      watch(
+        [visibleRef, () => props.editData],
+        ([visible, data]) => {
+          if (visible) initialFormData.value = cloneDeep([data, props.editExtra]);
+        },
+        { flush: 'post' }
+      );
+
       const getWrapperHeight = computed(() => {
         if (unref(fullScreenRef)) return undefined;
         return unref(getProps).height;
@@ -196,16 +211,28 @@
       async function handleCancel(e: Event) {
         e?.stopPropagation();
         // 过滤自定义关闭按钮的空白区域
-        if ((e.target as HTMLElement)?.classList?.contains(prefixCls + '-close--custom')) return;
-        if (props.closeFunc && isFunction(props.closeFunc)) {
-          const isClose: boolean = await props.closeFunc();
-          visibleRef.value = !isClose;
-          return;
+        if ((e?.target as HTMLElement)?.classList?.contains(prefixCls + '-close--custom')) return;
+        if (closePending) return;
+        closePending = true;
+        try {
+          const options = unref(getMergeProps);
+          if (isFunction(options.closeFunc) && !(await options.closeFunc())) return;
+          if (options.confirmDiscard && props.editData != null && !isEqual([props.editData, props.editExtra], initialFormData.value)) {
+            const confirmed = await createConfirmSync({
+              title: t('component.modal.discardChangesTitle'),
+              content: t('component.modal.discardChangesConfirm'),
+              okText: t('component.modal.discardChanges'),
+              cancelText: t('common.cancelText'),
+            });
+            if (!confirmed) return;
+          }
+          visibleRef.value = false;
+          emit('cancel', e);
+        } finally {
+          closePending = false;
         }
-
-        visibleRef.value = false;
-        emit('cancel', e);
       }
+
 
       /**
        * @description: 设置modal参数

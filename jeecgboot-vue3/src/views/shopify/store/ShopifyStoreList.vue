@@ -30,6 +30,9 @@
     <SectionedEditorModal
       @register="registerEdit"
       :title="label(isAdding ? 'add' : 'edit')"
+      :confirmDiscard="true"
+      :editData="draft"
+      :editExtra="{ days, slotLimitDraft }"
       :confirmLoading="saving"
       :okButtonProps="{ disabled: loading || !draft || !hasPermission(savePermission) }"
       :closeFunc="canClose"

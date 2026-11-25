@@ -28,7 +28,10 @@
       :confirmLoading="saving"
       :showOkBtn="!detail"
       :okButtonProps="{ disabled: !hasPermission(permission('edit')) }"
+      :confirmDiscard="true"
+      :editData="draft"
       :closeFunc="canClose"
+      :okText="t('common.saveText')"
       @ok="submit"
     >
       <a-form v-if="draft" ref="form" :model="draft" layout="vertical">

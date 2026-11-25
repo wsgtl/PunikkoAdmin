@@ -15,7 +15,7 @@
           ]"
       /></template>
     </BasicTable>
-    <BasicModal @register="registerModal" :title="label('editTitle')" :width="1100" :closeFunc="canClose">
+    <BasicModal @register="registerModal" :confirmDiscard="true" :editData="draft" :title="label('editTitle')" :width="1100" :closeFunc="canClose">
       <a-form v-if="draft" ref="form" :model="draft" layout="vertical">
         <a-row :gutter="24">
           <a-col

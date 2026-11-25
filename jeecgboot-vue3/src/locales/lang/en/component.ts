@@ -47,6 +47,9 @@ export default {
     search: 'Menu search',
   },
   modal: {
+    discardChangesTitle: 'Discard unsaved changes?',
+    discardChangesConfirm: 'You have unsaved changes. They will be lost if you close this window. Close anyway?',
+    discardChanges: 'Discard changes',
     cancelText: 'Close',
     okText: 'Confirm',
     close: 'Close',

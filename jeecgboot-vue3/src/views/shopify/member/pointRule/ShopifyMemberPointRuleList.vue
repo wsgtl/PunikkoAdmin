@@ -21,7 +21,10 @@
       :showOkBtn="!readonly"
       :confirmLoading="saving"
       :okButtonProps="{ disabled: loading || failed || !draft || !hasPermission(permission(adding ? 'add' : 'edit')) }"
+      :confirmDiscard="true"
+      :editData="draft"
       :closeFunc="canClose"
+      :okText="t('common.saveText')"
       @ok="submit"
       @cancel="cancel"
     >

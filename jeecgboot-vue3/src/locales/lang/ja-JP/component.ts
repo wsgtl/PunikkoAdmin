@@ -25,7 +25,16 @@ export default {
   },
   icon: { placeholder: 'クリックしてアイコンを選択', search: 'アイコンを検索', copy: 'アイコンをコピーしました' },
   menu: { search: 'メニュー検索' },
-  modal: { cancelText: '閉じる', okText: '確認', close: '閉じる', maximize: '最大化', restore: '元に戻す' },
+  modal: {
+    discardChangesTitle: '未保存の変更を破棄しますか？',
+    discardChangesConfirm: '内容が変更されています。閉じると変更内容は失われます。閉じてもよろしいですか？',
+    discardChanges: '変更を破棄',
+    cancelText: '閉じる',
+    okText: '確認',
+    close: '閉じる',
+    maximize: '最大化',
+    restore: '元に戻す',
+  },
   table: {
     settingDens: '表示密度',
     settingDensDefault: '標準',

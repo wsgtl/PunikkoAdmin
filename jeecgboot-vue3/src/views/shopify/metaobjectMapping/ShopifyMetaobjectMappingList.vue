@@ -11,11 +11,13 @@
     </BasicTable>
     <BasicModal
       @register="registerEdit"
+      :confirmDiscard="true" :editData="draft" :editExtra="selectedRoles"
       :title="t('shopify.metaobjectMapping.editTitle')"
       :width="900"
       :confirmLoading="saving"
       :okButtonProps="{ disabled: !rolesReady || rolesLoading }"
       :closeFunc="canClose"
+      :okText="t('common.saveText')"
       @ok="submit"
     >
       <a-spin :spinning="rolesLoading"

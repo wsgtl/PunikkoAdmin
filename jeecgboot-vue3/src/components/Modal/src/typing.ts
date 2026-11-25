@@ -58,6 +58,9 @@ export interface ModalProps {
   showOkBtn: boolean;
   showCancelBtn: boolean;
   closeFunc: () => Promise<any>;
+  confirmDiscard?: boolean;
+  editExtra?: unknown;
+  editData?: Record<string, any>;
 
   /**
    * Specify a function that will be called when modal is closed completely.

@@ -1,5 +1,5 @@
 <template>
-  <BasicModal v-bind="$attrs" :width="1000" :okText="t('common.saveText')" @register="forwardRegister">
+  <BasicModal v-bind="$attrs" :confirmDiscard="$attrs.confirmDiscard ?? true" :width="1000" :okText="t('common.saveText')" @register="forwardRegister">
     <div class="sectioned-editor"><slot /></div>
   </BasicModal>
 </template>

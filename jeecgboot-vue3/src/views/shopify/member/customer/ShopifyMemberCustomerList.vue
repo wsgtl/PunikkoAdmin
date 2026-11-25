@@ -74,11 +74,13 @@
     </BasicModal>
     <BasicModal
       @register="registerEditor"
+      :confirmDiscard="true" :editData="draft"
       :title="label('editTitle')"
       :width="1000"
       :confirmLoading="saving"
       :closeFunc="canClose"
       :okButtonProps="{ disabled: !hasPermission(permission('edit')) }"
+      :okText="t('common.saveText')"
       @ok="submit"
     >
       <a-form v-if="draft" ref="form" :model="draft" layout="vertical">

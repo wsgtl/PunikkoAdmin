@@ -49,6 +49,9 @@ export default {
     search: '菜单搜索',
   },
   modal: {
+    discardChangesTitle: '放弃未保存的修改？',
+    discardChangesConfirm: '当前内容已修改，关闭后这些修改将丢失。确定关闭吗？',
+    discardChanges: '放弃修改',
     cancelText: '关闭',
     okText: '确认',
     close: '关闭',

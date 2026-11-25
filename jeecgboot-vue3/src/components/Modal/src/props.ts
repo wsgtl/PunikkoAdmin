@@ -17,6 +17,9 @@ export const modalProps = {
   okText: { type: String, default: t('common.okText') },
 
   closeFunc: Function as PropType<() => Promise<boolean>>,
+  confirmDiscard: { type: Boolean, default: false },
+  editExtra: { default: undefined },
+  editData: Object as PropType<Record<string, any>>,
 
   modalHeaderHeight: Number,
   modalFooterHeight: Number,

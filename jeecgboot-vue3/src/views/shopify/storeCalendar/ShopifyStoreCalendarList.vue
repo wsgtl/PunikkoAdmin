@@ -20,11 +20,13 @@
     </BasicTable>
     <BasicModal
       @register="registerEditor"
+      :confirmDiscard="true" :editData="draft" :editExtra="timeMode"
       :title="label(adding ? 'add' : 'edit')"
       :width="900"
       :confirmLoading="saving"
       :closeFunc="canClose"
       :okButtonProps="{ disabled: !draft || !storesReady || storesLoading || !hasPermission(permission(adding ? 'add' : 'edit')) }"
+      :okText="t('common.saveText')"
       @ok="submit"
     >
       <a-alert v-if="!storesReady && !storesLoading" type="error" :message="label('storeLoadFailed')"

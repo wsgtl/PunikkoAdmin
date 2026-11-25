@@ -1,5 +1,5 @@
 <template>
-  <BasicModal v-if="!detailMode" :title="title" v-bind="$attrs" @register="registerEditor" @cancel="editorCancelled" @ok="$emit('ok')">
+  <BasicModal v-if="!detailMode" :title="title" :confirmDiscard="true" v-bind="$attrs" @register="registerEditor" @cancel="editorCancelled" @ok="$emit('ok')">
     <template v-for="(_, name) in $slots" #[name]="slotProps">
       <slot :name="name" v-bind="slotProps || {}" />
     </template>
