@@ -121,7 +121,13 @@
                       style="width: 100%"
                     />
                     <a-textarea
-                      v-else-if="['storeAddress', 'remark'].includes(field)"
+                      v-else-if="field === 'remark'"
+                      v-model:value="draft[field]"
+                      :auto-size="{ minRows: 3, maxRows: 6 }"
+                      :disabled="saving"
+                    />
+                    <a-textarea
+                      v-else-if="field === 'storeAddress'"
                       v-model:value="draft[field]"
                       :auto-size="{ minRows: 1, maxRows: 2 }"
                       :disabled="saving"
@@ -162,7 +168,7 @@
               </template>
             </EditorSection>
           </template>
-          <EditorSection v-else :title="label('translations')">
+          <EditorSection v-if="activeEditorSection === 'translations' || activeEditorSection === 'all'" :title="label('translations')">
             <p class="translation-help">{{ label('translationExpandHint') }}</p>
             <a-table
               :data-source="draft.shopifyStoreI18nList"
@@ -174,6 +180,13 @@
             >
               <template #bodyCell="{ column, record }">
                 <span v-if="column.dataIndex === 'language'">{{ businessDictionaryText('shopify_language', record.language) }}</span>
+                <a-textarea
+                  v-else-if="column.dataIndex === 'remark'"
+                  v-model:value="record[column.dataIndex]"
+                  :disabled="saving"
+                  :placeholder="label('translationFallback')"
+                  :auto-size="{ minRows: 2, maxRows: 5 }"
+                />
                 <a-input v-else v-model:value="record[column.dataIndex]" :disabled="saving" :placeholder="label('translationFallback')" />
               </template>
               <template #expandedRowRender="{ record }">
